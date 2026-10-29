@@ -113,10 +113,10 @@ export default function AcademicFoundation() {
         />
 
         {/* Top Cinema Telemetry Bar */}
-        <div className="absolute top-6 inset-x-8 z-20 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.25em] text-amber-200/80 border-b border-amber-500/20 pb-3 backdrop-blur-sm">
+        <div className="absolute top-20 sm:top-24 inset-x-8 z-20 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.25em] text-amber-200/80 border-b border-amber-500/20 pb-3 backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
-            <span className="font-bold text-amber-300">SCENE 02 // HIGHER EDUCATION</span>
+            <span className="font-bold text-amber-300">SCENE 03 // HIGHER EDUCATION</span>
           </div>
 
           <div className="flex items-center gap-2 text-amber-400 font-semibold tracking-widest">
@@ -283,7 +283,7 @@ export default function AcademicFoundation() {
             <div className="inline-flex items-center gap-2 mb-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
               <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-amber-400">
-                SCENE 02 // HIGHER EDUCATION
+                SCENE 03 // HIGHER EDUCATION
               </p>
             </div>
             <TextEngine
