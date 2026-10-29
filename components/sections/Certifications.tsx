@@ -201,7 +201,7 @@ export default function Certifications() {
         {/* Header */}
         <div className="mb-10 text-center relative z-10">
           <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-amber-400 mb-2">
-            PROOF OF PROGRESS // MMXXVI
+            SCENE 03 // PROOF OF PROGRESS
           </p>
           <h2
             id="certsTitle"

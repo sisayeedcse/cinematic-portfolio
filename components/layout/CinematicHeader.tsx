@@ -13,11 +13,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { id: "home", label: "HOME", targetId: "stage" },
   { id: "skills", label: "SKILLS", targetId: "skills" },
-  { id: "journey", label: "JOURNEY", targetId: "journey" },
-  { id: "projects", label: "PROJECTS", targetId: "projects" },
-  { id: "experience", label: "EXPERIENCE", targetId: "experience" },
   { id: "certifications", label: "CERTS", targetId: "certifications" },
-  { id: "activities", label: "HONORS", targetId: "activities" },
   { id: "contact", label: "CONTACT", targetId: "contact" },
 ];
 
@@ -73,10 +69,10 @@ export default function CinematicHeader() {
   };
 
   const handleLegendClick = () => {
-    // Smooth scroll into the core technical journey or tech universe
-    const journeyEl = document.getElementById("journey") || document.getElementById("skills");
-    if (journeyEl) {
-      journeyEl.scrollIntoView({ behavior: "smooth" });
+    // Smooth scroll into the core tech universe or certifications
+    const targetEl = document.getElementById("skills") || document.getElementById("certifications");
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: "smooth" });
     }
   };
 
