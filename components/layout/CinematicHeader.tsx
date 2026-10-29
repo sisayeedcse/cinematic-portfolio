@@ -12,8 +12,6 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { id: "home", label: "HOME", targetId: "stage" },
-  { id: "skills", label: "SKILLS", targetId: "skills" },
-  { id: "certifications", label: "CERTS", targetId: "certifications" },
   { id: "contact", label: "CONTACT", targetId: "contact" },
 ];
 
@@ -65,8 +63,7 @@ export default function CinematicHeader() {
   };
 
   const handleLegendClick = () => {
-    // Smooth scroll into the core tech universe or certifications
-    const targetEl = document.getElementById("skills") || document.getElementById("certifications");
+    const targetEl = document.getElementById("contact");
     if (targetEl) {
       targetEl.scrollIntoView({ behavior: "smooth" });
     }

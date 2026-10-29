@@ -3,186 +3,187 @@
 import { useEffect, useRef } from "react";
 
 /**
- * CascadingDotsCursor
- * ---------------------
- * A 14-node chain cursor overlay. The head chases the pointer; each
- * subsequent node eases (spring-like lerp) toward the node ahead of it.
- * Rendered on a full-viewport canvas as an additive overlay.
+ * Cascading Dots Cursor Effect (Trail-Class Cursor)
+ * Vanilla JS + CSS DOM nodes, no canvas, no external library.
  *
- * Accessibility rules (strictly enforced):
- * - NO cursor:none anywhere — native cursor always visible
- * - position:fixed, pointer-events:none, aria-hidden="true"
- * - Respects prefers-reduced-motion: doesn't mount at all
- * - Only mounts for hover:hover + pointer:fine (no touch / coarse)
+ * Parameters:
+ * - Nodes: 14
+ * - Chain ease: 0.34
+ * - Head size: 24px
+ * - Taper: 0.8
+ * - Theme colors: Royal Crimson (#c8382b) to Imperial Gold (#d4af37)
+ *
+ * Accessibility:
+ * - Native cursor is NEVER hidden (no cursor:none anywhere)
+ * - Additive overlay: position: fixed, pointer-events: none, aria-hidden="true"
+ * - Respects prefers-reduced-motion: reduce (does not mount effect)
+ * - Disabled on touch/coarse pointers: only mounts when (hover: hover) and (pointer: fine)
+ * - Single rAF loop with full teardown cleanup
+ * - Interactive hover detection: element.closest("a, button, input, [role='button']")
  */
 
-const NODES = 14;
-const EASE = 0.34;          // chain lerp factor per frame
-const HEAD_SIZE = 24;       // px, head diameter
-const TAPER = 0.8;          // size multiplier per step
-const DPR_CAP = 2;
+const NODES_COUNT = 14;
+const CHAIN_EASE = 0.34;
+const HEAD_SIZE = 24; // px
+const TAPER = 0.8;
 
-// Royal Crimson → Imperial Gold gradient along the chain
-const CRIMSON = [200, 56, 43] as const;   // #c8382b
-const GOLD    = [212, 175, 55] as const;  // #d4af37
+// Royal theme colors
+const COLOR_CRIMSON = [200, 56, 43];  // #c8382b
+const COLOR_GOLD = [212, 175, 55];    // #d4af37
 
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-function colorAt(t: number): string {
-  // t ∈ [0,1] — 0 is head (crimson), 1 is tail (gold, faded)
-  const r = Math.round(lerp(CRIMSON[0], GOLD[0], t));
-  const g = Math.round(lerp(CRIMSON[1], GOLD[1], t));
-  const b = Math.round(lerp(CRIMSON[2], GOLD[2], t));
-  const a = lerp(1, 0.08, t);   // tail fades to near-transparent
-  return `rgba(${r},${g},${b},${a})`;
-}
-
-function colorGlowAt(t: number): string {
-  const r = Math.round(lerp(CRIMSON[0], GOLD[0], t));
-  const g = Math.round(lerp(CRIMSON[1], GOLD[1], t));
-  const b = Math.round(lerp(CRIMSON[2], GOLD[2], t));
-  const a = lerp(0.35, 0, t);   // glow halo, fades quickly
-  return `rgba(${r},${g},${b},${a})`;
-}
-
 export default function CascadingDotsCursor() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 1. Prefers-reduced-motion check
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    // 2. Hover + fine pointer check
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (!mq.matches) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Node positions: array of [x, y]
-    const nodes: [number, number][] = Array.from({ length: NODES }, () => [
-      window.innerWidth / 2,
-      window.innerHeight / 2,
-    ]);
-
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let hovering = false; // cursor over interactive element?
-    let raf = 0;
-    let alive = true;
-
-    // Resize canvas to full viewport at capped DPR
-    function resize() {
-      if (!canvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // 1. Accessibility: prefers-reduced-motion check
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
     }
 
-    resize();
-
-    function onPointerMove(e: PointerEvent) {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      // Detect interactive element
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      hovering = !!(el?.closest("a, button, input, [role='button']"));
+    // 2. Accessibility: fine pointer & hover check (disables on touch / mobile)
+    const pointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    if (!pointerQuery.matches) {
+      return;
     }
 
-    function onPointerLeave() {
-      // When pointer leaves window, slowly let nodes rest
-    }
+    const container = containerRef.current;
+    if (!container) return;
 
-    function draw() {
-      if (!alive || !canvas || !ctx) return;
-      raf = requestAnimationFrame(draw);
+    // Create 14 DOM nodes
+    const nodeElements: HTMLDivElement[] = [];
+    const positions: { x: number; y: number }[] = [];
 
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    const initX = window.innerWidth / 2;
+    const initY = window.innerHeight / 2;
 
-      // Update node positions (chain lerp)
-      nodes[0][0] = lerp(nodes[0][0], mouse.x, EASE);
-      nodes[0][1] = lerp(nodes[0][1], mouse.y, EASE);
-      for (let i = 1; i < NODES; i++) {
-        nodes[i][0] = lerp(nodes[i][0], nodes[i - 1][0], EASE);
-        nodes[i][1] = lerp(nodes[i][1], nodes[i - 1][1], EASE);
+    for (let i = 0; i < NODES_COUNT; i++) {
+      const dot = document.createElement("div");
+      dot.setAttribute("aria-hidden", "true");
+
+      const t = i / (NODES_COUNT - 1); // 0 at head, 1 at tail
+      const r = Math.round(lerp(COLOR_CRIMSON[0], COLOR_GOLD[0], t));
+      const g = Math.round(lerp(COLOR_CRIMSON[1], COLOR_GOLD[1], t));
+      const b = Math.round(lerp(COLOR_CRIMSON[2], COLOR_GOLD[2], t));
+      const alpha = lerp(0.95, 0.1, t);
+
+      // Node size with 0.8 taper
+      const size = Math.max(HEAD_SIZE * Math.pow(TAPER, i), 2);
+
+      dot.style.position = "fixed";
+      dot.style.top = "0";
+      dot.style.left = "0";
+      dot.style.width = `${size}px`;
+      dot.style.height = `${size}px`;
+      dot.style.borderRadius = "50%";
+      dot.style.pointerEvents = "none";
+      dot.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      dot.style.zIndex = `${99990 - i}`;
+      dot.style.willChange = "transform";
+      dot.style.transform = `translate3d(${initX - size / 2}px, ${initY - size / 2}px, 0)`;
+
+      if (i === 0) {
+        dot.style.boxShadow = `0 0 16px rgba(200, 56, 43, 0.8), 0 0 28px rgba(212, 175, 55, 0.4)`;
+      } else if (i < 4) {
+        dot.style.boxShadow = `0 0 10px rgba(200, 56, 43, 0.4)`;
       }
 
-      // Draw nodes from tail → head so head renders on top
-      for (let i = NODES - 1; i >= 0; i--) {
-        const t = i / (NODES - 1);              // 0 = head, 1 = tail
-        const size = HEAD_SIZE * Math.pow(TAPER, i); // shrink along chain
-        const hoverScale = i === 0 && hovering ? 1.5 : 1;
-        const r = (size / 2) * hoverScale;
-
-        const [x, y] = nodes[i];
-        const color = colorAt(t);
-        const glow  = colorGlowAt(t);
-
-        // Outer glow halo (only for head + first few nodes)
-        if (i < 5 && r > 1) {
-          const grad = ctx.createRadialGradient(x, y, r * 0.4, x, y, r * 2.8);
-          grad.addColorStop(0, glow);
-          grad.addColorStop(1, "transparent");
-          ctx.beginPath();
-          ctx.arc(x, y, r * 2.8, 0, Math.PI * 2);
-          ctx.fillStyle = grad;
-          ctx.fill();
-        }
-
-        // Solid dot
-        if (r >= 0.5) {
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, Math.PI * 2);
-          ctx.fillStyle = color;
-          ctx.fill();
-        }
-      }
+      container.appendChild(dot);
+      nodeElements.push(dot);
+      positions.push({ x: initX, y: initY });
     }
 
-    const resizeObs = new ResizeObserver(resize);
-    resizeObs.observe(document.documentElement);
+    let targetX = initX;
+    let targetY = initY;
+    let isHovering = false;
+    let isVisible = false;
+    let rafId = 0;
+    let isRunning = true;
+
+    const onPointerMove = (e: PointerEvent) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (!isVisible) {
+        isVisible = true;
+        container.style.opacity = "1";
+      }
+
+      // Check if interactive element is under pointer
+      const target = document.elementFromPoint(e.clientX, e.clientY);
+      isHovering = !!target?.closest("a, button, input, [role='button']");
+    };
+
+    const onPointerLeave = () => {
+      isVisible = false;
+      container.style.opacity = "0";
+    };
+
+    // Single rAF loop for math & transformation
+    const loop = () => {
+      if (!isRunning) return;
+
+      // Head eases toward pointer
+      positions[0].x = lerp(positions[0].x, targetX, CHAIN_EASE);
+      positions[0].y = lerp(positions[0].y, targetY, CHAIN_EASE);
+
+      // Subsequent nodes ease toward the node in front
+      for (let i = 1; i < NODES_COUNT; i++) {
+        positions[i].x = lerp(positions[i].x, positions[i - 1].x, CHAIN_EASE);
+        positions[i].y = lerp(positions[i].y, positions[i - 1].y, CHAIN_EASE);
+      }
+
+      // Apply transforms
+      for (let i = 0; i < NODES_COUNT; i++) {
+        const size = Math.max(HEAD_SIZE * Math.pow(TAPER, i), 2);
+        const scale = i === 0 && isHovering ? 1.4 : 1;
+        const x = positions[i].x - (size * scale) / 2;
+        const y = positions[i].y - (size * scale) / 2;
+
+        nodeElements[i].style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+      }
+
+      rafId = requestAnimationFrame(loop);
+    };
+
+    container.style.opacity = "0";
+    container.style.transition = "opacity 0.3s ease";
+
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerleave", onPointerLeave);
+    document.addEventListener("mouseleave", onPointerLeave);
+    rafId = requestAnimationFrame(loop);
 
-    raf = requestAnimationFrame(draw);
-
-    // Re-check mq on change (e.g. external mouse plugged into tablet)
-    const mqChange = () => {
-      if (!mq.matches) {
-        alive = false;
-        cancelAnimationFrame(raf);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Dynamic listener for pointer change (e.g. tablet unplug)
+    const onPointerQueryChange = (e: MediaQueryListEvent) => {
+      if (!e.matches) {
+        container.style.display = "none";
+      } else {
+        container.style.display = "block";
       }
     };
-    mq.addEventListener("change", mqChange);
+    pointerQuery.addEventListener("change", onPointerQueryChange);
 
     return () => {
-      alive = false;
-      cancelAnimationFrame(raf);
+      isRunning = false;
+      cancelAnimationFrame(rafId);
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerleave", onPointerLeave);
-      resizeObs.disconnect();
-      mq.removeEventListener("change", mqChange);
+      document.removeEventListener("mouseleave", onPointerLeave);
+      pointerQuery.removeEventListener("change", onPointerQueryChange);
+      container.innerHTML = "";
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
+      ref={containerRef}
       aria-hidden="true"
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 99999,
         pointerEvents: "none",
-        mixBlendMode: "screen",
+        zIndex: 99990,
       }}
     />
   );

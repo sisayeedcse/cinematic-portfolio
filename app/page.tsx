@@ -1,14 +1,11 @@
 "use client";
 
 import CinematicHero from "@/components/sections/CinematicHero";
-import SkillsUniverse from "@/components/sections/SkillsUniverse";
-import Certifications from "@/components/sections/Certifications";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicAura from "@/components/ui/CinematicAura";
 import CinematicHeader from "@/components/layout/CinematicHeader";
 import SceneDirectorHUD from "@/components/layout/SceneDirectorHUD";
 import CascadingDotsCursor from "@/components/ui/CascadingDotsCursor";
-import StatCounters from "@/components/sections/StatCounters";
 
 export default function Home() {
   return (
@@ -19,7 +16,7 @@ export default function Home() {
       {/* Cascading Dots Cursor Trail — Crimson→Gold, additive overlay */}
       <CascadingDotsCursor />
 
-      {/* Cinematic Header / Menu (Matching Reference Image) */}
+      {/* Cinematic Header / Menu */}
       <CinematicHeader />
 
       {/* Floating Scene Director's HUD & Quick Navigator */}
@@ -30,18 +27,9 @@ export default function Home() {
 
       {/* Main Flow: Scrolls over the fixed hero stage */}
       <main className="flow">
-        {/* Scene 2 — Skills Universe */}
-        <SkillsUniverse />
-
-        {/* Scene 3 — Certifications */}
-        <Certifications />
-
-        {/* Impact Stat Counters — Marcus Vane inspired */}
-        <StatCounters />
+        {/* Finale — Closing Shot Footer */}
+        <CinematicFooter />
       </main>
-
-      {/* Finale — Closing Shot Footer */}
-      <CinematicFooter />
     </>
   );
 }
