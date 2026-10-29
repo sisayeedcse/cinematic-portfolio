@@ -102,6 +102,16 @@ export default function AcademicFoundation() {
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none z-10" />
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#050102] via-[#050102]/80 to-transparent pointer-events-none z-10" />
 
+        {/* Right-Side Obsidian Shade: cleanly hides the baked AI graphics behind the live interactive HUD */}
+        <div
+          className="absolute inset-y-0 right-0 w-[50%] pointer-events-none z-10"
+          style={{
+            background:
+              "linear-gradient(to right, transparent 0%, rgba(5,1,2,0.8) 10%, rgba(5,1,2,0.98) 22%, #050102 42%, #050102 100%)",
+          }}
+          aria-hidden="true"
+        />
+
         {/* Top Cinema Telemetry Bar */}
         <div className="absolute top-6 inset-x-8 z-20 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.25em] text-amber-200/80 border-b border-amber-500/20 pb-3 backdrop-blur-sm">
           <div className="flex items-center gap-2">
@@ -115,54 +125,6 @@ export default function AcademicFoundation() {
           </div>
 
           <span className="text-red-400 font-mono">EST. MMXXII — MMXXVI</span>
-        </div>
-
-        {/* ── Left Interactive Zone (Overlaying the books, laptop, quote & bio) ── */}
-        {/* Interactive Floating Quote Plaque */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 15 }}
-          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="absolute top-[29.8%] left-[27.8%] z-20 pointer-events-auto"
-        >
-          <div className="group relative p-3.5 rounded-xl bg-gradient-to-b from-[#18070b]/92 to-[#0a0204]/96 border border-amber-500/50 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.85),0_0_20px_rgba(212,175,55,0.3)] hover:scale-105 transition-all cursor-default max-w-[210px]">
-            <p className="font-serif italic text-xs text-amber-100 leading-snug">
-              “Not just a student, but a builder.”
-            </p>
-            <p className="text-[10px] font-mono text-amber-400 mt-1.5 text-right font-bold tracking-wider">
-              — Sayeed
-            </p>
-            <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping opacity-75" />
-          </div>
-        </motion.div>
-
-        {/* Left Stacked Spines Interactive Hotspots */}
-        <div className="absolute bottom-[4.5%] left-[6.5%] z-20 flex flex-col gap-1 w-[260px] pointer-events-auto">
-          {books.map((b, i) => (
-            <button
-              key={b.title}
-              onClick={() => setSelectedBook(selectedBook === b.title ? null : b.title)}
-              className={`flex items-center justify-between px-3 py-1.5 rounded-md text-left font-mono text-[10px] tracking-wider transition-all border ${
-                selectedBook === b.title
-                  ? "bg-gradient-to-r from-red-600/40 to-amber-600/40 border-amber-400 text-white shadow-[0_0_15px_rgba(245,158,11,0.5)]"
-                  : "bg-black/60 hover:bg-black/85 border-amber-500/30 text-amber-200/90 hover:border-amber-400/70"
-              }`}
-            >
-              <span className="font-bold truncate">{b.title}</span>
-              <BookmarkCheck size={11} className="text-amber-400 shrink-0 ml-1.5" />
-            </button>
-          ))}
-          {selectedBook && (
-            <motion.div
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-1 p-2.5 rounded-lg bg-[#140508]/95 border border-amber-400/60 backdrop-blur-xl text-[10px] font-mono text-amber-100 shadow-[0_10px_25px_rgba(0,0,0,0.9)]"
-            >
-              <span className="text-red-400 font-bold block mb-1">KEY COMPETENCY:</span>
-              {books.find((b) => b.title === selectedBook)?.desc}
-            </motion.div>
-          )}
         </div>
 
         {/* Scroll Cue Button */}
@@ -182,9 +144,9 @@ export default function AcademicFoundation() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-[16.5%] right-[3.2%] w-[33.5%] max-w-[495px] z-20 pointer-events-auto"
+          className="absolute top-[13%] right-[2.5%] bottom-[7%] w-[36%] max-w-[505px] z-20 pointer-events-auto flex flex-col justify-center"
         >
-          <div className="relative rounded-2xl border border-amber-500/50 bg-gradient-to-b from-[#16060a]/92 via-[#0c0205]/95 to-[#16060a]/92 backdrop-blur-2xl p-5 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(212,175,55,0.25)] flex flex-col gap-4">
+          <div className="relative rounded-2xl border border-amber-500/50 bg-gradient-to-b from-[#18070c]/98 via-[#0e0306]/98 to-[#18070c]/98 backdrop-blur-2xl p-5 shadow-[0_25px_60px_rgba(0,0,0,0.98),0_0_35px_rgba(200,56,43,0.3)] flex flex-col gap-3.5">
             {/* Header: Graduation Cap + Premier University */}
             <div className="flex items-center justify-between border-b border-amber-500/30 pb-3">
               <div className="flex items-center gap-3">
