@@ -21,10 +21,7 @@ type Scene = {
 
 const scenes: Scene[] = [
   { id: "stage", num: "01", title: "Cinematic Hero", short: "Hero" },
-  { id: "skills", num: "02", title: "The Tech Universe", short: "Skills" },
-  { id: "academic", num: "03", title: "Academic Foundation", short: "Academia" },
-  { id: "certifications", num: "04", title: "Verified Credentials", short: "Certs" },
-  { id: "contact", num: "05", title: "Closing Finale", short: "Finale" },
+  { id: "contact", num: "02", title: "Closing Finale", short: "Finale" },
 ];
 
 export default function SceneDirectorHUD() {
@@ -132,7 +129,7 @@ export default function SceneDirectorHUD() {
                     SCENE DIRECTOR
                   </span>
                   <span className="text-[10px] font-mono text-gray-400">
-                    {activeScene.num} / 05
+                    {activeScene.num} / 02
                   </span>
                 </div>
 

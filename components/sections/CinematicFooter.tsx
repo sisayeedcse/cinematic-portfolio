@@ -27,7 +27,7 @@ export default function CinematicFooter() {
   return (
     <footer
       id="contact"
-      className="relative min-h-[100svh] py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
+      className="relative min-h-[100svh] pt-24 sm:pt-28 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-label="Closing"
     >
       {/* 1. Master High-Resolution Sayeed Artwork (100% Solid & Highlighted) */}
@@ -60,7 +60,7 @@ export default function CinematicFooter() {
       <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-5 border-b border-amber-500/20 backdrop-blur-sm">
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
-          SCENE 05 // THE CLOSING FINALE
+          SCENE 02 // THE CLOSING FINALE
         </span>
 
         {/* Delicate letterspaced quote placed softly on top bar */}

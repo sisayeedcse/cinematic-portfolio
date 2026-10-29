@@ -12,9 +12,6 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { id: "home", label: "HOME", targetId: "stage" },
-  { id: "skills", label: "SKILLS", targetId: "skills" },
-  { id: "academic", label: "ACADEMIA", targetId: "academic" },
-  { id: "certifications", label: "CERTS", targetId: "certifications" },
   { id: "contact", label: "CONTACT", targetId: "contact" },
 ];
 

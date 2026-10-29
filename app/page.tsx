@@ -1,9 +1,6 @@
 "use client";
 
 import CinematicHero from "@/components/sections/CinematicHero";
-import SkillsUniverse from "@/components/sections/SkillsUniverse";
-import AcademicFoundation from "@/components/sections/AcademicFoundation";
-import Certifications from "@/components/sections/Certifications";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicAura from "@/components/ui/CinematicAura";
 import CinematicHeader from "@/components/layout/CinematicHeader";
@@ -30,18 +27,9 @@ export default function Home() {
 
       {/* Main Flow: Scrolls over the fixed hero stage */}
       <main className="flow">
-        {/* Scene 2 — The Tech Universe (Skills) */}
-        <SkillsUniverse />
-
-        {/* Scene 3 — Academic Foundation */}
-        <AcademicFoundation />
-
-        {/* Scene 4 — Certifications */}
-        <Certifications />
+        {/* Finale — Closing Shot Footer (Scene 02) */}
+        <CinematicFooter />
       </main>
-
-      {/* Finale — Closing Shot Footer (Scene 05) */}
-      <CinematicFooter />
     </>
   );
 }
