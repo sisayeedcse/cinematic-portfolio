@@ -217,16 +217,16 @@ export class Stage {
   }
 
   private _heroGeometry(clip: Clip | null | undefined, st: HeroSample) {
-    if (!clip || !clip.ready || st.opacity <= 0.001 || !this.layout) return null;
+    if (st.opacity <= 0.001 || !this.layout) return null;
     const dpr = this.layout.dpr;
     const { hero } = this.layout;
-    const box = clip.box();
+    const box = clip?.box() || [0.25, 0.05, 0.75, 0.98];
     const subH = Math.max(box[3] - box[1], 1e-3);
     const subCX = (box[0] + box[2]) * 0.5;
 
     const wantH = hero.h * dpr * st.scale;
     const quadH = wantH / subH;
-    const quadW = quadH * (clip.w / clip.h);
+    const quadW = quadH * ((clip?.w || 720) / (clip?.h || 1280));
     return {
       wantH,
       rect: [
@@ -263,9 +263,9 @@ export class Stage {
     st: HeroSample,
     skew: number[]
   ) {
-    if (!geo || !clip || !this.gl || !this.layout) return;
+    if (!geo || !this.gl || !this.layout) return;
     const gl = this.gl;
-    if (clip.poll()) upload(gl, this.tex.hero, clip.el);
+    if (clip && clip.poll()) upload(gl, this.tex.hero, clip.el);
 
     const p = this.progs.figure;
     gl.useProgram(p.p);
@@ -274,8 +274,11 @@ export class Stage {
     gl.uniform1i(p.u.uMask, bind(gl, this.tex.glyph, 2));
     gl.uniform1f(p.u.uUseMask, 0);
     gl.uniform4f(p.u.uMaskUV, 0, 0, 1, 1);
-    gl.uniform2f(p.u.uTexel, 0.5 / (clip.w * 2), 0.5 / clip.h);
-    gl.uniform1f(p.u.uOpacity, st.opacity * clip.seamFade());
+    const clipW = clip?.w || 720;
+    const clipH = clip?.h || 1280;
+    const seamFade = clip?.seamFade() ?? 1;
+    gl.uniform2f(p.u.uTexel, 0.5 / (clipW * 2), 0.5 / clipH);
+    gl.uniform1f(p.u.uOpacity, st.opacity * seamFade);
     gl.uniform1f(p.u.uReveal, st.reveal);
     gl.uniform1f(p.u.uFeetFade, 0.02);
     gl.uniform1f(p.u.uTopFade, 0.012);

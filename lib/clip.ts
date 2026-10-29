@@ -42,7 +42,6 @@ export class Clip {
     v.setAttribute("playsinline", "");
     v.setAttribute("webkit-playsinline", "");
     v.preload = "auto";
-    v.crossOrigin = "anonymous";
     v.disablePictureInPicture = true;
     if (poster) v.poster = poster;
 
@@ -58,28 +57,40 @@ export class Clip {
     v.addEventListener("loadedmetadata", () => {
       this.duration = v.duration;
     });
+    v.addEventListener("loadeddata", () => {
+      this.ready = true;
+    });
     v.addEventListener("canplay", () => {
       this.ready = true;
     });
     v.load();
   }
 
-  /** Resolves when there is enough data to start without stalling. */
-  whenReady(): Promise<this> {
-    if (this.el.readyState >= 3) return Promise.resolve(this);
+  /** Resolves when there is enough data to start without stalling, with a safety timeout. */
+  whenReady(timeoutMs = 1200): Promise<this> {
+    if (this.el.readyState >= 2) {
+      this.ready = true;
+      return Promise.resolve(this);
+    }
     return new Promise((res) => {
+      let timer: any;
       const done = () => {
+        if (timer) clearTimeout(timer);
         cleanup();
+        this.ready = this.el.readyState >= 2;
         res(this);
       };
       const cleanup = () => {
         this.el.removeEventListener("canplaythrough", done);
         this.el.removeEventListener("canplay", done);
+        this.el.removeEventListener("loadeddata", done);
         this.el.removeEventListener("error", done);
       };
       this.el.addEventListener("canplaythrough", done, { once: true });
       this.el.addEventListener("canplay", done, { once: true });
+      this.el.addEventListener("loadeddata", done, { once: true });
       this.el.addEventListener("error", done, { once: true });
+      timer = setTimeout(done, timeoutMs);
     });
   }
 

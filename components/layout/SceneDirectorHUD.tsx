@@ -36,14 +36,19 @@ export default function SceneDirectorHUD() {
       const scrollPos = window.scrollY;
       setHasScrolled(scrollPos > 300);
 
-      // Determine active scene based on section offsets
-      for (let i = scenes.length - 1; i >= 0; i--) {
+      // Determine active scene based on scroll position
+      if (scrollPos < window.innerHeight * 0.5) {
+        setActiveSceneId("stage");
+        return;
+      }
+
+      for (let i = scenes.length - 1; i >= 1; i--) {
         const el = document.getElementById(scenes[i].id);
         if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= window.innerHeight * 0.45) {
+          const top = el.offsetTop;
+          if (scrollPos >= top - 250) {
             setActiveSceneId(scenes[i].id);
-            break;
+            return;
           }
         }
       }

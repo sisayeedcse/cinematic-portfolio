@@ -28,24 +28,20 @@ export default function CinematicHeader() {
       const scrollPos = window.scrollY;
       setIsScrolled(scrollPos > 40);
 
-      // Scroll spy detection
-      const scrollCenter = scrollPos + window.innerHeight * 0.35;
+      // Scroll spy detection: if scroll position is within the hero viewport, highlight HOME
+      if (scrollPos < window.innerHeight * 0.5) {
+        setActiveSection("home");
+        return;
+      }
 
-      for (let i = navItems.length - 1; i >= 0; i--) {
+      for (let i = navItems.length - 1; i >= 1; i--) {
         const item = navItems[i];
-        if (item.targetId === "stage") {
-          if (scrollPos < 350) {
-            setActiveSection("home");
-            break;
-          }
-        } else {
-          const el = document.getElementById(item.targetId);
-          if (el) {
-            const top = el.offsetTop;
-            if (scrollPos >= top - 200) {
-              setActiveSection(item.id);
-              break;
-            }
+        const el = document.getElementById(item.targetId);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPos >= top - 250) {
+            setActiveSection(item.id);
+            return;
           }
         }
       }

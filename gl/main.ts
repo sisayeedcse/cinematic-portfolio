@@ -102,8 +102,14 @@ export function createCinematicApp(canvas: HTMLCanvasElement) {
     window.addEventListener("resize", debounce(handleLayout, 140));
     window.addEventListener("orientationchange", () => setTimeout(handleLayout, 220));
 
+    const safetyTimer = setTimeout(() => {
+      if (!app.running) {
+        begin();
+      }
+    }, 2200);
+
     try {
-      await app.clips.hero.whenReady();
+      await app.clips.hero.whenReady(1000);
     } catch {
       // proceed anyway
     }
@@ -112,6 +118,7 @@ export function createCinematicApp(canvas: HTMLCanvasElement) {
     const held = performance.now() - startedAt;
     if (held < MIN_BLACK) await wait(MIN_BLACK - held);
 
+    clearTimeout(safetyTimer);
     const playing = await app.clips.hero.play();
     begin();
     if (!playing) {
@@ -131,6 +138,20 @@ export function createCinematicApp(canvas: HTMLCanvasElement) {
     app.t0 = performance.now();
     app.running = true;
     bindPointer();
+
+    const q = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("t") : null;
+    if (q !== null) {
+      const at = q === "end" ? T.settled : parseFloat(q);
+      if (Number.isFinite(at)) {
+        app.t0 = performance.now() - at * 1000;
+        for (const [when, name] of CUES) {
+          if (at >= when) {
+            app.fired.add(name);
+            root.classList.add(`is-${name}`);
+          }
+        }
+      }
+    }
 
     if (reduced) {
       app.t0 = performance.now() - T.settled * 1000;
