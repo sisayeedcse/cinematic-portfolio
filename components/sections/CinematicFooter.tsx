@@ -5,6 +5,15 @@ import { motion } from "motion/react";
 import { profile } from "@/data/profile";
 import { Mail, FileText, ArrowUpRight, MapPin, Sparkles, Check, Copy } from "lucide-react";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/SocialIcons";
+import TextEngine from "spring-text-engine";
+
+// Infinite scrolling marquee words
+const MARQUEE_WORDS = [
+  "Linux", "•", "Nginx", "•", "Cloud", "•", "Next.js", "•", "MySQL", "•",
+  "Docker", "•", "PHP", "•", "WordPress", "•", "Python", "•", "Bash", "•",
+  "IEEE CS", "•", "Infrastructure", "•", "WordPress", "•", "Networking", "•",
+];
+const MARQUEE_DUP = [...MARQUEE_WORDS, ...MARQUEE_WORDS]; // duplicate for seamless loop
 
 export default function CinematicFooter() {
   const [copied, setCopied] = useState(false);
@@ -94,6 +103,36 @@ export default function CinematicFooter() {
 
       {/* 4. Bottom Sleek Action Dock (Docked at bottom edge — zero occlusion of face or typography) */}
       <div className="relative z-10 max-w-5xl mx-auto w-full pt-4">
+
+        {/* ── Marcus Vane–style infinite skills marquee ── */}
+        <div
+          className="relative overflow-hidden w-full mb-6 py-2 border-y border-amber-500/20"
+          aria-label="Skills marquee"
+        >
+          <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-[#050102] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#050102] to-transparent z-10 pointer-events-none" />
+          <div
+            className="flex items-center gap-5 whitespace-nowrap"
+            style={{ animation: "marquee-scroll 28s linear infinite", width: "max-content" }}
+            aria-hidden="true"
+          >
+            {MARQUEE_DUP.map((word, i) => (
+              <span
+                key={i}
+                className={`font-mono text-[11px] uppercase tracking-[0.22em] ${
+                  word === "•" ? "text-[#c8382b] text-[8px]" : "text-amber-200/60"
+                }`}
+              >
+                {word}
+              </span>
+            ))}
+          </div>
+          <style>{`
+            @keyframes marquee-scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+            @media (prefers-reduced-motion:reduce) { [style*="marquee-scroll"] { animation:none !important; } }
+          `}</style>
+        </div>
+
         {/* Glassmorphic Luxury Command Dock */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}

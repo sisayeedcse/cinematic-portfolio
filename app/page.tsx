@@ -7,12 +7,17 @@ import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicAura from "@/components/ui/CinematicAura";
 import CinematicHeader from "@/components/layout/CinematicHeader";
 import SceneDirectorHUD from "@/components/layout/SceneDirectorHUD";
+import CascadingDotsCursor from "@/components/ui/CascadingDotsCursor";
+import StatCounters from "@/components/sections/StatCounters";
 
 export default function Home() {
   return (
     <>
       {/* Interactive Global Cinematic Ambient Light Cursor / Aura */}
       <CinematicAura />
+
+      {/* Cascading Dots Cursor Trail — Crimson→Gold, additive overlay */}
+      <CascadingDotsCursor />
 
       {/* Cinematic Header / Menu (Matching Reference Image) */}
       <CinematicHeader />
@@ -30,6 +35,9 @@ export default function Home() {
 
         {/* Scene 3 — Certifications */}
         <Certifications />
+
+        {/* Impact Stat Counters — Marcus Vane inspired */}
+        <StatCounters />
       </main>
 
       {/* Finale — Closing Shot Footer */}

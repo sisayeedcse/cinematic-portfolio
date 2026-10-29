@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import TextEngine from "spring-text-engine";
 import { certifications, Certification } from "@/data/certifications";
 import {
   ShieldCheck,
@@ -203,12 +204,19 @@ export default function Certifications() {
           <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-amber-400 mb-2">
             SCENE 03 // PROOF OF PROGRESS
           </p>
-          <h2
+          <TextEngine
+            tag="h2"
+            mode="once"
+            lineOut={{ opacity: 0, filter: "blur(10px)" }}
+            lineIn={{ opacity: 1, filter: "blur(0px)" }}
+            lineConfig={{ tension: 190, friction: 26 }}
+            lineStagger={90}
             id="certsTitle"
             className="font-black text-4xl sm:text-5xl uppercase tracking-tight font-[Anton] text-white"
+            style={{ justifyContent: "center" }}
           >
             Certifications
-          </h2>
+          </TextEngine>
           <p className="text-xs text-amber-200/70 mt-2 max-w-xs mx-auto font-sans tracking-wide">
             Learning today for a better tomorrow. Skills backed by verified credibility.
           </p>

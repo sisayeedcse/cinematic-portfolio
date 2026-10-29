@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import TextEngine from "spring-text-engine";
 import {
   Cloud,
   Terminal,
@@ -401,15 +402,19 @@ export default function SkillsUniverse() {
               Scene 02 // Core Competencies
             </p>
           </div>
-          <h2
+          <TextEngine
+            tag="h2"
+            mode="once"
+            lineOut={{ opacity: 0, filter: "blur(10px)" }}
+            lineIn={{ opacity: 1, filter: "blur(0px)" }}
+            lineConfig={{ tension: 190, friction: 26 }}
+            lineStagger={90}
             id="skillsTitle"
             className="font-black text-3xl sm:text-5xl md:text-6xl tracking-tight leading-none uppercase font-[Anton]"
+            style={{ justifyContent: "flex-start" }}
           >
-            The Tech{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-400 to-red-500">
-              Universe
-            </span>
-          </h2>
+            The Tech Universe
+          </TextEngine>
           <p className="text-amber-100/80 text-xs sm:text-sm mt-1.5 max-w-lg font-sans tracking-wide">
             Kinetic 3D zero-gravity constellation. Interactive holographic nodes mapped to live production stacks.
           </p>
