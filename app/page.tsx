@@ -1,6 +1,8 @@
 "use client";
 
 import CinematicHero from "@/components/sections/CinematicHero";
+import AcademicFoundation from "@/components/sections/AcademicFoundation";
+import Certifications from "@/components/sections/Certifications";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicAura from "@/components/ui/CinematicAura";
 import CinematicHeader from "@/components/layout/CinematicHeader";
@@ -27,9 +29,15 @@ export default function Home() {
 
       {/* Main Flow: Scrolls over the fixed hero stage */}
       <main className="flow">
-        {/* Finale — Closing Shot Footer */}
-        <CinematicFooter />
+        {/* Scene 2 — Academic Foundation */}
+        <AcademicFoundation />
+
+        {/* Scene 3 — Certifications */}
+        <Certifications />
       </main>
+
+      {/* Finale — Closing Shot Footer (Scene 04) */}
+      <CinematicFooter />
     </>
   );
 }

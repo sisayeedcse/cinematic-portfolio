@@ -21,7 +21,9 @@ type Scene = {
 
 const scenes: Scene[] = [
   { id: "stage", num: "01", title: "Cinematic Hero", short: "Hero" },
-  { id: "contact", num: "02", title: "Closing Finale", short: "Finale" },
+  { id: "academic", num: "02", title: "Academic Foundation", short: "Academia" },
+  { id: "certifications", num: "03", title: "Verified Credentials", short: "Certs" },
+  { id: "contact", num: "04", title: "Closing Finale", short: "Finale" },
 ];
 
 export default function SceneDirectorHUD() {
@@ -43,8 +45,9 @@ export default function SceneDirectorHUD() {
       for (let i = scenes.length - 1; i >= 1; i--) {
         const el = document.getElementById(scenes[i].id);
         if (el) {
-          const top = el.offsetTop;
-          if (scrollPos >= top - 250) {
+          const rect = el.getBoundingClientRect();
+          const top = rect.top + scrollPos;
+          if (scrollPos >= top - 200) {
             setActiveSceneId(scenes[i].id);
             return;
           }
@@ -128,7 +131,7 @@ export default function SceneDirectorHUD() {
                     SCENE DIRECTOR
                   </span>
                   <span className="text-[10px] font-mono text-gray-400">
-                    {activeScene.num} / 02
+                    {activeScene.num} / 04
                   </span>
                 </div>
 

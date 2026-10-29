@@ -60,7 +60,7 @@ export default function CinematicFooter() {
       <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-5 border-b border-amber-500/20 backdrop-blur-sm">
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
-          SCENE 02 // THE CLOSING FINALE
+          SCENE 04 // THE CLOSING FINALE
         </span>
 
         {/* Delicate letterspaced quote placed softly on top bar */}

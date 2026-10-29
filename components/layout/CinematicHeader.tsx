@@ -12,6 +12,8 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { id: "home", label: "HOME", targetId: "stage" },
+  { id: "academic", label: "ACADEMIA", targetId: "academic" },
+  { id: "certifications", label: "CERTS", targetId: "certifications" },
   { id: "contact", label: "CONTACT", targetId: "contact" },
 ];
 
@@ -36,8 +38,9 @@ export default function CinematicHeader() {
         const item = navItems[i];
         const el = document.getElementById(item.targetId);
         if (el) {
-          const top = el.offsetTop;
-          if (scrollPos >= top - 250) {
+          const rect = el.getBoundingClientRect();
+          const top = rect.top + scrollPos;
+          if (scrollPos >= top - 200) {
             setActiveSection(item.id);
             return;
           }
