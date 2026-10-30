@@ -133,7 +133,7 @@ export default function Projects() {
             lineConfig={{ tension: 190, friction: 26 }}
             lineStagger={90}
             id="projectsTitle"
-            className="font-black text-3xl sm:text-5xl md:text-6xl tracking-tight leading-none uppercase font-[Anton]"
+            className="font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight uppercase font-sans"
             style={{ justifyContent: "flex-start" }}
           >
             Featured Productions
@@ -182,10 +182,14 @@ export default function Projects() {
         style={{ perspective: "1400px" }}
         className="relative z-10 w-full max-w-[1920px] mx-auto hidden lg:flex flex-col justify-between aspect-[16/9] min-h-[760px] max-h-[900px] rounded-3xl overflow-hidden border border-amber-500/30 shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_60px_rgba(220,38,38,0.25)] p-6 sm:p-8 mb-6"
       >
-        {/* Master Ferrari Artwork Backdrop with subtle 3D parallax tilt */}
-        <div
+        {/* Master Ferrari Artwork Backdrop with cinematic scroll reveal & 3D parallax tilt */}
+        <motion.div
+          initial={{ scale: 1.1, opacity: 0, filter: "blur(14px) brightness(0.6)" }}
+          whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(0.95)" }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)`,
+            transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
             transition: "transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
           className="absolute inset-0 pointer-events-none overflow-hidden select-none"
@@ -207,12 +211,21 @@ export default function Projects() {
             aria-hidden="true"
           />
 
+          {/* Cinematic Anamorphic Light Sweep on Viewport Reveal */}
+          <motion.div
+            initial={{ x: "-100%", opacity: 0.75 }}
+            whileInView={{ x: "200%", opacity: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+          />
+
           {/* Top subtle vignette */}
           <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
 
           {/* Dark floor reflection enhancer */}
           <div className="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
-        </div>
+        </motion.div>
 
         {/* ── 2A. LEFT FLANK (Upper-Left ivory/cream negative space): Interactive Project Command Dossier ── */}
         <div className="relative z-20 w-full max-w-xl flex flex-col justify-between">
@@ -259,7 +272,7 @@ export default function Projects() {
 
               {/* Title & Client Attribution */}
               <div>
-                <h3 className="font-black text-2xl sm:text-3xl xl:text-4xl uppercase tracking-tight font-[Anton] text-white leading-tight">
+                <h3 className="font-extrabold text-2xl sm:text-3xl xl:text-4xl uppercase tracking-tight font-sans text-white leading-tight">
                   {activeProject.title}
                 </h3>
                 <p className="text-xs sm:text-sm font-mono text-amber-200/90 mt-1">
@@ -330,7 +343,7 @@ export default function Projects() {
                           <span className="text-[9px] font-mono uppercase tracking-wider text-amber-400/80">
                             {m.label}
                           </span>
-                          <span className="text-base sm:text-lg font-black font-[Anton] text-white tracking-wide">
+                          <span className="text-base sm:text-lg font-extrabold font-sans text-white tracking-wide">
                             {m.value}
                           </span>
                         </div>
@@ -517,7 +530,7 @@ export default function Projects() {
           </div>
 
           <div>
-            <h3 className="font-black text-2xl uppercase tracking-tight font-[Anton] text-white">
+            <h3 className="font-extrabold text-2xl uppercase tracking-tight font-sans text-white">
               {activeProject.title}
             </h3>
             <p className="text-xs font-mono text-amber-200/90 mt-0.5">
@@ -556,7 +569,7 @@ export default function Projects() {
                 <span className="text-[9px] font-mono text-amber-400/80 block uppercase">
                   {m.label}
                 </span>
-                <span className="text-sm font-black font-[Anton] text-white">
+                <span className="text-sm font-extrabold font-sans text-white">
                   {m.value}
                 </span>
               </div>
@@ -678,7 +691,7 @@ export default function Projects() {
                         </div>
                         <h3
                           id="modalProjectTitle"
-                          className="text-xl sm:text-2xl md:text-3xl font-black font-[Anton] uppercase text-white leading-tight mt-0.5"
+                          className="text-xl sm:text-2xl md:text-3xl font-extrabold font-sans uppercase text-white leading-tight mt-0.5"
                         >
                           {modalProject.title}
                         </h3>
@@ -722,7 +735,7 @@ export default function Projects() {
                             <span className="text-[9.5px] font-mono uppercase tracking-wider text-amber-300/80">
                               {metric.label}
                             </span>
-                            <span className="text-xl sm:text-2xl font-black font-[Anton] text-white tracking-wide mt-1">
+                            <span className="text-xl sm:text-2xl font-extrabold font-sans text-white tracking-wide mt-1">
                               {metric.value}
                             </span>
                           </div>

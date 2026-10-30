@@ -109,7 +109,7 @@ export default function Certifications() {
             lineConfig={{ tension: 190, friction: 26 }}
             lineStagger={90}
             id="certsTitle"
-            className="font-black text-3xl sm:text-5xl md:text-6xl tracking-tight leading-none uppercase font-[Anton]"
+            className="font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight uppercase font-sans"
             style={{ justifyContent: "flex-start" }}
           >
             Verified Credentials
@@ -147,7 +147,13 @@ export default function Certifications() {
           className="relative w-full h-full flex items-center justify-between"
         >
           {/* Master Royal Artwork (Sayeed standing centered in 3D "CERTIFICATES" atmosphere) */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
+          <motion.div
+            initial={{ scale: 1.1, opacity: 0, filter: "blur(14px) brightness(0.6)" }}
+            whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl"
+          >
             <img
               src="/media/certificates-hero-bg.png"
               alt="Sayeed Ibne Saif — Royal Certificates"
@@ -165,10 +171,19 @@ export default function Certifications() {
               aria-hidden="true"
             />
 
+            {/* Cinematic Anamorphic Light Sweep on Viewport Reveal */}
+            <motion.div
+              initial={{ x: "-100%", opacity: 0.75 }}
+              whileInView={{ x: "200%", opacity: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+            />
+
             {/* Top & Bottom Seamless Obsidian Feathering */}
             <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
             <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
-          </div>
+          </motion.div>
 
           {/* =================================================================
               LEFT FLANK: 3 Holographic Royal Credential Cards
@@ -541,7 +556,7 @@ export default function Certifications() {
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-400 block">
                       VERIFIED PROOF // {activeModalCert.categoryLabel}
                     </span>
-                    <h3 className="text-lg sm:text-2xl font-black font-[Anton] uppercase text-white leading-tight">
+                    <h3 className="text-lg sm:text-2xl font-extrabold font-sans uppercase text-white leading-tight">
                       {activeModalCert.name}
                     </h3>
                   </div>

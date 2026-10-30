@@ -30,8 +30,14 @@ export default function CinematicFooter() {
       className="relative min-h-[100svh] pt-24 sm:pt-28 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-label="Closing"
     >
-      {/* 1. Master High-Resolution Sayeed Artwork (100% Solid & Highlighted) */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
+      {/* 1. Master High-Resolution Sayeed Artwork (100% Solid & Highlighted with Cinematic Scroll Reveal) */}
+      <motion.div
+        initial={{ scale: 1.1, opacity: 0, filter: "blur(14px) brightness(0.6)" }}
+        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
+      >
         <img
           src="/media/footer-sayeed.png"
           alt="Sayeed Ibne Saif — Finale"
@@ -49,12 +55,21 @@ export default function CinematicFooter() {
           aria-hidden="true"
         />
 
+        {/* Cinematic Anamorphic Light Sweep on Viewport Reveal */}
+        <motion.div
+          initial={{ x: "-100%", opacity: 0.75 }}
+          whileInView={{ x: "200%", opacity: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+        />
+
         {/* Soft edge blend at top to connect with previous section */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
 
         {/* Subtle bottom edge shadow to frame the action dock */}
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
-      </div>
+      </motion.div>
 
       {/* 2. Top Cinema Marquee HUD (Elevated to top edge, keeping center completely clear) */}
       <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-5 border-b border-amber-500/20 backdrop-blur-sm">

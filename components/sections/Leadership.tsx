@@ -196,7 +196,7 @@ export default function Leadership() {
             lineConfig={{ tension: 190, friction: 26 }}
             lineStagger={90}
             id="leadershipTitle"
-            className="font-black text-3xl sm:text-5xl md:text-6xl tracking-tight leading-none uppercase font-[Anton]"
+            className="font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight uppercase font-sans"
             style={{ justifyContent: "flex-start" }}
           >
             Leadership & Creed
@@ -234,7 +234,13 @@ export default function Leadership() {
           className="relative w-full h-full flex items-center justify-between"
         >
           {/* Master Royal Leadership Artwork (Sayeed seated on throne with IEEE & IEEE CS Flags) */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
+          <motion.div
+            initial={{ scale: 1.1, opacity: 0, filter: "blur(14px) brightness(0.6)" }}
+            whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl"
+          >
             <img
               src="/media/leadership-hero-bg.jpg"
               alt="Sayeed Ibne Saif — Leadership & IEEE Chairperson"
@@ -252,10 +258,19 @@ export default function Leadership() {
               aria-hidden="true"
             />
 
+            {/* Cinematic Anamorphic Light Sweep on Viewport Reveal */}
+            <motion.div
+              initial={{ x: "-100%", opacity: 0.75 }}
+              whileInView={{ x: "200%", opacity: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+            />
+
             {/* Top & Bottom Seamless Obsidian Feathering */}
             <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
             <div className="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
-          </div>
+          </motion.div>
 
           {/* =================================================================
               LEFT FLANK: IEEE Command Monolith & Executive Directives
@@ -281,7 +296,7 @@ export default function Leadership() {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,1)]" />
               </div>
 
-              <h3 className="text-sm xl:text-base font-black font-[Anton] uppercase text-white tracking-wide leading-tight">
+              <h3 className="text-sm xl:text-base font-extrabold font-sans uppercase text-white tracking-wide leading-tight">
                 IEEE Computer Society Chapter
               </h3>
               <p className="text-[10px] font-mono text-amber-300/90 mt-0.5">
@@ -296,11 +311,11 @@ export default function Leadership() {
               <div className="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-white/10">
                 <div className="p-1.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[8px] font-mono text-gray-400 uppercase tracking-wider block">MENTORED</span>
-                  <span className="text-xs xl:text-sm font-black font-[Anton] text-amber-300">500+ STUDENTS</span>
+                  <span className="text-xs xl:text-sm font-bold font-sans text-amber-300">500+ STUDENTS</span>
                 </div>
                 <div className="p-1.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[8px] font-mono text-gray-400 uppercase tracking-wider block">INITIATIVES</span>
-                  <span className="text-xs xl:text-sm font-black font-[Anton] text-amber-300">12+ PROGRAMS</span>
+                  <span className="text-xs xl:text-sm font-bold font-sans text-amber-300">12+ PROGRAMS</span>
                 </div>
               </div>
             </motion.div>
