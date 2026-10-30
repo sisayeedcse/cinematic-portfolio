@@ -12,6 +12,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { id: "home", label: "HOME", targetId: "stage" },
+  { id: "certificates", label: "CERTS", targetId: "certificates" },
   { id: "contact", label: "CONTACT", targetId: "contact" },
 ];
 

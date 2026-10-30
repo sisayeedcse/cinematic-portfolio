@@ -1,6 +1,7 @@
 "use client";
 
 import CinematicHero from "@/components/sections/CinematicHero";
+import Certifications from "@/components/sections/Certifications";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicAura from "@/components/ui/CinematicAura";
 import CinematicHeader from "@/components/layout/CinematicHeader";
@@ -27,7 +28,10 @@ export default function Home() {
 
       {/* Main Flow: Scrolls over the fixed hero stage */}
       <main className="flow">
-        {/* Finale — Closing Shot Footer (Scene 02) */}
+        {/* Scene 2 — Royal Verified Credentials */}
+        <Certifications />
+
+        {/* Scene 3 — Closing Finale */}
         <CinematicFooter />
       </main>
     </>
