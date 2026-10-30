@@ -121,7 +121,7 @@ export default function Projects() {
           <div className="flex items-center gap-2 mb-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
             <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-amber-400 font-mono">
-              Scene 04 // High-Performance Systems
+              Scene 04 // Production Systems
             </p>
           </div>
 
@@ -182,50 +182,63 @@ export default function Projects() {
         style={{ perspective: "1400px" }}
         className="relative z-10 w-full max-w-[1920px] mx-auto hidden lg:flex flex-col justify-between aspect-[16/9] min-h-[760px] max-h-[900px] rounded-3xl overflow-hidden border border-amber-500/30 shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_60px_rgba(220,38,38,0.25)] p-6 sm:p-8 mb-6"
       >
-        {/* Master Ferrari Artwork Backdrop with cinematic scroll reveal & 3D parallax tilt */}
-        <motion.div
-          initial={{ scale: 1.1, opacity: 0, filter: "blur(14px) brightness(0.6)" }}
-          whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(0.95)" }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        {/* Master Ferrari Artwork Backdrop — Animates sliding in smoothly from the right like a sports car! */}
+        <div
           style={{
             transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
             transition: "transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
           className="absolute inset-0 pointer-events-none overflow-hidden select-none"
         >
-          <img
-            src="/media/projects-ferrari-bg.jpg"
-            alt="Sayeed Ibne Saif — Engineering High Performance"
-            className="w-full h-full object-cover object-center filter contrast-105 brightness-[0.95]"
-            loading="eager"
-          />
-
-          {/* Ambient Breathing Crimson & Gold Aura around Sayeed & Ferrari */}
-          <div
-            className="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse 70% 55% at 65% 55%, rgba(220, 38, 38, 0.45) 0%, rgba(212, 175, 55, 0.2) 45%, transparent 80%)",
-            }}
-            aria-hidden="true"
-          />
-
-          {/* Cinematic Anamorphic Light Sweep on Viewport Reveal */}
           <motion.div
-            initial={{ x: "-100%", opacity: 0.75 }}
-            whileInView={{ x: "200%", opacity: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
-          />
+            initial={{ x: "16%", scale: 1.05, opacity: 0, filter: "blur(10px) brightness(0.7)" }}
+            whileInView={{ x: "0%", scale: 1, opacity: 1, filter: "blur(0px) brightness(0.98)" }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 1.4, ease: [0.18, 1, 0.28, 1] }}
+            className="w-full h-full relative"
+          >
+            <img
+              src="/media/projects-ferrari-bg.jpg"
+              alt="Sayeed Ibne Saif — Engineering High Performance"
+              className="w-full h-full object-cover object-center filter contrast-105 brightness-[0.98]"
+              loading="eager"
+            />
 
-          {/* Top subtle vignette */}
-          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
+            {/* Automotive Floor Reflection Underglow sliding in synchronously with the car */}
+            <motion.div
+              initial={{ x: "20%", opacity: 0 }}
+              whileInView={{ x: "0%", opacity: 0.55 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.4, ease: [0.18, 1, 0.28, 1] }}
+              className="absolute bottom-2 right-12 w-[65%] h-28 bg-gradient-to-t from-red-600/40 via-red-600/15 to-transparent blur-2xl pointer-events-none mix-blend-screen"
+            />
 
-          {/* Dark floor reflection enhancer */}
-          <div className="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
-        </motion.div>
+            {/* Ambient Breathing Crimson & Gold Aura around Sayeed & Ferrari */}
+            <div
+              className="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(ellipse 70% 55% at 65% 55%, rgba(220, 38, 38, 0.45) 0%, rgba(212, 175, 55, 0.2) 45%, transparent 80%)",
+              }}
+              aria-hidden="true"
+            />
+
+            {/* Cinematic Headlight / Anamorphic Flare Sweep on Arrival */}
+            <motion.div
+              initial={{ x: "-100%", opacity: 0.8 }}
+              whileInView={{ x: "200%", opacity: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+            />
+
+            {/* Top subtle vignette */}
+            <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
+
+            {/* Dark floor reflection enhancer */}
+            <div className="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
+          </motion.div>
+        </div>
 
         {/* ── 2A. LEFT FLANK (Upper-Left ivory/cream negative space): Interactive Project Command Dossier ── */}
         <div className="relative z-20 w-full max-w-xl flex flex-col justify-between">
@@ -258,14 +271,14 @@ export default function Projects() {
                     {activeProject.categoryLabel}
                   </span>
                   <span className="text-[10px] font-mono text-amber-300/90 hidden sm:inline">
-                    // {activeProject.tier}
+                    • {activeProject.tier}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
                   <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 font-bold">
-                    SYSTEM 0{activeIdx + 1}/0{filteredProjects.length}
+                    PRODUCTION · 0{activeIdx + 1}/0{filteredProjects.length}
                   </span>
                 </div>
               </div>
@@ -279,7 +292,7 @@ export default function Projects() {
                   {activeProject.subtitle}
                 </p>
                 <div className="flex items-center gap-2 mt-2 text-[11px] font-mono text-gray-400">
-                  <span className="text-amber-400/90">CLIENT / ORG:</span>
+                  <span className="text-amber-400/90 uppercase tracking-wider">CLIENT / DOMAIN:</span>
                   <span className="text-gray-200 font-medium">{activeProject.client}</span>
                 </div>
               </div>
@@ -425,7 +438,7 @@ export default function Projects() {
         {/* ── 2D. BOTTOM HORIZON (Reflective floor dock): Amphitheater Filmstrip Selector ── */}
         <div className="relative z-20 w-full mt-auto pt-3 flex flex-col gap-2">
           <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.22em] text-amber-300/80 px-2">
-            <span>HIGH-PERFORMANCE SYSTEM REGISTRY // CLICK TO PROJECT ON STAGE</span>
+            <span>PRODUCTION REGISTRY · SELECT TO INSPECT BLUEPRINT</span>
             <div className="flex items-center gap-2">
               <span className="text-gray-400 hidden xl:inline">USE ← / → ARROWS</span>
               <button
@@ -499,8 +512,14 @@ export default function Projects() {
 
       {/* ── 3. Mobile Dedicated Presentation (< 1024px) ── */}
       <div className="lg:hidden flex flex-col gap-6">
-        {/* Mobile Ferrari Visual Banner */}
-        <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_15px_40px_rgba(0,0,0,0.9)]">
+        {/* Mobile Ferrari Visual Banner — Sliding in from the right */}
+        <motion.div
+          initial={{ x: "20%", opacity: 0, filter: "blur(10px)" }}
+          whileInView={{ x: "0%", opacity: 1, filter: "blur(0px)" }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 1.3, ease: [0.18, 1, 0.28, 1] }}
+          className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_15px_40px_rgba(0,0,0,0.9)]"
+        >
           <img
             src="/media/projects-ferrari-bg.jpg"
             alt="Sayeed Ibne Saif — Engineering High Performance"
@@ -515,7 +534,7 @@ export default function Projects() {
               0{activeIdx + 1} / 0{filteredProjects.length}
             </span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Mobile Active Project Card */}
         <div className="rounded-2xl border border-amber-500/40 bg-[#0d0306]/95 backdrop-blur-xl p-5 flex flex-col gap-4 text-white shadow-xl">

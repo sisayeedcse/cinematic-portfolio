@@ -23,7 +23,7 @@ const scenes: Scene[] = [
   { id: "stage", num: "01", title: "Cinematic Hero", short: "Hero" },
   { id: "certificates", num: "02", title: "Verified Credentials", short: "Certs" },
   { id: "leadership", num: "03", title: "Leadership & Creed", short: "Lead" },
-  { id: "projects", num: "04", title: "High-Performance Systems", short: "Projects" },
+  { id: "projects", num: "04", title: "Production Systems", short: "Projects" },
   { id: "contact", num: "05", title: "Closing Finale", short: "Finale" },
 ];
 
