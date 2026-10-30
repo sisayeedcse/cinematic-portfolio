@@ -2,6 +2,7 @@
 
 import CinematicHero from "@/components/sections/CinematicHero";
 import Certifications from "@/components/sections/Certifications";
+import Leadership from "@/components/sections/Leadership";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicAura from "@/components/ui/CinematicAura";
 import CinematicHeader from "@/components/layout/CinematicHeader";
@@ -31,7 +32,10 @@ export default function Home() {
         {/* Scene 2 — Royal Verified Credentials */}
         <Certifications />
 
-        {/* Scene 3 — Closing Finale */}
+        {/* Scene 3 — Leadership & Creed */}
+        <Leadership />
+
+        {/* Scene 4 — Closing Finale */}
         <CinematicFooter />
       </main>
     </>
