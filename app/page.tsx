@@ -1,6 +1,7 @@
 "use client";
 
 import CinematicHero from "@/components/sections/CinematicHero";
+import Skills from "@/components/sections/Skills";
 import Leadership from "@/components/sections/Leadership";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicHeader from "@/components/layout/CinematicHeader";
@@ -24,10 +25,13 @@ export default function Home() {
 
       {/* Main Flow: Scrolls over the fixed hero stage */}
       <main className="flow">
-        {/* Scene 02 — Executive Leadership Journey */}
+        {/* Scene 02 — Technical Arsenal (Glowing Skills Matrix) */}
+        <Skills />
+
+        {/* Scene 03 — Executive Leadership Journey */}
         <Leadership />
 
-        {/* Scene 03 — Closing Finale */}
+        {/* Scene 04 — Closing Finale */}
         <CinematicFooter />
       </main>
     </>

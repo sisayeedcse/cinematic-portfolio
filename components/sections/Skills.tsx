@@ -1,437 +1,325 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import TextEngine from "spring-text-engine";
-import {
-  techStack,
-  techCategories,
-  TechItem,
-  SkillCategory,
-} from "@/data/techStack";
-import {
-  Cpu,
-  Layers,
-  Sparkles,
-  Maximize2,
-  X,
-  CheckCircle2,
-  ExternalLink,
-  ShieldCheck,
-  Flame,
-  ArrowRight,
-  Terminal,
-  Cloud,
-  Code2,
-  Database,
-  Eye,
-} from "lucide-react";
+import { Cpu, Layers, Sparkles, ShieldCheck, Terminal, Cloud, Flame, Check } from "lucide-react";
+
+interface SkillLogo {
+  id: string;
+  name: string;
+  category: string;
+  icon: string;
+  glow: string;
+  invertDark?: boolean;
+  desc: string;
+}
+
+const skillLogos: SkillLogo[] = [
+  {
+    id: "aws",
+    name: "AWS",
+    category: "Cloud Infrastructure",
+    icon: "/icons/aws.svg",
+    glow: "rgba(255, 153, 0, 0.65)",
+    desc: "Multi-AZ Cloud Architecture, VPC, EC2 Compute, S3 Storage & IAM Governance",
+  },
+  {
+    id: "docker",
+    name: "Docker",
+    category: "Containerization",
+    icon: "/icons/docker.svg",
+    glow: "rgba(36, 150, 237, 0.65)",
+    desc: "OCI Container Packaging, Multi-Stage Dockerfiles, Compose & Layer Cache Tuning",
+  },
+  {
+    id: "kubernetes",
+    name: "Kubernetes",
+    category: "Orchestration",
+    icon: "/icons/kubernetes.svg",
+    glow: "rgba(50, 108, 229, 0.65)",
+    desc: "Cluster Orchestration, Pod Lifecycle, Ingress Controllers & Declarative Deployments",
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    category: "CI/CD & Actions",
+    icon: "/icons/github.svg",
+    glow: "rgba(255, 255, 255, 0.65)",
+    desc: "Automated Build/Deploy Pipelines, Actions Workflows, Version Control & PR Review",
+  },
+  {
+    id: "python",
+    name: "Python",
+    category: "Systems & Automation",
+    icon: "/icons/python.svg",
+    glow: "rgba(255, 212, 59, 0.65)",
+    desc: "Python 3 Automation Tooling, RESTful API Microservices & Systems Scripting",
+  },
+  {
+    id: "php",
+    name: "PHP",
+    category: "Backend Architecture",
+    icon: "/icons/php.svg",
+    glow: "rgba(119, 123, 179, 0.65)",
+    desc: "High-Throughput Web Backends, Object-Oriented Domain Logic & Enterprise APIs",
+  },
+  {
+    id: "terraform",
+    name: "Terraform",
+    category: "Infrastructure as Code",
+    icon: "/icons/terraform.svg",
+    glow: "rgba(132, 79, 186, 0.65)",
+    desc: "Declarative Cloud Infrastructure as Code, State Management & Modular Provisioning",
+  },
+  {
+    id: "linux",
+    name: "Linux",
+    category: "Operating Systems",
+    icon: "/icons/linux.svg",
+    glow: "rgba(255, 214, 0, 0.65)",
+    desc: "Enterprise POSIX Kernel, Systemd Daemons, Process Governance & File Permissions",
+  },
+  {
+    id: "nginx",
+    name: "Nginx",
+    category: "Edge & Reverse Proxy",
+    icon: "/icons/nginx.svg",
+    glow: "rgba(0, 150, 57, 0.65)",
+    desc: "High-Performance Edge Reverse Proxy, TLS/SSL Termination & Load Balancing",
+  },
+  {
+    id: "nextjs",
+    name: "Next.js",
+    category: "Fullstack Architecture",
+    icon: "/icons/nextjs.svg",
+    glow: "rgba(255, 255, 255, 0.65)",
+    desc: "Server-Side Rendering, App Router Architecture, Edge Middleware & Hybrid Compute",
+  },
+  {
+    id: "mysql",
+    name: "MySQL",
+    category: "Relational Database",
+    icon: "/icons/mysql.svg",
+    glow: "rgba(0, 117, 143, 0.65)",
+    desc: "Relational Schema Design, Query Optimization, Index Tuning & Acid Transactions",
+  },
+  {
+    id: "bash",
+    name: "Bash",
+    category: "CLI & Pipelines",
+    icon: "/icons/bash.svg",
+    glow: "rgba(78, 170, 37, 0.65)",
+    desc: "POSIX Shell Scripting, Cron Automation, Pipe Streams & Standard I/O Redirection",
+  },
+];
 
 export default function Skills() {
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [activeCategory, setActiveCategory] = useState<"all" | SkillCategory>("all");
-  const [selectedTech, setSelectedTech] = useState<TechItem | null>(null);
+  const [activeId, setActiveId] = useState<string>("aws");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const filteredTech =
-    activeCategory === "all"
-      ? techStack
-      : techStack.filter((t) => t.category === activeCategory);
+  const selectedSkill =
+    skillLogos.find((s) => s.id === (hoveredId || activeId)) || skillLogos[0];
 
   return (
     <section
       id="skills"
-      className="relative w-full bg-[#050102] text-white py-20 sm:py-24 md:py-28 px-4 sm:px-6 md:px-10 overflow-hidden border-t border-amber-500/20 select-none"
+      className="relative min-h-[100svh] pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-labelledby="skillsTitle"
     >
-      {/* ── 1. Top Cinema Header Bar ── */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
-            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-amber-400 font-mono">
-              Scene 02 // Core Capabilities
-            </p>
-          </div>
-          <TextEngine
-            tag="h2"
-            mode="once"
-            lineOut={{ opacity: 0, filter: "blur(10px)" }}
-            lineIn={{ opacity: 1, filter: "blur(0px)" }}
-            lineConfig={{ tension: 190, friction: 26 }}
-            lineStagger={90}
-            id="skillsTitle"
-            className="font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight uppercase font-sans text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
-            style={{ justifyContent: "flex-start" }}
-          >
-            Technical Arsenal
-          </TextEngine>
-          <p className="text-amber-100/80 text-xs sm:text-sm mt-2 max-w-xl font-sans tracking-wide">
-            Enterprise cloud infrastructure, container orchestration, systems programming, and production engineering primitives.
-          </p>
-        </div>
+      {/* ── 1. Master High-Resolution Artwork (Sayeed on Throne with Glowing 3D SKILLS & Crown) ── */}
+      <motion.div
+        initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
+        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
+      >
+        <img
+          src="/media/skills-throne-clean.jpg"
+          alt="Sayeed Ibne Saif — Technical Arsenal & Skills"
+          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100"
+          loading="eager"
+        />
 
-        {/* Category Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-black/70 border border-amber-500/30 backdrop-blur-xl shadow-[0_0_25px_rgba(200,56,43,0.2)]">
-          {techCategories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] font-mono tracking-wider transition-all duration-300 focus-royal ${
-                activeCategory === cat.id
-                  ? "text-white font-bold shadow-[0_0_15px_rgba(245,158,11,0.5)]"
-                  : "text-gray-400 hover:text-amber-200"
-              }`}
-            >
-              {activeCategory === cat.id && (
-                <motion.div
-                  layoutId="skillsCategoryHighlight"
-                  className="absolute inset-0 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 rounded-xl"
-                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10 uppercase">{cat.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Ambient Pulsing Crimson & Gold Ember Aura */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-screen"
+          style={{
+            background:
+              "radial-gradient(ellipse 70% 55% at 50% 50%, rgba(200, 56, 43, 0.4) 0%, rgba(212, 175, 55, 0.15) 45%, transparent 80%)",
+          }}
+          aria-hidden="true"
+        />
 
-      {/* ── 2. Cinematic Showcase: Throne Master Artwork + Right-Side Holographic Tech Deck ── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full mb-12 sm:mb-16">
+        {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
         <motion.div
-          initial={{ scale: 1.05, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
-          whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1.0)" }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full rounded-3xl overflow-hidden border border-amber-500/35 shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(200,56,43,0.3)] bg-[#070103] group min-h-[480px] lg:min-h-[640px]"
+          initial={{ x: "-100%", opacity: 0.8 }}
+          whileInView={{ x: "200%", opacity: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+        />
+
+        {/* Edge Vignette Shading for Royal Contrast */}
+        <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
+      </motion.div>
+
+      {/* ── 2. Top Cinema Marquee HUD ── */}
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.25 }}
+        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
+      >
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
+          SCENE 02 // TECHNICAL ARSENAL
+        </span>
+
+        {/* Letterspaced Title */}
+        <p className="text-center text-amber-100 font-mono tracking-[0.22em] text-[11px] sm:text-xs">
+          CLOUD INFRASTRUCTURE · <span className="text-amber-400 font-bold">DEVOPS</span> · SYSTEMS
+        </p>
+
+        <span className="text-amber-400 font-semibold tracking-widest hidden sm:inline">
+          12 PRODUCTION PRIMITIVES
+        </span>
+      </motion.div>
+
+      {/* ── 3. Main Stage: Unobstructed Left/Center (Sayeed & SKILLS) + Holographic Glowing Logos on Right ── */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full mt-auto lg:my-auto py-2 sm:py-4 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-3 sm:gap-6 lg:gap-8">
+        {/* Left Side spacer: leaves Sayeed and "SKILLS" text 100% open and visible */}
+        <div className="hidden lg:block lg:flex-1 pointer-events-none" />
+
+        {/* Right Side: Creative Holographic Constellation of Glowing Logos */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.0, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full lg:w-auto lg:max-w-md xl:max-w-lg flex flex-col items-center lg:items-end space-y-2.5 sm:space-y-3.5"
         >
-          {/* Master Artwork Image */}
-          <img
-            src="/media/skills-throne-bg.jpg"
-            alt="Sayeed Ibne Saif — Technical Arsenal & Skills"
-            className="w-full h-full object-cover object-[center_35%] lg:object-[25%_center] filter contrast-105 brightness-100 transition-transform duration-700 group-hover:scale-[1.01]"
-            loading="eager"
-          />
-
-          {/* Ambient Warm Crimson/Amber Glow */}
-          <div
-            className="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse 65% 55% at 30% 48%, rgba(220, 38, 38, 0.45) 0%, rgba(212, 175, 55, 0.16) 42%, transparent 75%)",
-            }}
-            aria-hidden="true"
-          />
-
-          {/* Anamorphic Light Sweep on Viewport Reveal */}
-          <motion.div
-            initial={{ x: "-100%", opacity: 0.75 }}
-            whileInView={{ x: "200%", opacity: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
-          />
-
-          {/* Dark Vignette to guarantee high contrast */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-transparent to-[#050102]/60 pointer-events-none" />
-
-          {/* Desktop Right-Side Gradient Shade to blend behind the holographic deck */}
-          <div className="hidden lg:block absolute inset-y-0 right-0 w-[55%] bg-gradient-to-l from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
-
-          {/* Bottom Telemetry Strip across the artwork frame (Left side) */}
-          <div className="absolute bottom-4 left-4 sm:left-8 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/80 border border-amber-500/40 backdrop-blur-md shadow-lg pointer-events-none">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(245,158,11,1)]" />
-            <span className="text-[10px] sm:text-[11px] font-mono text-amber-200 font-bold tracking-[0.2em] uppercase">
-              TOOLS THAT TURN IDEAS INTO REALITY · SAYEED
+          {/* Header pill above the logos */}
+          <div className="flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 border border-amber-500/35 backdrop-blur-xl shadow-lg">
+            <Flame size={11} className="text-red-500 animate-pulse" />
+            <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-300 uppercase tracking-widest">
+              TECHNOLOGY MATRIX // SELECT OR HOVER
             </span>
           </div>
 
-          {/* ── Desktop Right-Side Holographic Deck Overlay ── */}
-          <div className="hidden lg:flex absolute top-5 bottom-5 right-5 w-[50%] xl:w-[46%] z-20 flex-col justify-between rounded-2xl bg-[#090205]/90 backdrop-blur-2xl border border-amber-500/35 p-5 shadow-[0_0_50px_rgba(200,56,43,0.3)]">
-            {/* Deck Top Bar */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,1)]" />
-                <span className="text-[10px] font-mono text-amber-300 font-bold uppercase tracking-[0.2em]">
-                  COMMAND ARSENAL
-                </span>
-                <span className="text-gray-500 text-xs">•</span>
-                <span className="text-[10px] font-mono text-gray-300 uppercase">
-                  {filteredTech.length} ACTIVE TOOLS
-                </span>
-              </div>
-              <span className="text-[9px] font-mono text-amber-400/80 uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/25">
-                CLICK TO INSPECT
-              </span>
-            </div>
+          {/* Glowing Logos Floating Grid (6 cols × 2 rows on mobile, 4 cols × 3 rows on desktop) */}
+          <div className="grid grid-cols-6 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-3.5 p-2.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#0d0205]/85 border border-amber-500/30 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(200,56,43,0.3)]">
+            {skillLogos.map((skill, idx) => {
+              const isSelected = selectedSkill.id === skill.id;
 
-            {/* Deck Scrollable Grid */}
-            <div className="flex-1 overflow-y-auto pr-1 space-y-2 max-h-[460px] custom-scrollbar">
-              <div className="grid grid-cols-2 gap-2.5">
-                {filteredTech.map((item, idx) => {
-                  const isHovered = hoveredId === item.id;
-                  return (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, y: 15 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: idx * 0.04 }}
-                      onMouseEnter={() => setHoveredId(item.id)}
-                      onMouseLeave={() => setHoveredId(null)}
-                      onClick={() => setSelectedTech(item)}
-                      className={`group relative rounded-xl p-3 flex items-center gap-3 cursor-pointer transition-all duration-200 border ${
-                        isHovered
-                          ? "bg-[#180408] border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.25)] scale-[1.02]"
-                          : "bg-black/60 border-white/10 hover:border-amber-500/40 hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      {/* Logo Container */}
-                      <div className="w-10 h-10 rounded-lg bg-black/80 border border-white/10 flex items-center justify-center p-2 shrink-0 group-hover:border-amber-400/50 group-hover:shadow-[0_0_12px_rgba(245,158,11,0.3)] transition-all">
-                        <img
-                          src={item.icon}
-                          alt={item.name}
-                          className={`w-6 h-6 object-contain ${
-                            item.invertDark ? "brightness-0 invert" : ""
-                          }`}
-                          loading="lazy"
-                        />
-                      </div>
+              return (
+                <motion.button
+                  key={skill.id}
+                  onClick={() => setActiveId(skill.id)}
+                  onMouseEnter={() => setHoveredId(skill.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 + idx * 0.03 }}
+                  whileHover={{ scale: 1.15, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative w-10 h-10 sm:w-13 sm:h-13 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center p-2 sm:p-2.5 lg:p-3 transition-all duration-300 group cursor-pointer focus-royal ${
+                    isSelected
+                      ? "bg-[#1f050b] border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.65),0_0_15px_rgba(220,38,38,0.5)] ring-1 sm:ring-2 ring-amber-400/50"
+                      : "bg-[#110204]/90 border border-white/10 hover:border-amber-400/80 hover:bg-[#180408] shadow-[0_8px_20px_rgba(0,0,0,0.7)]"
+                  }`}
+                  style={{
+                    boxShadow: isSelected
+                      ? `0 0 20px ${skill.glow}, 0 0 35px rgba(200, 56, 43, 0.4)`
+                      : undefined,
+                  }}
+                  title={`${skill.name} — ${skill.category}`}
+                  aria-label={skill.name}
+                >
+                  {/* Subtle pulsing background glow matching the brand color */}
+                  <div
+                    className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md pointer-events-none"
+                    style={{ backgroundColor: skill.glow }}
+                  />
 
-                      {/* Tech Info */}
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-extrabold text-sm font-sans uppercase text-white tracking-wide group-hover:text-amber-200 truncate">
-                            {item.name}
-                          </h4>
-                          {item.featured && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                          )}
-                        </div>
-                        <p className="text-[10px] font-mono text-gray-400 truncate mt-0.5">
-                          {item.role}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
+                  {/* SVG Logo Image */}
+                  <img
+                    src={skill.icon}
+                    alt={skill.name}
+                    className={`relative z-10 w-full h-full object-contain filter transition-transform duration-300 group-hover:scale-110 ${
+                      skill.invertDark ? "brightness-125" : ""
+                    }`}
+                    loading="eager"
+                  />
 
-            {/* Deck Bottom Status Bar */}
-            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-gray-400">
-              <span className="flex items-center gap-1.5 text-amber-200">
-                <ShieldCheck size={12} className="text-emerald-400" />
-                <span>BENCHMARK PROFICIENCY</span>
-              </span>
-              <span className="text-gray-400 uppercase tracking-wider">
-                SELECT PRIMITIVE FOR SPECS
-              </span>
-            </div>
+                  {/* Active Indicator Dot */}
+                  {isSelected && (
+                    <span className="absolute -top-1 -right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,1)] animate-ping" />
+                  )}
+                </motion.button>
+              );
+            })}
           </div>
+
+          {/* Interactive Dynamic Telemetry Bar for the Highlighted Skill */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedSkill.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="w-full rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 bg-[#120306]/92 border border-amber-500/35 backdrop-blur-xl shadow-xl flex items-center justify-between gap-2.5 text-left"
+            >
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                <div
+                  className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center p-1 sm:p-1.5 shrink-0 border border-white/15 bg-black/60 shadow-md"
+                  style={{ boxShadow: `0 0 12px ${selectedSkill.glow}` }}
+                >
+                  <img
+                    src={selectedSkill.icon}
+                    alt={selectedSkill.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                <div className="overflow-hidden">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <span className="font-extrabold text-xs sm:text-base font-sans uppercase text-white tracking-wide">
+                      {selectedSkill.name}
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-300/90 uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10">
+                      {selectedSkill.category}
+                    </span>
+                  </div>
+                  <p className="text-[9px] sm:text-[11px] font-sans text-gray-300 truncate mt-0.5">
+                    {selectedSkill.desc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="hidden sm:flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-[9px] font-mono uppercase font-bold">
+                <Check size={11} />
+                <span>ACTIVE</span>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
       </div>
 
-      {/* ── 3. Mobile Tech Deck (Displays seamlessly below artwork on <1024px screens) ── */}
-      <div className="lg:hidden relative z-10 max-w-7xl mx-auto w-full">
-        <div className="rounded-3xl border border-amber-500/30 bg-[#0e0306]/94 backdrop-blur-2xl p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,1)]" />
-              <span className="text-xs font-mono text-amber-300 font-bold uppercase tracking-wider">
-                COMMAND ARSENAL ({filteredTech.length})
-              </span>
-            </div>
-            <span className="text-[10px] font-mono text-gray-400">
-              TAP ICON TO INSPECT
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {filteredTech.map((item, idx) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.35, delay: idx * 0.03 }}
-                onClick={() => setSelectedTech(item)}
-                className="group relative rounded-xl p-3 bg-black/70 border border-white/10 active:border-amber-400 active:bg-[#180408] flex items-center gap-2.5 cursor-pointer shadow-md"
-              >
-                <div className="w-9 h-9 rounded-lg bg-black/80 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-                  <img
-                    src={item.icon}
-                    alt={item.name}
-                    className={`w-5 h-5 object-contain ${
-                      item.invertDark ? "brightness-0 invert" : ""
-                    }`}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h4 className="font-extrabold text-xs font-sans uppercase text-white truncate">
-                    {item.name}
-                  </h4>
-                  <p className="text-[9px] font-mono text-gray-400 truncate mt-0.5">
-                    {item.role}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      {/* ── 4. Bottom Telemetry Strip ── */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex items-center justify-between text-[10px] font-mono text-gray-400 tracking-wider pt-3 px-2 border-t border-white/5">
+        <span className="flex items-center gap-1.5 text-amber-300/80">
+          <ShieldCheck size={12} className="text-emerald-400" />
+          VERIFIED PRODUCTION ARCHITECTURE & RUNTIMES
+        </span>
+        <span className="hidden sm:inline text-amber-400/70">
+          ENTERPRISE CLOUD · DEVOPS · AUTOMATION
+        </span>
       </div>
-
-      {/* ── 4. Cinematic Technical Spec Modal Lightbox (Portal to document.body) ── */}
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {selectedTech && (
-              <div
-                className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-10 select-none"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="modalTechTitle"
-              >
-                {/* Dark Liquid Glass Backdrop */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setSelectedTech(null)}
-                  className="absolute inset-0 bg-black/94 backdrop-blur-2xl"
-                />
-
-                {/* Modal Container */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.94, y: 25 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.94, y: 25 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative z-10 w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl border border-amber-500/50 bg-[#0d0205] shadow-[0_0_80px_rgba(220,38,38,0.45)] overflow-hidden text-white"
-                >
-                  {/* Top Bar */}
-                  <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-white/[0.02]">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-black/80 border border-amber-400/40 flex items-center justify-center p-2.5 text-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                        <img
-                          src={selectedTech.icon}
-                          alt={selectedTech.name}
-                          className={`w-7 h-7 object-contain ${
-                            selectedTech.invertDark ? "brightness-0 invert" : ""
-                          }`}
-                        />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-400 block font-bold">
-                          TECH SPEC // {selectedTech.categoryLabel}
-                        </span>
-                        <h3
-                          id="modalTechTitle"
-                          className="text-xl sm:text-2xl font-extrabold font-sans uppercase text-white leading-tight"
-                        >
-                          {selectedTech.name}
-                        </h3>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => setSelectedTech(null)}
-                      className="p-2 sm:p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white transition-colors"
-                      aria-label="Close tech inspector"
-                    >
-                      <X size={20} />
-                    </button>
-                  </div>
-
-                  {/* Body Content */}
-                  <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
-                    {/* Role & Level Pill */}
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-red-300 font-mono text-xs uppercase tracking-wider">
-                        ROLE: {selectedTech.role}
-                      </span>
-                      <span className="px-3 py-1 rounded-full bg-amber-950/60 border border-amber-500/40 text-amber-300 font-mono text-xs uppercase tracking-wider">
-                        LEVEL: {selectedTech.level}
-                      </span>
-                    </div>
-
-                    {/* Architectural Overview */}
-                    <div>
-                      <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-amber-400 mb-2 font-bold">
-                        Architectural Overview
-                      </h4>
-                      <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-sans">
-                        {selectedTech.description}
-                      </p>
-                    </div>
-
-                    {/* Technical Specifications */}
-                    <div>
-                      <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-amber-400 mb-3 font-bold">
-                        Technical Specifications
-                      </h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        {selectedTech.specs.map((spec) => (
-                          <div
-                            key={spec.label}
-                            className="p-3.5 rounded-xl bg-black/60 border border-amber-500/25"
-                          >
-                            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-wider block">
-                              {spec.label}
-                            </span>
-                            <span className="text-sm sm:text-base font-mono font-bold text-amber-100 mt-1 block">
-                              {spec.value}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Production Workloads & Tags */}
-                    <div>
-                      <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-amber-400 mb-3 font-bold">
-                        Verified Workloads & Implementations
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedTech.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex items-center gap-1.5"
-                          >
-                            <CheckCircle2 size={12} className="text-amber-400" />
-                            <span>{tag}</span>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Modal Footer */}
-                  <div className="p-4 sm:p-6 border-t border-white/10 bg-[#070103] flex items-center justify-between">
-                    <span className="text-xs font-mono text-gray-400 flex items-center gap-2">
-                      <ShieldCheck size={14} className="text-emerald-400" />
-                      VERIFIED PRODUCTION PRIMITIVE
-                    </span>
-
-                    <button
-                      onClick={() => setSelectedTech(null)}
-                      className="royal-sheen px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(220,38,38,0.5)]"
-                    >
-                      Done Inspecting
-                    </button>
-                  </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>,
-          document.body
-        )}
     </section>
   );
 }
