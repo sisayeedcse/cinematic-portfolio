@@ -38,7 +38,6 @@ export default function Projects() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<RevealTab>("summary");
   const [modalProject, setModalProject] = useState<Project | null>(null);
-  const [tilt, setTilt] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   useEffect(() => {
     setMounted(true);
@@ -97,26 +96,14 @@ export default function Projects() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [modalProject, nextProject, prevProject]);
 
-  // Mouse 3D tilt tracking for stage
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: -y * 3.5, y: x * 5 });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
-
   return (
     <section
       id="projects"
-      className="relative min-h-[100svh] py-24 sm:py-28 md:py-32 px-4 sm:px-6 md:px-10 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none"
+      className="relative w-full bg-[#050102] text-white py-20 sm:py-24 md:py-28 px-4 sm:px-6 md:px-10 overflow-hidden border-t border-amber-500/20 select-none"
       aria-labelledby="projectsTitle"
     >
-      {/* ── 1. Top Cinema Telemetry Header Bar ── */}
-      <header className="relative z-20 max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
+      {/* ── 1. Top Cinema Header Bar ── */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
@@ -133,7 +120,7 @@ export default function Projects() {
             lineConfig={{ tension: 190, friction: 26 }}
             lineStagger={90}
             id="projectsTitle"
-            className="font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight uppercase font-sans"
+            className="font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight uppercase font-sans text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
             style={{ justifyContent: "flex-start" }}
           >
             Featured Productions
@@ -144,7 +131,7 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Category Filter Pills Bar */}
+        {/* Category Filter Tabs */}
         <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-black/70 border border-amber-500/30 backdrop-blur-xl shadow-[0_0_25px_rgba(200,56,43,0.2)]">
           {projectCategories.map((cat) => {
             const isCatActive = activeCategory === cat.id;
@@ -173,25 +160,14 @@ export default function Projects() {
             );
           })}
         </div>
-      </header>
+      </div>
 
-      {/* ── 2. Desktop Royal Master Stage (Sayeed Leaning on Classic Red Ferrari) ── */}
-      <div
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        style={{ perspective: "1400px" }}
-        className="relative z-10 w-full max-w-[1920px] mx-auto hidden lg:flex flex-col justify-between aspect-[16/9] min-h-[760px] max-h-[900px] rounded-3xl overflow-hidden border border-amber-500/30 shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_60px_rgba(220,38,38,0.25)] p-6 sm:p-8 mb-6"
-      >
-        {/* Master Ferrari Artwork Backdrop — Animates sliding in smoothly from the right like a sports car! */}
-        <div
-          style={{
-            transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-            transition: "transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-          className="absolute inset-0 pointer-events-none overflow-hidden select-none"
-        >
+      {/* ── 2. Cinematic Royal Spotlight Frame (Ferrari & Sayeed Sliding In Smoothly from the Right!) ── */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full mb-10 sm:mb-14">
+        <div className="relative w-full aspect-[21/9] sm:aspect-[2.4/1] min-h-[260px] sm:min-h-[380px] md:min-h-[440px] rounded-3xl overflow-hidden border border-amber-500/35 shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(220,38,38,0.3)] group">
+          {/* Motion Container: Slides in smoothly from the right with sports car deceleration physics */}
           <motion.div
-            initial={{ x: "16%", scale: 1.05, opacity: 0, filter: "blur(10px) brightness(0.7)" }}
+            initial={{ x: "18%", scale: 1.05, opacity: 0, filter: "blur(12px) brightness(0.65)" }}
             whileInView={{ x: "0%", scale: 1, opacity: 1, filter: "blur(0px) brightness(0.98)" }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 1.4, ease: [0.18, 1, 0.28, 1] }}
@@ -200,17 +176,17 @@ export default function Projects() {
             <img
               src="/media/projects-ferrari-bg.jpg"
               alt="Sayeed Ibne Saif — Engineering High Performance"
-              className="w-full h-full object-cover object-center filter contrast-105 brightness-[0.98]"
+              className="w-full h-full object-cover object-[center_35%] filter contrast-105 brightness-[0.98]"
               loading="eager"
             />
 
-            {/* Automotive Floor Reflection Underglow sliding in synchronously with the car */}
+            {/* Automotive Floor Underglow sliding in synchronously with the car */}
             <motion.div
               initial={{ x: "20%", opacity: 0 }}
               whileInView={{ x: "0%", opacity: 0.55 }}
               viewport={{ once: true }}
               transition={{ duration: 1.4, ease: [0.18, 1, 0.28, 1] }}
-              className="absolute bottom-2 right-12 w-[65%] h-28 bg-gradient-to-t from-red-600/40 via-red-600/15 to-transparent blur-2xl pointer-events-none mix-blend-screen"
+              className="absolute bottom-2 right-10 w-[65%] h-28 bg-gradient-to-t from-red-600/40 via-red-600/15 to-transparent blur-2xl pointer-events-none mix-blend-screen"
             />
 
             {/* Ambient Breathing Crimson & Gold Aura around Sayeed & Ferrari */}
@@ -223,7 +199,7 @@ export default function Projects() {
               aria-hidden="true"
             />
 
-            {/* Cinematic Headlight / Anamorphic Flare Sweep on Arrival */}
+            {/* Anamorphic Headlight & Cinema Flare Sweep on Arrival */}
             <motion.div
               initial={{ x: "-100%", opacity: 0.8 }}
               whileInView={{ x: "200%", opacity: 0 }}
@@ -232,441 +208,311 @@ export default function Projects() {
               className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
             />
 
-            {/* Top subtle vignette */}
-            <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
+            {/* Subtle edge shading for depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-transparent to-[#050102]/60 pointer-events-none" />
 
-            {/* Dark floor reflection enhancer */}
-            <div className="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
-          </motion.div>
-        </div>
-
-        {/* ── 2A. LEFT FLANK (Upper-Left ivory/cream negative space): Interactive Project Command Dossier ── */}
-        <div className="relative z-20 w-full max-w-xl flex flex-col justify-between">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={activeProject.id}
-              custom={direction}
-              initial={{
-                opacity: 0,
-                x: direction > 0 ? 30 : -30,
-                filter: "blur(6px)",
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                filter: "blur(0px)",
-              }}
-              exit={{
-                opacity: 0,
-                x: direction > 0 ? -30 : 30,
-                filter: "blur(6px)",
-              }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-3xl border border-amber-500/40 bg-[#0d0306]/92 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.9),0_0_35px_rgba(200,56,43,0.35)] p-5 sm:p-6 flex flex-col gap-3.5 text-white"
-            >
-              {/* Dossier Header: Badge, Status, Node Counter */}
-              <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-red-600/30 border border-red-500/50 text-[10px] font-mono text-red-300 font-bold uppercase tracking-wider">
-                    {activeProject.categoryLabel}
-                  </span>
-                  <span className="text-[10px] font-mono text-amber-300/90 hidden sm:inline">
-                    • {activeProject.tier}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 font-bold">
-                    PRODUCTION · 0{activeIdx + 1}/0{filteredProjects.length}
-                  </span>
-                </div>
+            {/* Royal Telemetry Banner on the image frame */}
+            <div className="absolute bottom-4 left-4 right-4 sm:left-8 sm:right-8 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
+              <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/80 border border-amber-500/40 backdrop-blur-md shadow-lg">
+                <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)] animate-pulse" />
+                <span className="text-[10px] sm:text-[11px] font-mono text-amber-200 font-bold tracking-[0.2em] uppercase">
+                  ENGINEERING HIGH PERFORMANCE · SAYEED IBNE SAIF
+                </span>
               </div>
 
-              {/* Title & Client Attribution */}
-              <div>
-                <h3 className="font-extrabold text-2xl sm:text-3xl xl:text-4xl uppercase tracking-tight font-sans text-white leading-tight">
-                  {activeProject.title}
-                </h3>
-                <p className="text-xs sm:text-sm font-mono text-amber-200/90 mt-1">
-                  {activeProject.subtitle}
-                </p>
-                <div className="flex items-center gap-2 mt-2 text-[11px] font-mono text-gray-400">
-                  <span className="text-amber-400/90 uppercase tracking-wider">CLIENT / DOMAIN:</span>
-                  <span className="text-gray-200 font-medium">{activeProject.client}</span>
-                </div>
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/80 border border-red-500/40 text-[10px] font-mono text-red-200 font-bold uppercase tracking-wider backdrop-blur-md">
+                <Sparkles size={13} className="text-amber-300" />
+                <span>ROSSO CORSA PRODUCTION PLATFORMS</span>
               </div>
-
-              {/* ── 2B. Interactive Reveal Tabs (Giving user 3 distinct perspectives) ── */}
-              <div className="flex items-center gap-1 p-1 rounded-xl bg-black/60 border border-white/10">
-                {[
-                  { id: "summary", label: "EXECUTIVE SUMMARY", icon: Eye },
-                  { id: "metrics", label: "PERFORMANCE METRICS", icon: Gauge },
-                  { id: "architecture", label: "TECH BLUEPRINT", icon: Cpu },
-                ].map((tab) => {
-                  const isTabActive = activeTab === tab.id;
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id as RevealTab)}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all duration-200 ${
-                        isTabActive
-                          ? "bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)]"
-                          : "text-gray-400 hover:text-amber-200"
-                      }`}
-                    >
-                      <Icon size={12} />
-                      <span className="truncate">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* ── 2C. Dynamic Tab Content View ── */}
-              <div className="min-h-[120px] flex flex-col justify-center">
-                <AnimatePresence mode="wait">
-                  {activeTab === "summary" && (
-                    <motion.div
-                      key="tab-summary"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.25 }}
-                      className="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans"
-                    >
-                      {activeProject.description}
-                    </motion.div>
-                  )}
-
-                  {activeTab === "metrics" && (
-                    <motion.div
-                      key="tab-metrics"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.25 }}
-                      className="grid grid-cols-2 gap-2"
-                    >
-                      {activeProject.impactMetrics.map((m, mIdx) => (
-                        <div
-                          key={mIdx}
-                          className="p-2 sm:p-2.5 rounded-xl bg-black/50 border border-amber-500/20 flex flex-col justify-between"
-                        >
-                          <span className="text-[9px] font-mono uppercase tracking-wider text-amber-400/80">
-                            {m.label}
-                          </span>
-                          <span className="text-base sm:text-lg font-extrabold font-sans text-white tracking-wide">
-                            {m.value}
-                          </span>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-
-                  {activeTab === "architecture" && (
-                    <motion.div
-                      key="tab-architecture"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.25 }}
-                      className="flex flex-col gap-1.5"
-                    >
-                      {activeProject.architectureHighlights.slice(0, 3).map((arch, aIdx) => (
-                        <div key={aIdx} className="flex items-start gap-2 text-xs text-gray-300">
-                          <CheckCircle2 size={13} className="text-amber-400 shrink-0 mt-0.5" />
-                          <span className="line-clamp-2">{arch}</span>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Tech Stack Badges */}
-              <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/10">
-                {activeProject.tech.slice(0, 5).map((t) => (
-                  <span
-                    key={t}
-                    className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/10 text-gray-300 font-mono text-[10px] hover:border-amber-500/40 hover:text-amber-200 transition-colors"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              {/* Action Buttons: Inspect Blueprint + External Links */}
-              <div className="pt-2 flex items-center gap-2.5">
-                {/* Master Blueprint Inspector Trigger */}
-                <button
-                  onClick={() => setModalProject(activeProject)}
-                  className="royal-sheen flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(220,38,38,0.5),0_0_10px_rgba(245,158,11,0.3)] hover:scale-[1.02] active:scale-[0.98] focus-royal"
-                >
-                  <Maximize2 size={13} />
-                  <span>INSPECT SYSTEM BLUEPRINT</span>
-                </button>
-
-                {activeProject.links?.live && (
-                  <a
-                    href={activeProject.links.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center p-2.5 rounded-xl bg-white/[0.05] hover:bg-white/10 border border-white/15 text-gray-200 hover:text-amber-300 transition-all focus-royal"
-                    title="Launch Live Production Site"
-                  >
-                    <Globe size={16} />
-                  </a>
-                )}
-
-                {activeProject.links?.github && (
-                  <a
-                    href={activeProject.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center p-2.5 rounded-xl bg-white/[0.05] hover:bg-white/10 border border-white/15 text-gray-200 hover:text-amber-300 transition-all focus-royal"
-                    title="View GitHub Repository"
-                  >
-                    <GitHubIcon className="w-4 h-4" />
-                  </a>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* ── 2D. BOTTOM HORIZON (Reflective floor dock): Amphitheater Filmstrip Selector ── */}
-        <div className="relative z-20 w-full mt-auto pt-3 flex flex-col gap-2">
-          <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.22em] text-amber-300/80 px-2">
-            <span>PRODUCTION REGISTRY · SELECT TO INSPECT BLUEPRINT</span>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-400 hidden xl:inline">USE ← / → ARROWS</span>
-              <button
-                onClick={prevProject}
-                className="p-1 rounded-lg bg-black/60 hover:bg-black/90 border border-amber-500/30 text-amber-200 hover:text-white transition-colors"
-                aria-label="Previous project"
-              >
-                <ChevronLeft size={14} />
-              </button>
-              <button
-                onClick={nextProject}
-                className="p-1 rounded-lg bg-black/60 hover:bg-black/90 border border-amber-500/30 text-amber-200 hover:text-white transition-colors"
-                aria-label="Next project"
-              >
-                <ChevronRight size={14} />
-              </button>
             </div>
-          </div>
-
-          {/* Filmstrip cards */}
-          <div className="grid grid-cols-7 gap-2.5">
-            {filteredProjects.map((p, idx) => {
-              const isSelected = activeProject.id === p.id;
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => selectProject(idx)}
-                  className={`group relative rounded-2xl border text-left overflow-hidden transition-all duration-300 focus:outline-none flex flex-col justify-between backdrop-blur-xl ${
-                    isSelected
-                      ? "border-amber-400/90 bg-[#160408]/90 shadow-[0_0_25px_rgba(245,158,11,0.5),0_0_15px_rgba(220,38,38,0.4)] scale-[1.03] ring-2 ring-amber-500/60"
-                      : "border-white/10 bg-black/60 hover:border-amber-500/40 hover:bg-black/80 opacity-70 hover:opacity-100"
-                  }`}
-                  aria-label={`Select ${p.title}`}
-                >
-                  {/* Thumbnail */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
-                    <img
-                      src={p.image}
-                      alt={p.title}
-                      className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
-                    <span className="absolute top-1.5 left-1.5 font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/80 text-amber-400 font-bold border border-amber-500/20">
-                      0{idx + 1}
-                    </span>
-                    {isSelected && (
-                      <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,1)] animate-pulse" />
-                    )}
-                  </div>
-
-                  {/* Label */}
-                  <div className="p-2 sm:p-2.5">
-                    <h4
-                      className={`text-xs font-bold font-sans truncate transition-colors ${
-                        isSelected ? "text-amber-100 font-bold" : "text-gray-300 group-hover:text-white"
-                      }`}
-                    >
-                      {p.title}
-                    </h4>
-                    <p className="text-[9px] font-mono text-gray-500 truncate uppercase mt-0.5">
-                      {p.categoryLabel}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* ── 3. Mobile Dedicated Presentation (< 1024px) ── */}
-      <div className="lg:hidden flex flex-col gap-6">
-        {/* Mobile Ferrari Visual Banner — Sliding in from the right */}
-        <motion.div
-          initial={{ x: "20%", opacity: 0, filter: "blur(10px)" }}
-          whileInView={{ x: "0%", opacity: 1, filter: "blur(0px)" }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 1.3, ease: [0.18, 1, 0.28, 1] }}
-          className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_15px_40px_rgba(0,0,0,0.9)]"
-        >
-          <img
-            src="/media/projects-ferrari-bg.jpg"
-            alt="Sayeed Ibne Saif — Engineering High Performance"
-            className="w-full h-full object-cover object-[center_35%]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-[#050102]/40 to-transparent" />
-          <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 bg-black/80 px-2.5 py-1 rounded-lg border border-amber-500/30">
-              HIGH-PERFORMANCE ARCHITECTURE
-            </span>
-            <span className="text-[10px] font-mono text-gray-300">
-              0{activeIdx + 1} / 0{filteredProjects.length}
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Mobile Active Project Card */}
-        <div className="rounded-2xl border border-amber-500/40 bg-[#0d0306]/95 backdrop-blur-xl p-5 flex flex-col gap-4 text-white shadow-xl">
-          <div className="flex items-center justify-between pb-2 border-b border-white/10">
-            <span className="px-2 py-0.5 rounded-full bg-red-600/30 border border-red-500/50 text-[10px] font-mono text-red-300 font-bold uppercase">
-              {activeProject.categoryLabel}
-            </span>
-            <span className="text-[10px] font-mono text-emerald-400 font-bold flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              LIVE PRODUCTION
-            </span>
-          </div>
-
-          <div>
-            <h3 className="font-extrabold text-2xl uppercase tracking-tight font-sans text-white">
-              {activeProject.title}
-            </h3>
-            <p className="text-xs font-mono text-amber-200/90 mt-0.5">
-              {activeProject.subtitle}
-            </p>
-          </div>
-
-          {/* Screenshot Preview */}
-          <div
-            onClick={() => setModalProject(activeProject)}
-            className="relative aspect-[16/10] rounded-xl overflow-hidden bg-black border border-white/10 group cursor-pointer"
+      {/* ── 3. Clean Interactive Project Showcase Console (Uncluttered & High-Contrast) ── */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full mb-8">
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={activeProject.id}
+            custom={direction}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="rounded-3xl border border-amber-500/30 bg-[#0e0306]/94 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
           >
-            <img
-              src={activeProject.image}
-              alt={activeProject.title}
-              className="w-full h-full object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="px-3 py-1.5 rounded-lg bg-black/80 text-amber-300 font-mono text-xs font-bold border border-amber-400/50 flex items-center gap-1.5">
-                <Maximize2 size={12} /> TAP TO EXPAND
-              </span>
-            </div>
-          </div>
-
-          <p className="text-xs text-gray-300 leading-relaxed font-sans">
-            {activeProject.description}
-          </p>
-
-          {/* Quick Metrics */}
-          <div className="grid grid-cols-2 gap-2">
-            {activeProject.impactMetrics.slice(0, 2).map((m, mIdx) => (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column (6 cols): Real Dashboard Screenshot Showcase */}
               <div
-                key={mIdx}
-                className="p-2 rounded-lg bg-black/60 border border-amber-500/20 text-center"
+                onClick={() => setModalProject(activeProject)}
+                className="lg:col-span-6 relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-amber-500/25 bg-black cursor-pointer shadow-xl group"
               >
-                <span className="text-[9px] font-mono text-amber-400/80 block uppercase">
-                  {m.label}
-                </span>
-                <span className="text-sm font-extrabold font-sans text-white">
-                  {m.value}
-                </span>
+                <img
+                  src={activeProject.image}
+                  alt={activeProject.title}
+                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  loading="eager"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-between p-4">
+                  <span className="text-xs font-mono text-amber-200 font-bold">
+                    SYSTEM 0{activeIdx + 1} // {activeProject.tier}
+                  </span>
+                  <span className="px-3 py-1 rounded-lg bg-black/85 text-amber-300 font-mono text-xs font-bold border border-amber-400/50 flex items-center gap-1.5 shadow-md">
+                    <Maximize2 size={12} /> CLICK TO INSPECT
+                  </span>
+                </div>
               </div>
-            ))}
-          </div>
 
-          {/* Actions */}
-          <div className="pt-2 flex flex-col gap-2">
-            <button
-              onClick={() => setModalProject(activeProject)}
-              className="royal-sheen w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white font-mono font-bold text-xs uppercase tracking-wider shadow-lg"
-            >
-              <Maximize2 size={13} />
-              <span>INSPECT FULL SYSTEM BLUEPRINT</span>
-            </button>
+              {/* Right Column (6 cols): Details, Reveal Tabs & Live Actions */}
+              <div className="lg:col-span-6 flex flex-col justify-between space-y-5">
+                <div>
+                  <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-full bg-red-600/30 border border-red-500/50 text-[10px] font-mono text-red-300 font-bold uppercase tracking-wider">
+                        {activeProject.categoryLabel}
+                      </span>
+                      <span className="text-[10px] font-mono text-amber-300/90 hidden sm:inline">
+                        • {activeProject.tier}
+                      </span>
+                    </div>
 
-            <div className="flex items-center gap-2">
-              {activeProject.links?.live && (
-                <a
-                  href={activeProject.links.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-white/[0.06] border border-white/15 text-gray-200 text-xs font-mono font-bold uppercase"
-                >
-                  <Globe size={13} />
-                  <span>Live Site</span>
-                  <ExternalLink size={12} />
-                </a>
-              )}
-              {activeProject.links?.github && (
-                <a
-                  href={activeProject.links.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.06] border border-white/15 text-gray-200 text-xs font-mono font-bold uppercase"
-                >
-                  <GitHubIcon className="w-3.5 h-3.5" />
-                  <span>Code</span>
-                </a>
-              )}
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 font-bold">
+                        ACTIVE PRODUCTION · 0{activeIdx + 1}/0{filteredProjects.length}
+                      </span>
+                    </div>
+                  </div>
+
+                  <h3 className="font-extrabold text-2xl sm:text-3xl xl:text-4xl uppercase tracking-tight font-sans text-white leading-tight">
+                    {activeProject.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm font-mono text-amber-200/90 mt-0.5">
+                    {activeProject.subtitle}
+                  </p>
+                  <p className="text-[11px] font-mono text-gray-400 mt-1">
+                    <span className="text-amber-400/90 font-bold">CLIENT / DOMAIN:</span>{" "}
+                    <span className="text-gray-200">{activeProject.client}</span>
+                  </p>
+                </div>
+
+                {/* 3 Clean Reveal Tabs */}
+                <div className="flex items-center gap-1 p-1 rounded-xl bg-black/60 border border-white/10">
+                  {[
+                    { id: "summary", label: "EXECUTIVE SUMMARY", icon: Eye },
+                    { id: "metrics", label: "PERFORMANCE METRICS", icon: Gauge },
+                    { id: "architecture", label: "TECH BLUEPRINT", icon: Cpu },
+                  ].map((tab) => {
+                    const isTabActive = activeTab === tab.id;
+                    const Icon = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id as RevealTab)}
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all duration-200 ${
+                          isTabActive
+                            ? "bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)]"
+                            : "text-gray-400 hover:text-amber-200"
+                        }`}
+                      >
+                        <Icon size={12} />
+                        <span className="truncate">{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Dynamic Tab Content Area */}
+                <div className="min-h-[110px] flex flex-col justify-center">
+                  <AnimatePresence mode="wait">
+                    {activeTab === "summary" && (
+                      <motion.div
+                        key="tab-summary"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-xs sm:text-sm text-gray-200 leading-relaxed font-sans"
+                      >
+                        {activeProject.description}
+                      </motion.div>
+                    )}
+
+                    {activeTab === "metrics" && (
+                      <motion.div
+                        key="tab-metrics"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.2 }}
+                        className="grid grid-cols-2 gap-2"
+                      >
+                        {activeProject.impactMetrics.map((m, mIdx) => (
+                          <div
+                            key={mIdx}
+                            className="p-2.5 rounded-xl bg-black/60 border border-amber-500/20 flex flex-col justify-between"
+                          >
+                            <span className="text-[9px] font-mono uppercase tracking-wider text-amber-400/80">
+                              {m.label}
+                            </span>
+                            <span className="text-base sm:text-lg font-extrabold font-sans text-white tracking-wide">
+                              {m.value}
+                            </span>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+
+                    {activeTab === "architecture" && (
+                      <motion.div
+                        key="tab-architecture"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-1.5"
+                      >
+                        {activeProject.architectureHighlights.slice(0, 3).map((arch, aIdx) => (
+                          <div key={aIdx} className="flex items-start gap-2 text-xs text-gray-300">
+                            <CheckCircle2 size={13} className="text-amber-400 shrink-0 mt-0.5" />
+                            <span className="line-clamp-2">{arch}</span>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Tech Pills */}
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/10">
+                  {activeProject.tech.slice(0, 5).map((t) => (
+                    <span
+                      key={t}
+                      className="px-2.5 py-0.5 rounded-md bg-white/[0.04] border border-white/10 text-gray-300 font-mono text-[10px] hover:border-amber-500/40 hover:text-amber-200 transition-colors"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={() => setModalProject(activeProject)}
+                    className="royal-sheen flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-mono font-bold text-xs uppercase tracking-wider shadow-lg hover:scale-[1.01] transition-all"
+                  >
+                    <Maximize2 size={13} />
+                    <span>INSPECT FULL BLUEPRINT</span>
+                  </button>
+
+                  {activeProject.links?.live && (
+                    <a
+                      href={activeProject.links.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/12 border border-white/15 text-gray-200 hover:text-amber-300 font-mono text-xs font-bold uppercase transition-all"
+                      title="Launch Live Production Site"
+                    >
+                      <Globe size={14} />
+                      <span>Live Site</span>
+                      <ExternalLink size={12} />
+                    </a>
+                  )}
+
+                  {activeProject.links?.github && (
+                    <a
+                      href={activeProject.links.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/12 border border-white/15 text-gray-200 hover:text-amber-300 font-mono text-xs font-bold uppercase transition-all"
+                      title="View GitHub Repository"
+                    >
+                      <GitHubIcon className="w-3.5 h-3.5" />
+                      <span>Source</span>
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* ── 4. Filmstrip Selector Deck (7 Cards, Fully Responsive) ── */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full pt-4">
+        <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.22em] text-amber-300/80 px-2 mb-3">
+          <span>PRODUCTION REGISTRY · SELECT TO VIEW SYSTEM BLUEPRINT</span>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-400 hidden sm:inline">USE ← / → ARROWS</span>
+            <button
+              onClick={prevProject}
+              className="p-1.5 rounded-lg bg-black/60 hover:bg-black/90 border border-amber-500/30 text-amber-200 hover:text-white transition-colors"
+              aria-label="Previous project"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <button
+              onClick={nextProject}
+              className="p-1.5 rounded-lg bg-black/60 hover:bg-black/90 border border-amber-500/30 text-amber-200 hover:text-white transition-colors"
+              aria-label="Next project"
+            >
+              <ChevronRight size={14} />
+            </button>
           </div>
         </div>
 
-        {/* Mobile Horizontal Carousel */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        {/* Filmstrip cards: grid on md+, horizontal scroll on mobile */}
+        <div className="flex md:grid md:grid-cols-7 gap-3 overflow-x-auto pb-2 scrollbar-none">
           {filteredProjects.map((p, idx) => {
             const isSelected = activeProject.id === p.id;
             return (
               <button
                 key={p.id}
                 onClick={() => selectProject(idx)}
-                className={`flex-shrink-0 w-36 rounded-xl border text-left p-2.5 transition-all ${
+                className={`flex-shrink-0 w-36 md:w-auto rounded-2xl border text-left overflow-hidden transition-all duration-300 focus:outline-none flex flex-col justify-between backdrop-blur-xl ${
                   isSelected
-                    ? "border-amber-400 bg-red-950/60 shadow-lg ring-1 ring-amber-400"
-                    : "border-white/10 bg-black/60 opacity-60"
+                    ? "border-amber-400/90 bg-[#180409]/95 shadow-[0_0_25px_rgba(245,158,11,0.5),0_0_15px_rgba(220,38,38,0.4)] scale-[1.02] ring-2 ring-amber-500/60"
+                    : "border-white/10 bg-black/60 hover:border-amber-500/40 hover:bg-black/80 opacity-70 hover:opacity-100"
                 }`}
+                aria-label={`Select ${p.title}`}
               >
-                <span className="text-[9px] font-mono text-amber-400 font-bold block mb-1">
-                  0{idx + 1} // {p.categoryLabel}
-                </span>
-                <h4 className="text-xs font-bold font-sans text-white truncate">
-                  {p.title}
-                </h4>
+                {/* Thumbnail */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                  <span className="absolute top-1.5 left-1.5 font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/80 text-amber-400 font-bold border border-amber-500/20">
+                    0{idx + 1}
+                  </span>
+                  {isSelected && (
+                    <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,1)] animate-pulse" />
+                  )}
+                </div>
+
+                {/* Label */}
+                <div className="p-2 sm:p-2.5">
+                  <h4
+                    className={`text-xs font-bold font-sans truncate transition-colors ${
+                      isSelected ? "text-amber-100 font-bold" : "text-gray-300 group-hover:text-white"
+                    }`}
+                  >
+                    {p.title}
+                  </h4>
+                  <p className="text-[9px] font-mono text-gray-500 truncate uppercase mt-0.5">
+                    {p.categoryLabel}
+                  </p>
+                </div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* ── 4. Bottom Colophon & Navigation Legend ── */}
-      <footer className="relative z-20 max-w-7xl mx-auto w-full pt-8 sm:pt-10 flex flex-wrap items-center justify-between gap-4 text-[10px] font-mono text-gray-500 border-t border-amber-500/20 uppercase tracking-widest">
-        <span>[ ARCHITECTURE · RESILIENT FULL-STACK PRODUCTION ]</span>
-        <span className="hidden sm:inline">CYCLE: USE ← / → ARROWS · ESC TO CLOSE MODAL</span>
-        <span>[ SCENE: 04 / 05 — THE PROJECT UNIVERSE ]</span>
-      </footer>
-
-      {/* ── 5. Full-Screen Deep-Dive Modal Inspector (Mounted at document.body via Portal) ── */}
+      {/* ── 5. Full-Screen Deep-Dive Modal Inspector (Portal to document.body) ── */}
       {mounted &&
         createPortal(
           <AnimatePresence>
