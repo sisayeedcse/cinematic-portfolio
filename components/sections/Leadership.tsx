@@ -185,7 +185,7 @@ export default function Leadership() {
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <img
           ref={bgImgRef}
-          src="/media/leadership-clean-throne.png"
+          src="/media/leadership-clean-throne.jpg"
           alt="Sayeed Ibne Saif — Executive Leadership"
           className="w-full h-full object-cover object-[center_30%] sm:object-center select-none filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
