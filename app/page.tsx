@@ -2,20 +2,12 @@
 
 import CinematicHero from "@/components/sections/CinematicHero";
 import CinematicFooter from "@/components/sections/CinematicFooter";
-import CinematicAura from "@/components/ui/CinematicAura";
 import CinematicHeader from "@/components/layout/CinematicHeader";
 import SceneDirectorHUD from "@/components/layout/SceneDirectorHUD";
-import CascadingDotsCursor from "@/components/ui/CascadingDotsCursor";
 
 export default function Home() {
   return (
     <>
-      {/* Interactive Global Cinematic Ambient Light Cursor / Aura */}
-      <CinematicAura />
-
-      {/* Cascading Dots Cursor Trail — Crimson→Gold, additive overlay */}
-      <CascadingDotsCursor />
-
       {/* Cinematic Header / Menu */}
       <CinematicHeader />
 

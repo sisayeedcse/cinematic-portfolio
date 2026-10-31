@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { profile } from "@/data/profile";
-import RoyalNeonLightTrail from "@/components/ui/RoyalNeonLightTrail";
 
 export default function CinematicHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -29,9 +28,6 @@ export default function CinematicHero() {
 
       <div className="stage-wrap">
         <canvas ref={canvasRef} id="stage" aria-hidden="true" />
-
-        {/* Royal Cinematic Neon Light Trail Entrance */}
-        <RoyalNeonLightTrail />
 
         <div className="furniture" aria-hidden="true">
           <p className="welcome" id="welcome">
