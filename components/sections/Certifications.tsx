@@ -1,64 +1,136 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import { certifications } from "@/data/certifications";
-import { ExternalLink, ShieldCheck, Award, Sparkles, Check } from "lucide-react";
+import { ExternalLink, ShieldCheck, Award } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function Certifications() {
   const [activeId, setActiveId] = useState<string>(certifications[0].id);
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
+  const mistRef = useRef<HTMLDivElement>(null);
+  const sweepRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          once: true,
+        },
+      });
+
+      // 1. Heroic Character Silhouette & Mist Expansion (Technique A + F)
+      tl.fromTo(
+        bgImgRef.current,
+        {
+          scale: 1.14,
+          filter: "blur(12px) brightness(0.55) contrast(1.2)",
+        },
+        {
+          scale: 1.0,
+          filter: "blur(0px) brightness(1.0) contrast(1.05)",
+          duration: 1.4,
+          ease: "expo.out",
+        },
+        0
+      );
+
+      // 2. Volumetric Crimson Mist Bloom
+      tl.fromTo(
+        mistRef.current,
+        { opacity: 0, scale: 0.85 },
+        { opacity: 0.5, scale: 1.05, duration: 1.5, ease: "power2.out" },
+        0.2
+      );
+
+      // 3. Golden Light Sweep across the stage
+      tl.fromTo(
+        sweepRef.current,
+        { x: "-100%", opacity: 0.85 },
+        { x: "200%", opacity: 0, duration: 1.6, ease: "power2.inOut" },
+        0.3
+      );
+
+      // 4. Marquee HUD Unroll
+      tl.fromTo(
+        hudRef.current,
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        0.35
+      );
+
+      // 5. Cascading Slate Reveal for Credential Tiles
+      const tiles = stackRef.current?.querySelectorAll(".cert-tile");
+      if (tiles && tiles.length > 0) {
+        tl.fromTo(
+          tiles,
+          { x: 45, opacity: 0 },
+          { x: 0, opacity: 1, stagger: 0.05, duration: 0.65, ease: "power3.out" },
+          0.45
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="certificates"
       className="relative min-h-[100svh] pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-labelledby="certsTitle"
     >
       {/* ── 1. Master High-Resolution Artwork (Sayeed Standing in Suit with Glowing 3D CERTIFICATES) ── */}
-      <motion.div
-        initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
-        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center will-change-transform">
         <img
+          ref={bgImgRef}
           src="/media/certificates-clean-throne.png"
           alt="Sayeed Ibne Saif — Verified Credentials & Certificates"
-          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100"
+          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
           loading="eager"
         />
 
         {/* Ambient Pulsing Crimson & Gold Aura */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-screen"
+          ref={mistRef}
+          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-screen will-change-transform"
           style={{
             background:
-              "radial-gradient(ellipse 70% 55% at 50% 50%, rgba(200, 56, 43, 0.4) 0%, rgba(212, 175, 55, 0.15) 45%, transparent 80%)",
+              "radial-gradient(ellipse 70% 55% at 50% 50%, rgba(200, 56, 43, 0.45) 0%, rgba(212, 175, 55, 0.18) 45%, transparent 80%)",
           }}
           aria-hidden="true"
         />
 
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
-        <motion.div
-          initial={{ x: "-100%", opacity: 0.8 }}
-          whileInView={{ x: "200%", opacity: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        <div
+          ref={sweepRef}
           className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
-      </motion.div>
+      </div>
 
       {/* ── 2. Top Cinema Marquee HUD ── */}
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.25 }}
+      <div
+        ref={hudRef}
         className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
       >
         <span className="flex items-center gap-2">
@@ -74,7 +146,7 @@ export default function Certifications() {
         <span className="text-amber-400 font-semibold tracking-widest hidden sm:inline">
           {certifications.length} VERIFIED CREDENTIALS
         </span>
-      </motion.div>
+      </div>
 
       {/* ── 3. Main Stage: Left/Center Open (Sayeed & CERTIFICATES) + Sleek Names Stack on Right ── */}
       <div className="relative z-10 max-w-7xl mx-auto w-full mt-auto lg:my-auto py-3 sm:py-6 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-4 sm:gap-6 lg:gap-8">
@@ -82,13 +154,7 @@ export default function Certifications() {
         <div className="hidden lg:block lg:flex-1 pointer-events-none" />
 
         {/* Right Side: Creative Minimalist Typography Stack of Certificate Names */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.0, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full lg:w-auto lg:max-w-lg xl:max-w-xl flex flex-col items-center lg:items-end space-y-2 sm:space-y-2.5"
-        >
+        <div className="w-full lg:w-auto lg:max-w-lg xl:max-w-xl flex flex-col items-center lg:items-end space-y-2 sm:space-y-2.5">
           {/* Header pill above the list */}
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/80 border border-amber-500/35 backdrop-blur-xl shadow-lg">
             <Award size={12} className="text-amber-400 animate-pulse" />
@@ -98,7 +164,7 @@ export default function Certifications() {
           </div>
 
           {/* Interactive Stack of Certificate Names */}
-          <div className="w-full space-y-2 sm:space-y-2.5">
+          <div ref={stackRef} className="w-full space-y-2 sm:space-y-2.5">
             {certifications.map((cert, idx) => {
               const isSelected = activeId === cert.id;
 
@@ -109,7 +175,7 @@ export default function Certifications() {
                   whileHover={{ scale: 1.02, x: -3 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.2 }}
-                  className={`relative w-full rounded-2xl p-3 sm:p-3.5 transition-all duration-300 cursor-pointer backdrop-blur-2xl flex items-center justify-between gap-3 ${
+                  className={`cert-tile relative w-full rounded-2xl p-3 sm:p-3.5 transition-all duration-300 cursor-pointer backdrop-blur-2xl flex items-center justify-between gap-3 ${
                     isSelected
                       ? "bg-[#180408]/96 border-2 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.5),0_0_15px_rgba(220,38,38,0.4)] ring-1 ring-amber-400/50"
                       : "bg-[#0d0205]/88 border border-white/10 hover:border-amber-400/70 hover:bg-[#140307]/90 shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
@@ -169,7 +235,7 @@ export default function Certifications() {
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* ── 4. Bottom Telemetry Strip ── */}

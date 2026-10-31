@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import { profile } from "@/data/profile";
 import { Mail, FileText, ArrowUpRight, MapPin, Sparkles, Check, Copy } from "lucide-react";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/SocialIcons";
 import TextEngine from "spring-text-engine";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // Infinite scrolling marquee words
 const MARQUEE_WORDS = [
@@ -18,6 +24,100 @@ const MARQUEE_DUP = [...MARQUEE_WORDS, ...MARQUEE_WORDS]; // duplicate for seaml
 export default function CinematicFooter() {
   const [copied, setCopied] = useState(false);
 
+  const footerRef = useRef<HTMLElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
+  const sweepRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+  const lateralLeftRef = useRef<HTMLDivElement>(null);
+  const lateralRightRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 75%",
+          once: true,
+        },
+      });
+
+      // 1. Director's Aperture Focus Pull: Rack focus from deep bokeh blur to razor sharp
+      tl.fromTo(
+        bgImgRef.current,
+        {
+          scale: 1.10,
+          filter: "blur(16px) brightness(0.55)",
+        },
+        {
+          scale: 1.0,
+          filter: "blur(0px) brightness(1.0)",
+          duration: 1.4,
+          ease: "power2.out",
+        },
+        0
+      );
+
+      // 2. Cinematic Anamorphic Light Sweep
+      tl.fromTo(
+        sweepRef.current,
+        { x: "-100%", opacity: 0.85 },
+        { x: "200%", opacity: 0, duration: 1.5, ease: "power2.inOut" },
+        0.15
+      );
+
+      // 3. Top Cinema Marquee HUD
+      tl.fromTo(
+        hudRef.current,
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        0.2
+      );
+
+      // 4. Lateral Badges slide in
+      if (lateralLeftRef.current && lateralRightRef.current) {
+        tl.fromTo(
+          lateralLeftRef.current,
+          { x: -35, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+          0.3
+        );
+        tl.fromTo(
+          lateralRightRef.current,
+          { x: 35, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+          0.3
+        );
+      }
+
+      // 5. Marquee strip fade
+      if (marqueeRef.current) {
+        tl.fromTo(
+          marqueeRef.current,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" },
+          0.35
+        );
+      }
+
+      // 6. Luxury Command Dock slide-up
+      if (dockRef.current) {
+        tl.fromTo(
+          dockRef.current,
+          { y: 45, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
+          0.4
+        );
+      }
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const copyEmail = () => {
     navigator.clipboard.writeText(profile.email);
     setCopied(true);
@@ -26,22 +126,18 @@ export default function CinematicFooter() {
 
   return (
     <footer
+      ref={footerRef}
       id="contact"
       className="relative min-h-[100svh] pt-24 sm:pt-28 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-label="Closing"
     >
       {/* 1. Master High-Resolution Sayeed Artwork (100% Solid & Highlighted with Cinematic Scroll Reveal) */}
-      <motion.div
-        initial={{ scale: 1.1, opacity: 0, filter: "blur(14px) brightness(0.6)" }}
-        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <img
+          ref={bgImgRef}
           src="/media/footer-sayeed.png"
           alt="Sayeed Ibne Saif — Finale"
-          className="w-full h-full object-cover object-center select-none filter contrast-105 brightness-100"
+          className="w-full h-full object-cover object-center select-none filter contrast-105 brightness-100 will-change-transform"
           loading="eager"
         />
 
@@ -56,12 +152,9 @@ export default function CinematicFooter() {
         />
 
         {/* Cinematic Anamorphic Light Sweep on Viewport Reveal */}
-        <motion.div
-          initial={{ x: "-100%", opacity: 0.75 }}
-          whileInView={{ x: "200%", opacity: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+        <div
+          ref={sweepRef}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
         />
 
         {/* Soft edge blend at top to connect with previous section */}
@@ -69,10 +162,13 @@ export default function CinematicFooter() {
 
         {/* Subtle bottom edge shadow to frame the action dock */}
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#050102] via-[#050102]/70 to-transparent pointer-events-none" />
-      </motion.div>
+      </div>
 
       {/* 2. Top Cinema Marquee HUD (Elevated to top edge, keeping center completely clear) */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-5 border-b border-amber-500/20 backdrop-blur-sm">
+      <div
+        ref={hudRef}
+        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-5 border-b border-amber-500/20 backdrop-blur-sm opacity-0"
+      >
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
           SCENE 07 // THE CLOSING FINALE
@@ -90,30 +186,18 @@ export default function CinematicFooter() {
       {/* 3. Lateral Floating Role Badges (Positioned on the dark outer margins, framing Sayeed) */}
       <div className="relative z-10 w-full max-w-7xl mx-auto hidden lg:flex items-center justify-between pointer-events-none my-auto px-4">
         {/* Left Badge */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="pointer-events-auto"
-        >
+        <div ref={lateralLeftRef} className="pointer-events-auto opacity-0">
           <div className="px-4 py-2 rounded-full bg-[#18060a]/85 border border-amber-500/40 text-amber-300 font-mono text-[11px] uppercase tracking-[0.2em] backdrop-blur-md shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:scale-105 transition-all">
             <span>• IEEE CS CHAIRPERSON •</span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Right Badge */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="pointer-events-auto"
-        >
+        <div ref={lateralRightRef} className="pointer-events-auto opacity-0">
           <div className="px-4 py-2 rounded-full bg-[#18060a]/85 border border-amber-500/40 text-amber-300 font-mono text-[11px] uppercase tracking-[0.2em] backdrop-blur-md shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:scale-105 transition-all">
             <span>• CLOUD ENGINEER •</span>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* 4. Bottom Sleek Action Dock (Docked at bottom edge — zero occlusion of face or typography) */}
@@ -121,7 +205,8 @@ export default function CinematicFooter() {
 
         {/* ── Marcus Vane–style infinite skills marquee ── */}
         <div
-          className="relative overflow-hidden w-full mb-6 py-2 border-y border-amber-500/20"
+          ref={marqueeRef}
+          className="relative overflow-hidden w-full mb-6 py-2 border-y border-amber-500/20 opacity-0"
           aria-label="Skills marquee"
         >
           <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-[#050102] to-transparent z-10 pointer-events-none" />
@@ -149,12 +234,9 @@ export default function CinematicFooter() {
         </div>
 
         {/* Glassmorphic Luxury Command Dock */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl border border-amber-500/40 bg-gradient-to-r from-[#18070b]/92 via-[#0e0306]/95 to-[#18070b]/92 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(200,56,43,0.35)] p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4"
+        <div
+          ref={dockRef}
+          className="rounded-2xl border border-amber-500/40 bg-gradient-to-r from-[#18070b]/92 via-[#0e0306]/95 to-[#18070b]/92 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(200,56,43,0.35)] p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 opacity-0"
         >
           {/* Left: Contact CTAs */}
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-center md:justify-start">
@@ -230,7 +312,7 @@ export default function CinematicFooter() {
               <span>{profile.location}</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* 5. Minimalist Bottom Copyright & Engineering Credits */}
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-mono text-amber-200/50 uppercase tracking-widest">

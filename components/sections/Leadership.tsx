@@ -1,9 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Award, Crown, Globe, ShieldCheck, Sparkles, CheckCircle2, Calendar } from "lucide-react";
 import TextEngine from "spring-text-engine";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface LeadershipRole {
   id: string;
@@ -56,24 +62,116 @@ const leadershipRoles: LeadershipRole[] = [
 export default function Leadership() {
   const [activeId, setActiveId] = useState<string>("chairperson");
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
+  const sweepRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+  const lateralLeftRef = useRef<HTMLDivElement>(null);
+  const lateralRightRef = useRef<HTMLDivElement>(null);
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          once: true,
+        },
+      });
+
+      // 1. Stage Floor & Throne Hall perspective tilt-up and focus reveal
+      tl.fromTo(
+        bgImgRef.current,
+        {
+          scale: 1.12,
+          filter: "blur(14px) brightness(0.55)",
+        },
+        {
+          scale: 1.0,
+          filter: "blur(0px) brightness(1.0)",
+          duration: 1.4,
+          ease: "power2.out",
+        },
+        0
+      );
+
+      // 2. Anamorphic Golden Light Beam sweep across the throne
+      tl.fromTo(
+        sweepRef.current,
+        { x: "-100%", opacity: 0.9 },
+        { x: "200%", opacity: 0, duration: 1.5, ease: "power2.inOut" },
+        0.15
+      );
+
+      // 3. Marquee HUD unroll
+      tl.fromTo(
+        hudRef.current,
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        0.2
+      );
+
+      // 4. Lateral Badges slide in
+      if (lateralLeftRef.current && lateralRightRef.current) {
+        tl.fromTo(
+          lateralLeftRef.current,
+          { x: -35, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+          0.35
+        );
+        tl.fromTo(
+          lateralRightRef.current,
+          { x: 35, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+          0.35
+        );
+      }
+
+      // 5. Executive Milestone Cards 3D rise from stage floor reflection
+      const cards = cardsContainerRef.current?.querySelectorAll(".milestone-card");
+      if (cards && cards.length > 0) {
+        tl.fromTo(
+          cards,
+          {
+            y: 45,
+            opacity: 0,
+            rotateX: 12,
+            transformPerspective: 900,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            rotateX: 0,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: "power3.out",
+          },
+          0.35
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="leadership"
       className="relative min-h-[100svh] pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-labelledby="leadershipTitle"
     >
       {/* ── 1. Master High-Resolution Artwork (Sayeed Centered on Throne with Glowing 3D LEADERSHIP) ── */}
-      <motion.div
-        initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
-        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <img
+          ref={bgImgRef}
           src="/media/leadership-clean-throne.png"
           alt="Sayeed Ibne Saif — Executive Leadership"
-          className="w-full h-full object-cover object-[center_30%] sm:object-center select-none filter contrast-105 brightness-100"
+          className="w-full h-full object-cover object-[center_30%] sm:object-center select-none filter contrast-105 brightness-100 will-change-transform"
           loading="eager"
         />
 
@@ -88,26 +186,20 @@ export default function Leadership() {
         />
 
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
-        <motion.div
-          initial={{ x: "-100%", opacity: 0.8 }}
-          whileInView={{ x: "200%", opacity: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+        <div
+          ref={sweepRef}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
-      </motion.div>
+      </div>
 
       {/* ── 2. Top Cinema Marquee HUD (Elevated to top, keeping central portrait clear) ── */}
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.25 }}
-        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
+      <div
+        ref={hudRef}
+        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm opacity-0"
       >
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
@@ -122,33 +214,21 @@ export default function Leadership() {
         <span className="text-amber-400 font-semibold tracking-widest hidden sm:inline">
           3 MILESTONES // GOVERNANCE
         </span>
-      </motion.div>
+      </div>
 
       {/* ── 3. Subtle Lateral Accents (Frames Sayeed without touching his body or the typography) ── */}
       <div className="relative z-10 w-full max-w-7xl mx-auto hidden xl:flex items-center justify-between pointer-events-none my-auto px-2">
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="pointer-events-auto"
-        >
+        <div ref={lateralLeftRef} className="pointer-events-auto opacity-0">
           <div className="px-4 py-2 rounded-full bg-[#140407]/85 border border-amber-500/35 text-amber-300 font-mono text-[10px] uppercase tracking-[0.2em] backdrop-blur-md shadow-[0_0_20px_rgba(200,56,43,0.3)]">
             <span>• IEEE COMPUTER SOCIETY •</span>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="pointer-events-auto"
-        >
+        <div ref={lateralRightRef} className="pointer-events-auto opacity-0">
           <div className="px-4 py-2 rounded-full bg-[#140407]/85 border border-amber-500/35 text-amber-300 font-mono text-[10px] uppercase tracking-[0.2em] backdrop-blur-md shadow-[0_0_20px_rgba(200,56,43,0.3)]">
             <span>• EXECUTIVE LEADERSHIP •</span>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* ── 4. Bottom Sleek Milestone Dock (Sleek, Minimal, Zero Jargon) ── */}
@@ -226,19 +306,15 @@ export default function Leadership() {
           </AnimatePresence>
         </div>
 
-        {/* Desktop View (md+): 3-Column Side-by-Side Milestone Deck */}
-        <div className="hidden md:grid grid-cols-3 gap-3.5 sm:gap-4 md:gap-5">
-          {leadershipRoles.map((item, idx) => {
+        {/* Desktop View (md+): 3-Column Side-by-Side Milestone Deck with 3D Elevation */}
+        <div ref={cardsContainerRef} className="hidden md:grid grid-cols-3 gap-3.5 sm:gap-4 md:gap-5" style={{ perspective: "1000px" }}>
+          {leadershipRoles.map((item) => {
             const isActive = activeId === item.id;
             return (
-              <motion.div
+              <div
                 key={item.id}
-                initial={{ y: 35, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.35 + idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => setActiveId(item.id)}
-                className={`relative rounded-2xl p-4 sm:p-5 transition-all duration-300 cursor-pointer select-none border backdrop-blur-xl group ${
+                className={`milestone-card opacity-0 relative rounded-2xl p-4 sm:p-5 transition-all duration-300 cursor-pointer select-none border backdrop-blur-xl group ${
                   isActive
                     ? "bg-[#160408]/92 border-amber-400 shadow-[0_15px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(245,158,11,0.35)] ring-1 ring-amber-400/60 -translate-y-1"
                     : "bg-[#0b0204]/80 border-amber-500/25 hover:border-amber-400/70 hover:bg-[#120407]/90 hover:-translate-y-0.5 shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
@@ -292,7 +368,7 @@ export default function Leadership() {
                     TENURE // {item.period.toUpperCase()}
                   </span>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

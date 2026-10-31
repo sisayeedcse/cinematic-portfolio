@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Cpu, Layers, Sparkles, ShieldCheck, Terminal, Cloud, Flame, Check } from "lucide-react";
+import { Flame, Check, ShieldCheck } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface SkillLogo {
   id: string;
@@ -117,27 +123,117 @@ export default function Skills() {
   const [activeId, setActiveId] = useState<string>("aws");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgContainerRef = useRef<HTMLDivElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
+  const sweepRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+  const gridContainerRef = useRef<HTMLDivElement>(null);
+
   const selectedSkill =
     skillLogos.find((s) => s.id === (hoveredId || activeId)) || skillLogos[0];
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Respect prefers-reduced-motion
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          once: true,
+        },
+      });
+
+      // 1. Cinematic Widescreen Mask Expansion (Technique B: Cinematic Mask Reveal)
+      tl.fromTo(
+        bgContainerRef.current,
+        {
+          clipPath: "inset(10% 0% 10% 0% round 20px)",
+          opacity: 0.3,
+        },
+        {
+          clipPath: "inset(0% 0% 0% 0% round 0px)",
+          opacity: 1,
+          duration: 1.4,
+          ease: "power3.inOut",
+        },
+        0
+      );
+
+      // 2. Camera Settle & Contrast (scale 1.14 -> 1.0)
+      tl.fromTo(
+        bgImgRef.current,
+        {
+          scale: 1.14,
+          filter: "blur(12px) brightness(0.5) contrast(1.2)",
+        },
+        {
+          scale: 1.0,
+          filter: "blur(0px) brightness(1.0) contrast(1.05)",
+          duration: 1.5,
+          ease: "expo.out",
+        },
+        0.1
+      );
+
+      // 3. Anamorphic Flare Sweep
+      tl.fromTo(
+        sweepRef.current,
+        { x: "-100%", opacity: 0.9 },
+        { x: "200%", opacity: 0, duration: 1.6, ease: "power2.inOut" },
+        0.3
+      );
+
+      // 4. Marquee HUD Unroll
+      tl.fromTo(
+        hudRef.current,
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        0.4
+      );
+
+      // 5. Holographic Primitives Stagger (Technique F: Cinematic Stagger Reveal)
+      const logoButtons = gridContainerRef.current?.querySelectorAll(".skill-logo-btn");
+      if (logoButtons && logoButtons.length > 0) {
+        tl.fromTo(
+          logoButtons,
+          { scale: 0, opacity: 0, y: 25 },
+          {
+            scale: 1,
+            opacity: 1,
+            y: 0,
+            stagger: 0.035,
+            duration: 0.6,
+            ease: "back.out(1.8)",
+          },
+          0.5
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="skills"
       className="relative min-h-[100svh] pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-labelledby="skillsTitle"
     >
       {/* ── 1. Master High-Resolution Artwork (Sayeed on Throne with Glowing 3D SKILLS & Crown) ── */}
-      <motion.div
-        initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
-        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
+      <div
+        ref={bgContainerRef}
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center will-change-transform"
       >
         <img
+          ref={bgImgRef}
           src="/media/skills-throne-clean.jpg"
           alt="Sayeed Ibne Saif — Technical Arsenal & Skills"
-          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100"
+          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
           loading="eager"
         />
 
@@ -152,25 +248,19 @@ export default function Skills() {
         />
 
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
-        <motion.div
-          initial={{ x: "-100%", opacity: 0.8 }}
-          whileInView={{ x: "200%", opacity: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        <div
+          ref={sweepRef}
           className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
-      </motion.div>
+      </div>
 
       {/* ── 2. Top Cinema Marquee HUD ── */}
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.25 }}
+      <div
+        ref={hudRef}
         className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
       >
         <span className="flex items-center gap-2">
@@ -186,7 +276,7 @@ export default function Skills() {
         <span className="text-amber-400 font-semibold tracking-widest hidden sm:inline">
           12 PRODUCTION PRIMITIVES
         </span>
-      </motion.div>
+      </div>
 
       {/* ── 3. Main Stage: Unobstructed Left/Center (Sayeed & SKILLS) + Holographic Glowing Logos on Right ── */}
       <div className="relative z-10 max-w-7xl mx-auto w-full mt-auto lg:my-auto py-2 sm:py-4 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-3 sm:gap-6 lg:gap-8">
@@ -194,13 +284,7 @@ export default function Skills() {
         <div className="hidden lg:block lg:flex-1 pointer-events-none" />
 
         {/* Right Side: Creative Holographic Constellation of Glowing Logos */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.0, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full lg:w-auto lg:max-w-md xl:max-w-lg flex flex-col items-center lg:items-end space-y-2.5 sm:space-y-3.5"
-        >
+        <div className="w-full lg:w-auto lg:max-w-md xl:max-w-lg flex flex-col items-center lg:items-end space-y-2.5 sm:space-y-3.5">
           {/* Header pill above the logos */}
           <div className="flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 border border-amber-500/35 backdrop-blur-xl shadow-lg">
             <Flame size={11} className="text-red-500 animate-pulse" />
@@ -210,26 +294,23 @@ export default function Skills() {
           </div>
 
           {/* Glowing Logos Floating Grid (6 cols × 2 rows on mobile, 4 cols × 3 rows on desktop) */}
-          <div className="grid grid-cols-6 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-3.5 p-2.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#0d0205]/85 border border-amber-500/30 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(200,56,43,0.3)]">
-            {skillLogos.map((skill, idx) => {
+          <div
+            ref={gridContainerRef}
+            className="grid grid-cols-6 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-3.5 p-2.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#0d0205]/85 border border-amber-500/30 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(200,56,43,0.3)]"
+          >
+            {skillLogos.map((skill) => {
               const isSelected = selectedSkill.id === skill.id;
 
               return (
-                <motion.button
+                <button
                   key={skill.id}
                   onClick={() => setActiveId(skill.id)}
                   onMouseEnter={() => setHoveredId(skill.id)}
                   onMouseLeave={() => setHoveredId(null)}
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.3 + idx * 0.03 }}
-                  whileHover={{ scale: 1.15, y: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`relative w-10 h-10 sm:w-13 sm:h-13 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center p-2 sm:p-2.5 lg:p-3 transition-all duration-300 group cursor-pointer focus-royal ${
+                  className={`skill-logo-btn relative w-10 h-10 sm:w-13 sm:h-13 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center p-2 sm:p-2.5 lg:p-3 transition-all duration-300 group cursor-pointer focus-royal ${
                     isSelected
-                      ? "bg-[#1f050b] border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.65),0_0_15px_rgba(220,38,38,0.5)] ring-1 sm:ring-2 ring-amber-400/50"
-                      : "bg-[#110204]/90 border border-white/10 hover:border-amber-400/80 hover:bg-[#180408] shadow-[0_8px_20px_rgba(0,0,0,0.7)]"
+                      ? "bg-[#1f050b] border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.65),0_0_15px_rgba(220,38,38,0.5)] ring-1 sm:ring-2 ring-amber-400/50 scale-105"
+                      : "bg-[#110204]/90 border border-white/10 hover:border-amber-400/80 hover:bg-[#180408] shadow-[0_8px_20px_rgba(0,0,0,0.7)] hover:scale-110"
                   }`}
                   style={{
                     boxShadow: isSelected
@@ -259,7 +340,7 @@ export default function Skills() {
                   {isSelected && (
                     <span className="absolute -top-1 -right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,1)] animate-ping" />
                   )}
-                </motion.button>
+                </button>
               );
             })}
           </div>
@@ -307,7 +388,7 @@ export default function Skills() {
               </div>
             </motion.div>
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
 
       {/* ── 4. Bottom Telemetry Strip ── */}

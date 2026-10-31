@@ -1,60 +1,143 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "motion/react";
-import { Award, Sparkles, ShieldCheck } from "lucide-react";
+import { Award, ShieldCheck } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function AcademicFoundation() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
+  const haloRef = useRef<HTMLDivElement>(null);
+  const sweepRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const gaugeRef = useRef<SVGPathElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          once: true,
+        },
+      });
+
+      // 1. Royal Velvet Background Rise (Technique D: Editorial Slide Reveal)
+      tl.fromTo(
+        bgImgRef.current,
+        {
+          scale: 1.12,
+          yPercent: -6,
+          filter: "blur(12px) brightness(0.55) contrast(1.2)",
+        },
+        {
+          scale: 1.0,
+          yPercent: 0,
+          filter: "blur(0px) brightness(1.0) contrast(1.05)",
+          duration: 1.4,
+          ease: "expo.out",
+        },
+        0
+      );
+
+      // 2. Halo Aura Breathing Behind Sunglasses & Crown (Technique G: Light & Shadow Reveal)
+      tl.fromTo(
+        haloRef.current,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 0.5, scale: 1.05, duration: 1.5, ease: "power2.out" },
+        0.2
+      );
+
+      // 3. Golden Light Sweep across the throne
+      tl.fromTo(
+        sweepRef.current,
+        { x: "-100%", opacity: 0.85 },
+        { x: "200%", opacity: 0, duration: 1.6, ease: "power2.inOut" },
+        0.3
+      );
+
+      // 4. Marquee HUD Unroll
+      tl.fromTo(
+        hudRef.current,
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        0.35
+      );
+
+      // 5. CGPA Distinction Card Slide-in
+      tl.fromTo(
+        cardRef.current,
+        { x: 60, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.0, ease: "power3.out" },
+        0.4
+      );
+
+      // 6. Circular Radial Gauge Stroke Fill (0% -> 94.75%)
+      if (gaugeRef.current) {
+        tl.fromTo(
+          gaugeRef.current,
+          { strokeDasharray: "0, 100" },
+          { strokeDasharray: "94.75, 100", duration: 1.4, ease: "power2.out" },
+          0.6
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="academic"
       className="relative min-h-[100svh] pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-labelledby="academicTitle"
     >
       {/* ── 1. Master High-Resolution Artwork (Sayeed in Sunglasses on Gold Throne with Red Cape & 3D ACADEMIC FOUNDATION) ── */}
-      <motion.div
-        initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
-        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center will-change-transform">
         <img
+          ref={bgImgRef}
           src="/media/academic-foundation-throne.jpg"
           alt="Sayeed Ibne Saif — Academic Foundation"
-          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100"
+          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
           loading="eager"
         />
 
         {/* Ambient Pulsing Crimson & Imperial Gold Aura */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-screen"
+          ref={haloRef}
+          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-screen will-change-transform"
           style={{
             background:
-              "radial-gradient(ellipse 70% 55% at 50% 50%, rgba(200, 56, 43, 0.4) 0%, rgba(212, 175, 55, 0.18) 45%, transparent 80%)",
+              "radial-gradient(ellipse 70% 55% at 50% 50%, rgba(200, 56, 43, 0.45) 0%, rgba(212, 175, 55, 0.2) 45%, transparent 80%)",
           }}
           aria-hidden="true"
         />
 
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
-        <motion.div
-          initial={{ x: "-100%", opacity: 0.8 }}
-          whileInView={{ x: "200%", opacity: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        <div
+          ref={sweepRef}
           className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
-      </motion.div>
+      </div>
 
       {/* ── 2. Top Cinema Marquee HUD ── */}
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.25 }}
+      <div
+        ref={hudRef}
         className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
       >
         <span className="flex items-center gap-2">
@@ -70,7 +153,7 @@ export default function AcademicFoundation() {
         <span className="text-amber-400 font-semibold tracking-widest hidden sm:inline">
           HONORS & DISTINCTION
         </span>
-      </motion.div>
+      </div>
 
       {/* ── 3. Main Stage: Unobstructed Left/Center (Sayeed & 3D Typography) + Creative CG Card on Right ── */}
       <div className="relative z-10 max-w-7xl mx-auto w-full mt-auto lg:my-auto py-4 sm:py-6 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6 lg:gap-8">
@@ -78,12 +161,9 @@ export default function AcademicFoundation() {
         <div className="hidden lg:block lg:flex-1 pointer-events-none" />
 
         {/* Right Side: Creative Academic CGPA Card */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.0, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full lg:w-auto lg:max-w-md xl:max-w-lg flex flex-col items-center lg:items-end"
+        <div
+          ref={cardRef}
+          className="w-full lg:w-auto lg:max-w-md xl:max-w-lg flex flex-col items-center lg:items-end will-change-transform"
         >
           <motion.div
             whileHover={{ scale: 1.03, y: -4 }}
@@ -132,6 +212,7 @@ export default function AcademicFoundation() {
                   />
                   {/* Glowing Progress Arc (3.79/4.00 = 94.75%) */}
                   <path
+                    ref={gaugeRef}
                     className="text-amber-400"
                     strokeDasharray="94.75, 100"
                     strokeWidth="3.2"
@@ -157,7 +238,7 @@ export default function AcademicFoundation() {
               </p>
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
 
       {/* ── 4. Bottom Telemetry Strip ── */}

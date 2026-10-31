@@ -1,28 +1,30 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { projects, projectCategories, Project } from "@/data/projects";
 import {
   ExternalLink,
-  ChevronLeft,
-  ChevronRight,
   Maximize2,
   Globe,
   ShieldCheck,
   CheckCircle2,
-  Sparkles,
   X,
   Cpu,
   Layers,
   Terminal,
   Gauge,
   Flame,
-  Check,
 } from "lucide-react";
 import { GitHubIcon } from "@/components/ui/SocialIcons";
 import OrbitImages from "@/components/ui/OrbitImages";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function Projects() {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -30,6 +32,14 @@ export default function Projects() {
   const [activeIdx, setActiveIdx] = useState<number>(0);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [modalProject, setModalProject] = useState<Project | null>(null);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
+  const floorGlowRef = useRef<HTMLDivElement>(null);
+  const sweepRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
+  const orbitWrapRef = useRef<HTMLDivElement>(null);
+  const bottomBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -50,6 +60,80 @@ export default function Projects() {
 
   const selectProject = useCallback((idx: number) => {
     setActiveIdx(idx);
+  }, []);
+
+  // GSAP ScrollTrigger Coordination (Technique E + C: Perspective Horizon & Spotlight Ignition)
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          once: true,
+        },
+      });
+
+      // 1. Camera Glide on Ferrari Backdrop (Scale 1.12 -> 1.0)
+      tl.fromTo(
+        bgImgRef.current,
+        {
+          scale: 1.12,
+          filter: "blur(12px) brightness(0.6) contrast(1.15)",
+        },
+        {
+          scale: 1.0,
+          filter: "blur(0px) brightness(1.0) contrast(1.05)",
+          duration: 1.4,
+          ease: "expo.out",
+        },
+        0
+      );
+
+      // 2. Automotive Floor Underglow & Spotlight Ignition
+      tl.fromTo(
+        floorGlowRef.current,
+        { opacity: 0, scaleX: 0.6 },
+        { opacity: 0.7, scaleX: 1.0, duration: 1.2, ease: "power2.out" },
+        0.2
+      );
+
+      // 3. Headlight Light Sweep across the horizon
+      tl.fromTo(
+        sweepRef.current,
+        { x: "-100%", opacity: 0.85 },
+        { x: "200%", opacity: 0, duration: 1.5, ease: "power2.inOut" },
+        0.3
+      );
+
+      // 4. Marquee HUD Unroll
+      tl.fromTo(
+        hudRef.current,
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        0.35
+      );
+
+      // 5. Orbit Arena Entrance (Fade & Settle)
+      tl.fromTo(
+        orbitWrapRef.current,
+        { opacity: 0, scale: 0.94 },
+        { opacity: 1, scale: 1.0, duration: 1.0, ease: "power3.out" },
+        0.4
+      );
+
+      // 6. Bottom Telemetry Bar Slide Up
+      tl.fromTo(
+        bottomBarRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        0.6
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   // Global keyboard shortcuts (Left/Right arrow to cycle, Escape to close modal)
@@ -76,55 +160,46 @@ export default function Projects() {
 
   return (
     <section
+      ref={sectionRef}
       id="projects"
       className="relative min-h-[100svh] pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-labelledby="projectsTitle"
     >
       {/* ── 1. Master High-Resolution Artwork (Sayeed Leaning on Red Ferrari F40) ── */}
-      <motion.div
-        initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
-        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center will-change-transform">
         <img
+          ref={bgImgRef}
           src="/media/projects-ferrari-clean.jpg"
           alt="Sayeed Ibne Saif — Engineering High-Performance Systems"
-          className="w-full h-full object-cover object-[55%_center] sm:object-[center_35%] select-none filter contrast-105 brightness-100"
+          className="w-full h-full object-cover object-[55%_center] sm:object-[center_35%] select-none filter contrast-105 brightness-100 will-change-transform"
           loading="eager"
         />
 
         {/* Floor Glow Under Sayeed & The Ferrari F40 */}
         <div
-          className="absolute bottom-0 inset-x-0 h-44 pointer-events-none opacity-60 mix-blend-screen"
+          ref={floorGlowRef}
+          className="absolute bottom-0 inset-x-0 h-44 pointer-events-none opacity-60 mix-blend-screen will-change-transform"
           style={{
             background:
-              "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(200, 56, 43, 0.55) 0%, rgba(212, 175, 55, 0.2) 40%, transparent 80%)",
+              "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(200, 56, 43, 0.6) 0%, rgba(212, 175, 55, 0.25) 40%, transparent 80%)",
           }}
           aria-hidden="true"
         />
 
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
-        <motion.div
-          initial={{ x: "-100%", opacity: 0.8 }}
-          whileInView={{ x: "200%", opacity: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        <div
+          ref={sweepRef}
           className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}
         <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
-      </motion.div>
+      </div>
 
       {/* ── 2. Top Cinema Marquee HUD ── */}
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.25 }}
+      <div
+        ref={hudRef}
         className="relative z-20 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
       >
         <span className="flex items-center gap-2">
@@ -140,10 +215,13 @@ export default function Projects() {
         <span className="text-amber-400 font-semibold tracking-widest hidden sm:inline">
           {filteredProjects.length} SYSTEMS IN ORBIT
         </span>
-      </motion.div>
+      </div>
 
       {/* ── 3. Central Orbital Stage (All Project Cards Orbiting Around Sayeed & The Ferrari) ── */}
-      <div className="relative z-10 w-full flex-1 flex items-center justify-center py-1 sm:py-4">
+      <div
+        ref={orbitWrapRef}
+        className="relative z-10 w-full flex-1 flex items-center justify-center py-1 sm:py-4 will-change-transform"
+      >
         <div className="relative w-full max-w-7xl h-[420px] sm:h-[580px] lg:h-[640px] flex items-center justify-center">
           <OrbitImages<Project>
             key={`${isMobile ? "mobile" : "desktop"}-${activeCategory}`}
@@ -296,7 +374,10 @@ export default function Projects() {
       </div>
 
       {/* ── 4. Bottom Telemetry Bar & Controls ── */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 px-2 border-t border-white/10 backdrop-blur-sm">
+      <div
+        ref={bottomBarRef}
+        className="relative z-20 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 px-2 border-t border-white/10 backdrop-blur-sm"
+      >
         {/* Active project quick summary */}
         <div className="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
