@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import GlobalGlowCursor from "@/components/ui/GlobalGlowCursor";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-[#050203] text-[#f5ede4] selection:bg-red-900 selection:text-amber-200">
+        <GlobalGlowCursor />
         {children}
       </body>
     </html>
