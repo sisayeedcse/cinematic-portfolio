@@ -28,11 +28,13 @@ import {
   Eye,
 } from "lucide-react";
 import { GitHubIcon } from "@/components/ui/SocialIcons";
+import OrbitImages from "@/components/ui/OrbitImages";
 
 type RevealTab = "summary" | "metrics" | "architecture";
 
 export default function Projects() {
   const [mounted, setMounted] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const [activeIdx, setActiveIdx] = useState<number>(0);
   const [direction, setDirection] = useState<number>(0);
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -41,6 +43,10 @@ export default function Projects() {
 
   useEffect(() => {
     setMounted(true);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Filter projects based on activeCategory
@@ -162,25 +168,25 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* ── 2. Cinematic Royal Spotlight Frame (Ferrari & Sayeed Sliding In Smoothly from the Right!) ── */}
+      {/* ── 2. Cinematic Orbital Showcase Arena (Projects Orbiting around Sayeed & Ferrari) ── */}
       <div className="relative z-10 max-w-7xl mx-auto w-full mb-10 sm:mb-14">
-        <div className="relative w-full aspect-[21/9] sm:aspect-[2.4/1] min-h-[260px] sm:min-h-[380px] md:min-h-[440px] rounded-3xl overflow-hidden border border-amber-500/35 shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(220,38,38,0.3)] group">
-          {/* Motion Container: Slides in smoothly from the right with sports car deceleration physics */}
+        <div className="relative w-full aspect-[16/10] sm:aspect-[2.1/1] min-h-[520px] sm:min-h-[580px] md:min-h-[640px] lg:min-h-[700px] rounded-3xl overflow-hidden border border-amber-500/35 shadow-[0_30px_90px_rgba(0,0,0,0.98),0_0_60px_rgba(200,56,43,0.35)] group">
+          {/* Layer 0: Master Artwork (Sayeed & Red Ferrari) sliding in from the right */}
           <motion.div
-            initial={{ x: "18%", scale: 1.05, opacity: 0, filter: "blur(12px) brightness(0.65)" }}
+            initial={{ x: "16%", scale: 1.05, opacity: 0, filter: "blur(12px) brightness(0.65)" }}
             whileInView={{ x: "0%", scale: 1, opacity: 1, filter: "blur(0px) brightness(0.98)" }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 1.4, ease: [0.18, 1, 0.28, 1] }}
-            className="w-full h-full relative"
+            className="absolute inset-0 w-full h-full"
           >
             <img
               src="/media/projects-ferrari-bg.jpg"
               alt="Sayeed Ibne Saif — Engineering High Performance"
-              className="w-full h-full object-cover object-[center_35%] filter contrast-105 brightness-[0.98]"
+              className="w-full h-full object-cover object-[center_35%] filter contrast-105 brightness-[0.96]"
               loading="eager"
             />
 
-            {/* Automotive Floor Underglow sliding in synchronously with the car */}
+            {/* Automotive Floor Underglow */}
             <motion.div
               initial={{ x: "20%", opacity: 0 }}
               whileInView={{ x: "0%", opacity: 0.55 }}
@@ -208,24 +214,171 @@ export default function Projects() {
               className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
             />
 
-            {/* Subtle edge shading for depth */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-transparent to-[#050102]/60 pointer-events-none" />
-
-            {/* Royal Telemetry Banner on the image frame */}
-            <div className="absolute bottom-4 left-4 right-4 sm:left-8 sm:right-8 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-              <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/80 border border-amber-500/40 backdrop-blur-md shadow-lg">
-                <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)] animate-pulse" />
-                <span className="text-[10px] sm:text-[11px] font-mono text-amber-200 font-bold tracking-[0.2em] uppercase">
-                  ENGINEERING HIGH PERFORMANCE · SAYEED IBNE SAIF
-                </span>
-              </div>
-
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/80 border border-red-500/40 text-[10px] font-mono text-red-200 font-bold uppercase tracking-wider backdrop-blur-md">
-                <Sparkles size={13} className="text-amber-300" />
-                <span>ROSSO CORSA PRODUCTION PLATFORMS</span>
-              </div>
-            </div>
+            {/* Vignette depth overlay ensuring high contrast for orbiting cards */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-[#050102]/20 to-[#050102]/65 pointer-events-none" />
           </motion.div>
+
+          {/* Layer 1: React Bits OrbitImages (All Production Project Cards Orbiting around Sayeed) */}
+          <div className="absolute inset-0 w-full h-full z-10 flex items-center justify-center p-2 sm:p-4">
+            <OrbitImages<Project>
+              key={isMobile ? "orbit-mobile" : "orbit-desktop"}
+              itemsData={filteredProjects}
+              shape="ellipse"
+              baseWidth={isMobile ? 580 : 1200}
+              radiusX={isMobile ? 220 : 470}
+              radiusY={isMobile ? 135 : 175}
+              rotation={isMobile ? -4 : -7}
+              depth={isMobile ? 0.65 : 0.78}
+              itemWidth={isMobile ? 120 : 255}
+              itemHeight={isMobile ? 80 : 170}
+              itemRadius={isMobile ? 12 : 16}
+              duration={isMobile ? 35 : 40}
+              hoverSpeed={0.12}
+              draggable={true}
+              clickToFront={true}
+              intro={true}
+              showPath={true}
+              pathColor="rgba(212, 175, 55, 0.32)"
+              pathWidth={1.5}
+              pathDash={8}
+              className="w-full h-full"
+              onItemClick={(idx) => {
+                selectProject(idx);
+              }}
+              centerContent={
+                isMobile ? null : (
+                  <div className="pointer-events-none flex flex-col items-center justify-center text-center px-4 py-2 rounded-2xl bg-black/60 border border-amber-500/30 backdrop-blur-md shadow-[0_0_25px_rgba(200,56,43,0.35)]">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <Flame size={12} className="text-red-500 animate-pulse" />
+                      <span className="text-[9px] font-mono text-amber-300 font-bold uppercase tracking-[0.22em]">
+                        PRODUCTION SYSTEMS IN ORBIT
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-white font-sans">
+                      DRAG · HOVER · EXPLORE
+                    </span>
+                  </div>
+                )
+              }
+              renderItem={(project: Project, index: number) => {
+                const isSelected = activeProject.id === project.id;
+
+                if (isMobile) {
+                  return (
+                    <div
+                      onClick={() => selectProject(index)}
+                      className={`relative w-full h-full rounded-xl overflow-hidden border transition-all duration-300 text-left flex flex-col justify-end p-1.5 select-none cursor-pointer backdrop-blur-md ${
+                        isSelected
+                          ? "border-amber-400 bg-[#160307] shadow-[0_0_20px_rgba(245,158,11,0.6)] ring-2 ring-amber-400"
+                          : "border-amber-500/35 bg-[#0e0306]/92 hover:border-amber-400/80 shadow-[0_8px_20px_rgba(0,0,0,0.85)]"
+                      }`}
+                    >
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="absolute inset-0 w-full h-full object-cover object-top"
+                        draggable={false}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent pointer-events-none" />
+                      <div className="relative z-10 flex items-center justify-between gap-1">
+                        <span className="text-[8px] font-bold text-white uppercase tracking-tight truncate leading-tight font-sans">
+                          0{index + 1} {project.title}
+                        </span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 animate-pulse" />
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    onClick={() => selectProject(index)}
+                    className={`relative w-full h-full rounded-2xl overflow-hidden border transition-all duration-300 text-left flex flex-col justify-between group/orbit select-none cursor-pointer backdrop-blur-xl ${
+                      isSelected
+                        ? "border-amber-400 bg-[#160307]/95 shadow-[0_0_30px_rgba(245,158,11,0.5),0_0_20px_rgba(220,38,38,0.4)] ring-2 ring-amber-400/80"
+                        : "border-amber-500/25 bg-[#0e0306]/92 hover:border-amber-400/70 hover:bg-[#180409]/95 shadow-[0_15px_35px_rgba(0,0,0,0.85)]"
+                    }`}
+                  >
+                    {/* Top 52%: Cover image preview */}
+                    <div className="relative h-[52%] w-full overflow-hidden bg-black/80">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/orbit:scale-105"
+                        draggable={false}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0306] via-transparent to-black/40" />
+
+                      {/* Category Badge */}
+                      <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/85 border border-amber-500/40 backdrop-blur-md">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        <span className="text-[8px] font-mono font-bold text-amber-200 uppercase tracking-wider">
+                          {project.categoryLabel}
+                        </span>
+                      </div>
+
+                      {/* System # */}
+                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/85 border border-white/20 text-[8px] font-mono text-amber-300 font-bold">
+                        0{index + 1}
+                      </div>
+                    </div>
+
+                    {/* Bottom 48%: Info & Action */}
+                    <div className="p-2.5 flex-1 flex flex-col justify-between">
+                      <div>
+                        <h4 className="text-[12px] font-bold text-white uppercase tracking-tight truncate font-sans group-hover/orbit:text-amber-200 transition-colors">
+                          {project.title}
+                        </h4>
+                        <p className="text-[9px] font-mono text-amber-400/80 truncate">
+                          {project.subtitle}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10 mt-1">
+                        <div className="flex items-center gap-1 overflow-hidden">
+                          {project.tech.slice(0, 2).map((t: string) => (
+                            <span
+                              key={t}
+                              className="px-1.5 py-0.5 rounded bg-white/[0.06] text-[8px] font-mono text-gray-300 truncate"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setModalProject(project);
+                          }}
+                          className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-[8px] font-mono font-bold uppercase tracking-wider shrink-0 transition-transform hover:scale-105 shadow"
+                          title="Inspect System Blueprint"
+                        >
+                          <Maximize2 size={9} />
+                          <span>OPEN</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }}
+            />
+          </div>
+
+          {/* Layer 2: Royal Telemetry HUD Bar on frame bottom */}
+          <div className="absolute bottom-4 left-4 right-4 sm:left-8 sm:right-8 flex flex-wrap items-center justify-between gap-3 pointer-events-none z-20">
+            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/85 border border-amber-500/40 backdrop-blur-md shadow-lg">
+              <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)] animate-pulse" />
+              <span className="text-[10px] sm:text-[11px] font-mono text-amber-200 font-bold tracking-[0.2em] uppercase">
+                ACTIVE SYSTEM // 0{activeIdx + 1}: {activeProject.title}
+              </span>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/80 border border-red-500/40 text-[10px] font-mono text-red-200 font-bold uppercase tracking-wider backdrop-blur-md">
+              <Sparkles size={13} className="text-amber-300" />
+              <span>ORBITAL REVOLUTION · INTERACTIVE TOUCH & DRAG</span>
+            </div>
+          </div>
         </div>
       </div>
 
