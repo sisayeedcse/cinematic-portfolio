@@ -2,6 +2,7 @@
 
 import CinematicHero from "@/components/sections/CinematicHero";
 import Skills from "@/components/sections/Skills";
+import Projects from "@/components/sections/Projects";
 import Leadership from "@/components/sections/Leadership";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicHeader from "@/components/layout/CinematicHeader";
@@ -28,10 +29,13 @@ export default function Home() {
         {/* Scene 02 — Technical Arsenal (Glowing Skills Matrix) */}
         <Skills />
 
-        {/* Scene 03 — Executive Leadership Journey */}
+        {/* Scene 03 — Production Systems (Orbital Showcase) */}
+        <Projects />
+
+        {/* Scene 04 — Executive Leadership Journey */}
         <Leadership />
 
-        {/* Scene 04 — Closing Finale */}
+        {/* Scene 05 — Closing Finale */}
         <CinematicFooter />
       </main>
     </>

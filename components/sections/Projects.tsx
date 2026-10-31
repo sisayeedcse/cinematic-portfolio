@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
-import TextEngine from "spring-text-engine";
 import { projects, projectCategories, Project } from "@/data/projects";
 import {
   ExternalLink,
@@ -11,34 +10,25 @@ import {
   ChevronRight,
   Maximize2,
   Globe,
-  Lock,
   ShieldCheck,
   CheckCircle2,
   Sparkles,
   X,
-  Code2,
   Cpu,
   Layers,
   Terminal,
-  ArrowRight,
   Gauge,
-  TrendingUp,
   Flame,
   Check,
-  Eye,
 } from "lucide-react";
 import { GitHubIcon } from "@/components/ui/SocialIcons";
 import OrbitImages from "@/components/ui/OrbitImages";
-
-type RevealTab = "summary" | "metrics" | "architecture";
 
 export default function Projects() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [activeIdx, setActiveIdx] = useState<number>(0);
-  const [direction, setDirection] = useState<number>(0);
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [activeTab, setActiveTab] = useState<RevealTab>("summary");
   const [modalProject, setModalProject] = useState<Project | null>(null);
 
   useEffect(() => {
@@ -58,23 +48,9 @@ export default function Projects() {
   // Keep activeIdx safe
   const activeProject = filteredProjects[activeIdx] || filteredProjects[0] || projects[0];
 
-  const nextProject = useCallback(() => {
-    setDirection(1);
-    setActiveIdx((prev) => (prev + 1) % filteredProjects.length);
-  }, [filteredProjects.length]);
-
-  const prevProject = useCallback(() => {
-    setDirection(-1);
-    setActiveIdx((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
-  }, [filteredProjects.length]);
-
-  const selectProject = useCallback(
-    (idx: number) => {
-      setDirection(idx > activeIdx ? 1 : -1);
-      setActiveIdx(idx);
-    },
-    [activeIdx]
-  );
+  const selectProject = useCallback((idx: number) => {
+    setActiveIdx(idx);
+  }, []);
 
   // Global keyboard shortcuts (Left/Right arrow to cycle, Escape to close modal)
   useEffect(() => {
@@ -82,621 +58,326 @@ export default function Projects() {
       if (modalProject) {
         if (e.key === "Escape") setModalProject(null);
         if (e.key === "ArrowRight") {
-          const currModalIdx = projects.findIndex((p) => p.id === modalProject.id);
-          const nextIdx = (currModalIdx + 1) % projects.length;
-          setModalProject(projects[nextIdx]);
+          const currIdx = filteredProjects.findIndex((p) => p.id === modalProject.id);
+          const nextIdx = (currIdx + 1) % filteredProjects.length;
+          setModalProject(filteredProjects[nextIdx]);
         }
         if (e.key === "ArrowLeft") {
-          const currModalIdx = projects.findIndex((p) => p.id === modalProject.id);
-          const prevIdx = (currModalIdx - 1 + projects.length) % projects.length;
-          setModalProject(projects[prevIdx]);
+          const currIdx = filteredProjects.findIndex((p) => p.id === modalProject.id);
+          const prevIdx = (currIdx - 1 + filteredProjects.length) % filteredProjects.length;
+          setModalProject(filteredProjects[prevIdx]);
         }
-        return;
       }
-
-      if (e.key === "ArrowRight") nextProject();
-      if (e.key === "ArrowLeft") prevProject();
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [modalProject, nextProject, prevProject]);
+  }, [modalProject, filteredProjects]);
 
   return (
     <section
       id="projects"
-      className="relative w-full bg-[#050102] text-white py-20 sm:py-24 md:py-28 px-4 sm:px-6 md:px-10 overflow-hidden border-t border-amber-500/20 select-none"
+      className="relative min-h-[100svh] pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 px-4 sm:px-6 md:px-12 bg-[#050102] text-white flex flex-col justify-between overflow-hidden border-t border-amber-500/20 select-none z-10"
       aria-labelledby="projectsTitle"
     >
-      {/* ── 1. Top Cinema Header Bar ── */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
-            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-amber-400 font-mono">
-              Scene 05 // Production Systems
-            </p>
-          </div>
+      {/* ── 1. Master High-Resolution Artwork (Sayeed Leaning on Red Ferrari F40) ── */}
+      <motion.div
+        initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
+        whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1)" }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center"
+      >
+        <img
+          src="/media/projects-ferrari-clean.jpg"
+          alt="Sayeed Ibne Saif — Engineering High-Performance Systems"
+          className="w-full h-full object-cover object-[55%_center] sm:object-[center_35%] select-none filter contrast-105 brightness-100"
+          loading="eager"
+        />
 
-          <TextEngine
-            tag="h2"
-            mode="once"
-            lineOut={{ opacity: 0, filter: "blur(10px)" }}
-            lineIn={{ opacity: 1, filter: "blur(0px)" }}
-            lineConfig={{ tension: 190, friction: 26 }}
-            lineStagger={90}
-            id="projectsTitle"
-            className="font-extrabold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight uppercase font-sans text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
-            style={{ justifyContent: "flex-start" }}
-          >
-            Featured Productions
-          </TextEngine>
+        {/* Floor Glow Under Sayeed & The Ferrari F40 */}
+        <div
+          className="absolute bottom-0 inset-x-0 h-44 pointer-events-none opacity-60 mix-blend-screen"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(200, 56, 43, 0.55) 0%, rgba(212, 175, 55, 0.2) 40%, transparent 80%)",
+          }}
+          aria-hidden="true"
+        />
 
-          <p className="text-amber-100/80 text-xs sm:text-sm mt-2 max-w-xl font-sans tracking-wide">
-            Commercial ERP systems, client e-commerce platforms, and full-stack software built for production environments.
-          </p>
-        </div>
+        {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
+        <motion.div
+          initial={{ x: "-100%", opacity: 0.8 }}
+          whileInView={{ x: "200%", opacity: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+        />
 
-        {/* Category Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-black/70 border border-amber-500/30 backdrop-blur-xl shadow-[0_0_25px_rgba(200,56,43,0.2)]">
-          {projectCategories.map((cat) => {
-            const isCatActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => {
-                  setActiveCategory(cat.id);
-                  setActiveIdx(0);
-                }}
-                className={`relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] font-mono tracking-wider transition-all duration-300 focus-royal ${
-                  isCatActive
-                    ? "text-white font-bold shadow-[0_0_15px_rgba(245,158,11,0.5)]"
-                    : "text-gray-400 hover:text-amber-200"
-                }`}
-              >
-                {isCatActive && (
-                  <motion.div
-                    layoutId="projectCategoryHighlight"
-                    className="absolute inset-0 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 rounded-xl"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10 uppercase">{cat.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+        {/* Edge Vignette Shading for Royal Contrast */}
+        <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050102] via-[#050102]/60 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#050102] via-[#050102]/85 to-transparent pointer-events-none" />
+      </motion.div>
 
-      {/* ── 2. Cinematic Orbital Showcase Arena (Projects Orbiting around Sayeed & Ferrari) ── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full mb-10 sm:mb-14">
-        <div className="relative w-full aspect-[16/10] sm:aspect-[2.1/1] min-h-[520px] sm:min-h-[580px] md:min-h-[640px] lg:min-h-[700px] rounded-3xl overflow-hidden border border-amber-500/35 shadow-[0_30px_90px_rgba(0,0,0,0.98),0_0_60px_rgba(200,56,43,0.35)] group">
-          {/* Layer 0: Master Artwork (Sayeed & Red Ferrari) sliding in from the right */}
-          <motion.div
-            initial={{ x: "16%", scale: 1.05, opacity: 0, filter: "blur(12px) brightness(0.65)" }}
-            whileInView={{ x: "0%", scale: 1, opacity: 1, filter: "blur(0px) brightness(0.98)" }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 1.4, ease: [0.18, 1, 0.28, 1] }}
-            className="absolute inset-0 w-full h-full"
-          >
-            <img
-              src="/media/projects-ferrari-bg.jpg"
-              alt="Sayeed Ibne Saif — Engineering High Performance"
-              className="w-full h-full object-cover object-[center_35%] filter contrast-105 brightness-[0.96]"
-              loading="eager"
-            />
+      {/* ── 2. Top Cinema Marquee HUD ── */}
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.25 }}
+        className="relative z-20 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
+      >
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
+          SCENE 03 // PRODUCTION SYSTEMS
+        </span>
 
-            {/* Automotive Floor Underglow */}
-            <motion.div
-              initial={{ x: "20%", opacity: 0 }}
-              whileInView={{ x: "0%", opacity: 0.55 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.4, ease: [0.18, 1, 0.28, 1] }}
-              className="absolute bottom-2 right-10 w-[65%] h-28 bg-gradient-to-t from-red-600/40 via-red-600/15 to-transparent blur-2xl pointer-events-none mix-blend-screen"
-            />
+        {/* Letterspaced Title */}
+        <p className="text-center text-amber-100 font-mono tracking-[0.22em] text-[11px] sm:text-xs">
+          ORBITAL SHOWCASE · <span className="text-amber-400 font-bold">FULL-STACK & CLOUD</span> · RELEASES
+        </p>
 
-            {/* Ambient Breathing Crimson & Gold Aura around Sayeed & Ferrari */}
-            <div
-              className="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(ellipse 70% 55% at 65% 55%, rgba(220, 38, 38, 0.45) 0%, rgba(212, 175, 55, 0.2) 45%, transparent 80%)",
-              }}
-              aria-hidden="true"
-            />
+        <span className="text-amber-400 font-semibold tracking-widest hidden sm:inline">
+          {filteredProjects.length} SYSTEMS IN ORBIT
+        </span>
+      </motion.div>
 
-            {/* Anamorphic Headlight & Cinema Flare Sweep on Arrival */}
-            <motion.div
-              initial={{ x: "-100%", opacity: 0.8 }}
-              whileInView={{ x: "200%", opacity: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
-            />
+      {/* ── 3. Central Orbital Stage (All Project Cards Orbiting Around Sayeed & The Ferrari) ── */}
+      <div className="relative z-10 w-full flex-1 flex items-center justify-center py-1 sm:py-4">
+        <div className="relative w-full max-w-7xl h-[420px] sm:h-[580px] lg:h-[640px] flex items-center justify-center">
+          <OrbitImages<Project>
+            key={`${isMobile ? "mobile" : "desktop"}-${activeCategory}`}
+            itemsData={filteredProjects}
+            shape="ellipse"
+            baseWidth={isMobile ? 540 : 1240}
+            radiusX={isMobile ? 190 : 480}
+            radiusY={isMobile ? 105 : 165}
+            rotation={isMobile ? -3 : -6}
+            depth={isMobile ? 0.65 : 0.74}
+            itemWidth={isMobile ? 115 : 250}
+            itemHeight={isMobile ? 75 : 165}
+            itemRadius={isMobile ? 10 : 16}
+            duration={isMobile ? 36 : 42}
+            hoverSpeed={0.12}
+            draggable={true}
+            clickToFront={true}
+            intro={true}
+            showPath={true}
+            pathColor="rgba(212, 175, 55, 0.3)"
+            pathWidth={1.5}
+            pathDash={7}
+            className="w-full h-full"
+            onItemClick={(idx) => {
+              selectProject(idx);
+            }}
+            centerContent={
+              <div className="pointer-events-none flex flex-col items-center justify-center text-center px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-2xl bg-black/75 border border-amber-500/40 backdrop-blur-xl shadow-[0_0_35px_rgba(200,56,43,0.4)]">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <Flame size={12} className="text-red-500 animate-pulse" />
+                  <span className="text-[9px] font-mono text-amber-300 font-bold uppercase tracking-[0.24em]">
+                    PRODUCTION ORBIT
+                  </span>
+                </div>
+                <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-white font-sans">
+                  DRAG · HOVER · SELECT SYSTEM
+                </span>
+              </div>
+            }
+            renderItem={(project: Project, index: number) => {
+              const isSelected = activeProject.id === project.id;
 
-            {/* Vignette depth overlay ensuring high contrast for orbiting cards */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-[#050102]/20 to-[#050102]/65 pointer-events-none" />
-          </motion.div>
-
-          {/* Layer 1: React Bits OrbitImages (All Production Project Cards Orbiting around Sayeed) */}
-          <div className="absolute inset-0 w-full h-full z-10 flex items-center justify-center p-2 sm:p-4">
-            <OrbitImages<Project>
-              key={isMobile ? "orbit-mobile" : "orbit-desktop"}
-              itemsData={filteredProjects}
-              shape="ellipse"
-              baseWidth={isMobile ? 580 : 1200}
-              radiusX={isMobile ? 220 : 470}
-              radiusY={isMobile ? 135 : 175}
-              rotation={isMobile ? -4 : -7}
-              depth={isMobile ? 0.65 : 0.78}
-              itemWidth={isMobile ? 120 : 255}
-              itemHeight={isMobile ? 80 : 170}
-              itemRadius={isMobile ? 12 : 16}
-              duration={isMobile ? 35 : 40}
-              hoverSpeed={0.12}
-              draggable={true}
-              clickToFront={true}
-              intro={true}
-              showPath={true}
-              pathColor="rgba(212, 175, 55, 0.32)"
-              pathWidth={1.5}
-              pathDash={8}
-              className="w-full h-full"
-              onItemClick={(idx) => {
-                selectProject(idx);
-              }}
-              centerContent={
-                isMobile ? null : (
-                  <div className="pointer-events-none flex flex-col items-center justify-center text-center px-4 py-2 rounded-2xl bg-black/60 border border-amber-500/30 backdrop-blur-md shadow-[0_0_25px_rgba(200,56,43,0.35)]">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <Flame size={12} className="text-red-500 animate-pulse" />
-                      <span className="text-[9px] font-mono text-amber-300 font-bold uppercase tracking-[0.22em]">
-                        PRODUCTION SYSTEMS IN ORBIT
-                      </span>
-                    </div>
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-white font-sans">
-                      DRAG · HOVER · EXPLORE
-                    </span>
-                  </div>
-                )
-              }
-              renderItem={(project: Project, index: number) => {
-                const isSelected = activeProject.id === project.id;
-
-                if (isMobile) {
-                  return (
-                    <div
-                      onClick={() => selectProject(index)}
-                      className={`relative w-full h-full rounded-xl overflow-hidden border transition-all duration-300 text-left flex flex-col justify-end p-1.5 select-none cursor-pointer backdrop-blur-md ${
-                        isSelected
-                          ? "border-amber-400 bg-[#160307] shadow-[0_0_20px_rgba(245,158,11,0.6)] ring-2 ring-amber-400"
-                          : "border-amber-500/35 bg-[#0e0306]/92 hover:border-amber-400/80 shadow-[0_8px_20px_rgba(0,0,0,0.85)]"
-                      }`}
-                    >
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="absolute inset-0 w-full h-full object-cover object-top"
-                        draggable={false}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent pointer-events-none" />
-                      <div className="relative z-10 flex items-center justify-between gap-1">
-                        <span className="text-[8px] font-bold text-white uppercase tracking-tight truncate leading-tight font-sans">
-                          0{index + 1} {project.title}
-                        </span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 animate-pulse" />
-                      </div>
-                    </div>
-                  );
-                }
-
+              if (isMobile) {
                 return (
                   <div
                     onClick={() => selectProject(index)}
-                    className={`relative w-full h-full rounded-2xl overflow-hidden border transition-all duration-300 text-left flex flex-col justify-between group/orbit select-none cursor-pointer backdrop-blur-xl ${
+                    className={`relative w-full h-full rounded-xl overflow-hidden border transition-all duration-300 text-left flex flex-col justify-between p-1.5 select-none cursor-pointer backdrop-blur-md ${
                       isSelected
-                        ? "border-amber-400 bg-[#160307]/95 shadow-[0_0_30px_rgba(245,158,11,0.5),0_0_20px_rgba(220,38,38,0.4)] ring-2 ring-amber-400/80"
-                        : "border-amber-500/25 bg-[#0e0306]/92 hover:border-amber-400/70 hover:bg-[#180409]/95 shadow-[0_15px_35px_rgba(0,0,0,0.85)]"
+                        ? "border-amber-400 bg-[#160307] shadow-[0_0_20px_rgba(245,158,11,0.65)] ring-2 ring-amber-400"
+                        : "border-amber-500/35 bg-[#0e0306]/92 hover:border-amber-400/80 shadow-[0_8px_20px_rgba(0,0,0,0.85)]"
                     }`}
                   >
-                    {/* Top 52%: Cover image preview */}
-                    <div className="relative h-[52%] w-full overflow-hidden bg-black/80">
+                    <div className="relative h-[55%] w-full rounded-lg overflow-hidden bg-black/80">
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/orbit:scale-105"
+                        className="w-full h-full object-cover object-top"
                         draggable={false}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0306] via-transparent to-black/40" />
-
-                      {/* Category Badge */}
-                      <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/85 border border-amber-500/40 backdrop-blur-md">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                        <span className="text-[8px] font-mono font-bold text-amber-200 uppercase tracking-wider">
-                          {project.categoryLabel}
-                        </span>
-                      </div>
-
-                      {/* System # */}
-                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/85 border border-white/20 text-[8px] font-mono text-amber-300 font-bold">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
+                      <span className="absolute top-1 left-1 px-1 py-0.2 rounded bg-black/85 text-[7px] font-mono text-amber-300 font-bold">
                         0{index + 1}
-                      </div>
+                      </span>
                     </div>
 
-                    {/* Bottom 48%: Info & Action */}
-                    <div className="p-2.5 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h4 className="text-[12px] font-bold text-white uppercase tracking-tight truncate font-sans group-hover/orbit:text-amber-200 transition-colors">
-                          {project.title}
-                        </h4>
-                        <p className="text-[9px] font-mono text-amber-400/80 truncate">
-                          {project.subtitle}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10 mt-1">
-                        <div className="flex items-center gap-1 overflow-hidden">
-                          {project.tech.slice(0, 2).map((t: string) => (
-                            <span
-                              key={t}
-                              className="px-1.5 py-0.5 rounded bg-white/[0.06] text-[8px] font-mono text-gray-300 truncate"
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalProject(project);
-                          }}
-                          className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-[8px] font-mono font-bold uppercase tracking-wider shrink-0 transition-transform hover:scale-105 shadow"
-                          title="Inspect System Blueprint"
-                        >
-                          <Maximize2 size={9} />
-                          <span>OPEN</span>
-                        </button>
-                      </div>
+                    <div className="flex items-center justify-between gap-1 mt-0.5">
+                      <span className="text-[8px] font-bold text-white uppercase tracking-tight truncate leading-tight font-sans">
+                        {project.title}
+                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 animate-pulse" />
                     </div>
                   </div>
                 );
-              }}
-            />
-          </div>
+              }
 
-          {/* Layer 2: Royal Telemetry HUD Bar on frame bottom */}
-          <div className="absolute bottom-4 left-4 right-4 sm:left-8 sm:right-8 flex flex-wrap items-center justify-between gap-3 pointer-events-none z-20">
-            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/85 border border-amber-500/40 backdrop-blur-md shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)] animate-pulse" />
-              <span className="text-[10px] sm:text-[11px] font-mono text-amber-200 font-bold tracking-[0.2em] uppercase">
-                ACTIVE SYSTEM // 0{activeIdx + 1}: {activeProject.title}
-              </span>
-            </div>
+              return (
+                <div
+                  onClick={() => selectProject(index)}
+                  className={`relative w-full h-full rounded-2xl overflow-hidden border transition-all duration-300 text-left flex flex-col justify-between group/orbit select-none cursor-pointer backdrop-blur-xl ${
+                    isSelected
+                      ? "border-amber-400 bg-[#160307]/95 shadow-[0_0_30px_rgba(245,158,11,0.6),0_0_20px_rgba(220,38,38,0.4)] ring-2 ring-amber-400/80"
+                      : "border-amber-500/25 bg-[#0e0306]/92 hover:border-amber-400/70 hover:bg-[#180409]/95 shadow-[0_15px_35px_rgba(0,0,0,0.85)]"
+                  }`}
+                >
+                  {/* Top 52%: Cover image preview */}
+                  <div className="relative h-[52%] w-full overflow-hidden bg-black/80">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/orbit:scale-105"
+                      draggable={false}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0e0306] via-transparent to-black/40" />
 
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/80 border border-red-500/40 text-[10px] font-mono text-red-200 font-bold uppercase tracking-wider backdrop-blur-md">
-              <Sparkles size={13} className="text-amber-300" />
-              <span>ORBITAL REVOLUTION · INTERACTIVE TOUCH & DRAG</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 3. Clean Interactive Project Showcase Console (Uncluttered & High-Contrast) ── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full mb-8">
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={activeProject.id}
-            custom={direction}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="rounded-3xl border border-amber-500/30 bg-[#0e0306]/94 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)]"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Column (6 cols): Real Dashboard Screenshot Showcase */}
-              <div
-                onClick={() => setModalProject(activeProject)}
-                className="lg:col-span-6 relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-amber-500/25 bg-black cursor-pointer shadow-xl group"
-              >
-                <img
-                  src={activeProject.image}
-                  alt={activeProject.title}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-between p-4">
-                  <span className="text-xs font-mono text-amber-200 font-bold">
-                    SYSTEM 0{activeIdx + 1} // {activeProject.tier}
-                  </span>
-                  <span className="px-3 py-1 rounded-lg bg-black/85 text-amber-300 font-mono text-xs font-bold border border-amber-400/50 flex items-center gap-1.5 shadow-md">
-                    <Maximize2 size={12} /> CLICK TO INSPECT
-                  </span>
-                </div>
-              </div>
-
-              {/* Right Column (6 cols): Details, Reveal Tabs & Live Actions */}
-              <div className="lg:col-span-6 flex flex-col justify-between space-y-5">
-                <div>
-                  <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-red-600/30 border border-red-500/50 text-[10px] font-mono text-red-300 font-bold uppercase tracking-wider">
-                        {activeProject.categoryLabel}
-                      </span>
-                      <span className="text-[10px] font-mono text-amber-300/90 hidden sm:inline">
-                        • {activeProject.tier}
+                    {/* Category Badge */}
+                    <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/85 border border-amber-500/40 backdrop-blur-md">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      <span className="text-[8px] font-mono font-bold text-amber-200 uppercase tracking-wider">
+                        {project.categoryLabel}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 font-bold">
-                        ACTIVE PRODUCTION · 0{activeIdx + 1}/0{filteredProjects.length}
-                      </span>
+                    {/* System # */}
+                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/85 border border-white/20 text-[8px] font-mono text-amber-300 font-bold">
+                      0{index + 1}
                     </div>
                   </div>
 
-                  <h3 className="font-extrabold text-2xl sm:text-3xl xl:text-4xl uppercase tracking-tight font-sans text-white leading-tight">
-                    {activeProject.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm font-mono text-amber-200/90 mt-0.5">
-                    {activeProject.subtitle}
-                  </p>
-                  <p className="text-[11px] font-mono text-gray-400 mt-1">
-                    <span className="text-amber-400/90 font-bold">CLIENT / DOMAIN:</span>{" "}
-                    <span className="text-gray-200">{activeProject.client}</span>
-                  </p>
-                </div>
+                  {/* Bottom 48%: Info & Action */}
+                  <div className="p-2.5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h4 className="text-[12px] font-bold text-white uppercase tracking-tight truncate font-sans group-hover/orbit:text-amber-200 transition-colors">
+                        {project.title}
+                      </h4>
+                      <p className="text-[9px] font-mono text-amber-400/80 truncate">
+                        {project.subtitle}
+                      </p>
+                    </div>
 
-                {/* 3 Clean Reveal Tabs */}
-                <div className="flex items-center gap-1 p-1 rounded-xl bg-black/60 border border-white/10">
-                  {[
-                    { id: "summary", label: "EXECUTIVE SUMMARY", icon: Eye },
-                    { id: "metrics", label: "PERFORMANCE METRICS", icon: Gauge },
-                    { id: "architecture", label: "TECH BLUEPRINT", icon: Cpu },
-                  ].map((tab) => {
-                    const isTabActive = activeTab === tab.id;
-                    const Icon = tab.icon;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as RevealTab)}
-                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all duration-200 ${
-                          isTabActive
-                            ? "bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)]"
-                            : "text-gray-400 hover:text-amber-200"
-                        }`}
-                      >
-                        <Icon size={12} />
-                        <span className="truncate">{tab.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Dynamic Tab Content Area */}
-                <div className="min-h-[110px] flex flex-col justify-center">
-                  <AnimatePresence mode="wait">
-                    {activeTab === "summary" && (
-                      <motion.div
-                        key="tab-summary"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2 }}
-                        className="text-xs sm:text-sm text-gray-200 leading-relaxed font-sans"
-                      >
-                        {activeProject.description}
-                      </motion.div>
-                    )}
-
-                    {activeTab === "metrics" && (
-                      <motion.div
-                        key="tab-metrics"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2 }}
-                        className="grid grid-cols-2 gap-2"
-                      >
-                        {activeProject.impactMetrics.map((m, mIdx) => (
-                          <div
-                            key={mIdx}
-                            className="p-2.5 rounded-xl bg-black/60 border border-amber-500/20 flex flex-col justify-between"
+                    <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10 mt-1">
+                      <div className="flex items-center gap-1 overflow-hidden">
+                        {project.tech.slice(0, 2).map((t: string) => (
+                          <span
+                            key={t}
+                            className="px-1.5 py-0.5 rounded bg-white/[0.06] text-[8px] font-mono text-gray-300 truncate"
                           >
-                            <span className="text-[9px] font-mono uppercase tracking-wider text-amber-400/80">
-                              {m.label}
-                            </span>
-                            <span className="text-base sm:text-lg font-extrabold font-sans text-white tracking-wide">
-                              {m.value}
-                            </span>
-                          </div>
+                            {t}
+                          </span>
                         ))}
-                      </motion.div>
-                    )}
+                      </div>
 
-                    {activeTab === "architecture" && (
-                      <motion.div
-                        key="tab-architecture"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2 }}
-                        className="space-y-1.5"
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setModalProject(project);
+                        }}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-[8px] font-mono font-bold uppercase tracking-wider shrink-0 transition-transform hover:scale-105 shadow cursor-pointer"
+                        title="Inspect System Blueprint"
                       >
-                        {activeProject.architectureHighlights.slice(0, 3).map((arch, aIdx) => (
-                          <div key={aIdx} className="flex items-start gap-2 text-xs text-gray-300">
-                            <CheckCircle2 size={13} className="text-amber-400 shrink-0 mt-0.5" />
-                            <span className="line-clamp-2">{arch}</span>
-                          </div>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        <Maximize2 size={9} />
+                        <span>OPEN</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-
-                {/* Tech Pills */}
-                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/10">
-                  {activeProject.tech.slice(0, 5).map((t) => (
-                    <span
-                      key={t}
-                      className="px-2.5 py-0.5 rounded-md bg-white/[0.04] border border-white/10 text-gray-300 font-mono text-[10px] hover:border-amber-500/40 hover:text-amber-200 transition-colors"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <button
-                    onClick={() => setModalProject(activeProject)}
-                    className="royal-sheen flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-mono font-bold text-xs uppercase tracking-wider shadow-lg hover:scale-[1.01] transition-all"
-                  >
-                    <Maximize2 size={13} />
-                    <span>INSPECT FULL BLUEPRINT</span>
-                  </button>
-
-                  {activeProject.links?.live && (
-                    <a
-                      href={activeProject.links.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/12 border border-white/15 text-gray-200 hover:text-amber-300 font-mono text-xs font-bold uppercase transition-all"
-                      title="Launch Live Production Site"
-                    >
-                      <Globe size={14} />
-                      <span>Live Site</span>
-                      <ExternalLink size={12} />
-                    </a>
-                  )}
-
-                  {activeProject.links?.github && (
-                    <a
-                      href={activeProject.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/12 border border-white/15 text-gray-200 hover:text-amber-300 font-mono text-xs font-bold uppercase transition-all"
-                      title="View GitHub Repository"
-                    >
-                      <GitHubIcon className="w-3.5 h-3.5" />
-                      <span>Source</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+              );
+            }}
+          />
+        </div>
       </div>
 
-      {/* ── 4. Filmstrip Selector Deck (7 Cards, Fully Responsive) ── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full pt-4">
-        <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.22em] text-amber-300/80 px-2 mb-3">
-          <span>PRODUCTION REGISTRY · SELECT TO VIEW SYSTEM BLUEPRINT</span>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400 hidden sm:inline">USE ← / → ARROWS</span>
-            <button
-              onClick={prevProject}
-              className="p-1.5 rounded-lg bg-black/60 hover:bg-black/90 border border-amber-500/30 text-amber-200 hover:text-white transition-colors"
-              aria-label="Previous project"
-            >
-              <ChevronLeft size={14} />
-            </button>
-            <button
-              onClick={nextProject}
-              className="p-1.5 rounded-lg bg-black/60 hover:bg-black/90 border border-amber-500/30 text-amber-200 hover:text-white transition-colors"
-              aria-label="Next project"
-            >
-              <ChevronRight size={14} />
-            </button>
+      {/* ── 4. Bottom Telemetry Bar & Controls ── */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 px-2 border-t border-white/10 backdrop-blur-sm">
+        {/* Active project quick summary */}
+        <div className="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+          <div className="flex items-center gap-2 truncate">
+            <span className="text-white font-extrabold text-xs sm:text-sm font-sans uppercase tracking-wide truncate">
+              0{activeIdx + 1} // {activeProject.title}
+            </span>
+            <span className="text-[9px] font-mono text-amber-400/90 uppercase px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 shrink-0 hidden sm:inline">
+              {activeProject.categoryLabel}
+            </span>
           </div>
         </div>
 
-        {/* Filmstrip cards: grid on md+, horizontal scroll on mobile */}
-        <div className="flex md:grid md:grid-cols-7 gap-3 overflow-x-auto pb-2 scrollbar-none">
-          {filteredProjects.map((p, idx) => {
-            const isSelected = activeProject.id === p.id;
-            return (
-              <button
-                key={p.id}
-                onClick={() => selectProject(idx)}
-                className={`flex-shrink-0 w-36 md:w-auto rounded-2xl border text-left overflow-hidden transition-all duration-300 focus:outline-none flex flex-col justify-between backdrop-blur-xl ${
-                  isSelected
-                    ? "border-amber-400/90 bg-[#180409]/95 shadow-[0_0_25px_rgba(245,158,11,0.5),0_0_15px_rgba(220,38,38,0.4)] scale-[1.02] ring-2 ring-amber-500/60"
-                    : "border-white/10 bg-black/60 hover:border-amber-500/40 hover:bg-black/80 opacity-70 hover:opacity-100"
-                }`}
-                aria-label={`Select ${p.title}`}
-              >
-                {/* Thumbnail */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
-                  <img
-                    src={p.image}
-                    alt={p.title}
-                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
-                  <span className="absolute top-1.5 left-1.5 font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/80 text-amber-400 font-bold border border-amber-500/20">
-                    0{idx + 1}
-                  </span>
-                  {isSelected && (
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,1)] animate-pulse" />
-                  )}
-                </div>
+        {/* Category Filter Pills & Open Modal Button */}
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          {/* Filter tabs */}
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-black/70 border border-amber-500/25">
+            {projectCategories.map((cat) => {
+              const isCatActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    setActiveIdx(0);
+                  }}
+                  className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-all cursor-pointer ${
+                    isCatActive
+                      ? "bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold shadow"
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  {cat.id === "all" ? "ALL" : cat.id.split("-")[0].toUpperCase()}
+                </button>
+              );
+            })}
+          </div>
 
-                {/* Label */}
-                <div className="p-2 sm:p-2.5">
-                  <h4
-                    className={`text-xs font-bold font-sans truncate transition-colors ${
-                      isSelected ? "text-amber-100 font-bold" : "text-gray-300 group-hover:text-white"
-                    }`}
-                  >
-                    {p.title}
-                  </h4>
-                  <p className="text-[9px] font-mono text-gray-500 truncate uppercase mt-0.5">
-                    {p.categoryLabel}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+          {/* Inspect Blueprint Modal Trigger */}
+          <button
+            onClick={() => setModalProject(activeProject)}
+            className="flex items-center gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(220,38,38,0.5)] transition-transform hover:scale-105 shrink-0 cursor-pointer"
+          >
+            <Maximize2 size={12} />
+            <span>INSPECT BLUEPRINT</span>
+          </button>
         </div>
       </div>
 
-      {/* ── 5. Full-Screen Deep-Dive Modal Inspector (Portal to document.body) ── */}
+      {/* ── 5. Fullscreen Cinematic Project Blueprint Modal ── */}
       {mounted &&
         createPortal(
           <AnimatePresence>
             {modalProject && (
               <div
-                className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-10 select-none"
+                className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 md:p-10 select-none"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="modalProjectTitle"
               >
-                {/* Dark Liquid Glass Backdrop */}
+                {/* Backdrop */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setModalProject(null)}
-                  className="absolute inset-0 bg-black/94 backdrop-blur-2xl"
+                  className="absolute inset-0 bg-black/85 backdrop-blur-2xl"
                 />
 
                 {/* Modal Container */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.94, y: 25 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.94, y: 25 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative z-10 w-full max-w-6xl max-h-[94vh] flex flex-col rounded-3xl border border-amber-500/50 bg-[#0e0307] shadow-[0_0_80px_rgba(220,38,38,0.35),0_30px_90px_rgba(0,0,0,0.95)] overflow-hidden text-white"
+                  initial={{ scale: 0.94, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.94, opacity: 0, y: 20 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  className="relative z-10 w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl bg-[#0b0204]/96 border border-amber-500/40 shadow-[0_25px_80px_rgba(0,0,0,0.98),0_0_50px_rgba(200,56,43,0.35)] overflow-hidden"
                 >
-                  {/* Top Header Bar */}
-                  <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-white/[0.02]">
+                  {/* Modal Header */}
+                  <div className="p-4 sm:p-6 border-b border-white/10 flex items-center justify-between gap-4 bg-gradient-to-r from-[#170308] to-transparent">
                     <div className="flex items-center gap-3">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)] animate-pulse" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,1)]" />
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.22em] text-amber-400 font-bold">
@@ -719,7 +400,7 @@ export default function Projects() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setModalProject(null)}
-                        className="p-2 sm:p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white transition-colors"
+                        className="p-2 sm:p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
                         aria-label="Close project blueprint"
                       >
                         <X size={20} />
@@ -727,14 +408,14 @@ export default function Projects() {
                     </div>
                   </div>
 
-                  {/* Scrollable Blueprint Content */}
+                  {/* Scrollable Content */}
                   <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
-                    {/* Widescreen Screenshot Showcase */}
+                    {/* Widescreen Screenshot */}
                     <div className="w-full rounded-2xl overflow-hidden border border-amber-500/30 bg-black shadow-[0_20px_50px_rgba(0,0,0,0.95)]">
                       <img
                         src={modalProject.image}
                         alt={modalProject.title}
-                        className="w-full h-auto object-cover max-h-[55vh]"
+                        className="w-full h-auto object-cover max-h-[50vh]"
                       />
                     </div>
 
@@ -761,9 +442,8 @@ export default function Projects() {
                       </div>
                     </div>
 
-                    {/* Detailed Production Narrative & Architecture Grid */}
+                    {/* Specifications & Highlights */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pt-2">
-                      {/* Left: Narrative (7 cols) */}
                       <div className="md:col-span-7 space-y-3">
                         <h4 className="text-[11px] font-mono uppercase tracking-[0.25em] text-amber-400/90 flex items-center gap-2">
                           <Layers size={13} className="text-amber-400" />
@@ -774,7 +454,6 @@ export default function Projects() {
                         </p>
                       </div>
 
-                      {/* Right: Architecture Highlights (5 cols) */}
                       <div className="md:col-span-5 space-y-3">
                         <h4 className="text-[11px] font-mono uppercase tracking-[0.25em] text-amber-400/90 flex items-center gap-2">
                           <Cpu size={13} className="text-amber-400" />
@@ -797,7 +476,7 @@ export default function Projects() {
                       </div>
                     </div>
 
-                    {/* Full Technical Stack Matrix */}
+                    {/* Tech Stack */}
                     <div className="pt-2 border-t border-white/10">
                       <h4 className="text-[11px] font-mono uppercase tracking-[0.25em] text-amber-400/90 mb-2.5 flex items-center gap-2">
                         <Terminal size={13} className="text-amber-400" />
@@ -816,7 +495,7 @@ export default function Projects() {
                     </div>
                   </div>
 
-                  {/* Modal Footer: Live Deployment Actions */}
+                  {/* Modal Footer Actions */}
                   <div className="p-4 sm:p-6 border-t border-white/10 bg-[#070103] flex flex-wrap items-center justify-between gap-4">
                     <span className="text-xs font-mono text-gray-400 flex items-center gap-2">
                       <ShieldCheck size={14} className="text-emerald-400" />
