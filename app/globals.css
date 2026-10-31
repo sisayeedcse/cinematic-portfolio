@@ -81,6 +81,14 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+/* High-Fidelity Artwork Sharpness & Anti-Blur Optimization */
+.cinematic-backdrop-img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 html.is-booting .furniture,
 html.is-booting #hdr { opacity: 0; }
 

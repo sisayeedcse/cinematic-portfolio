@@ -50,7 +50,7 @@ export default function Certifications() {
         0
       );
 
-      // 2. High-Resolution Artwork Expansion (Crisp, zero blur)
+      // 2. High-Resolution Artwork Expansion (Crisp, zero blur, clear transform on complete)
       tl.fromTo(
         bgImgRef.current,
         {
@@ -62,6 +62,7 @@ export default function Certifications() {
           scale: 1.0,
           duration: 0.85,
           ease: "power3.inOut",
+          clearProps: "scale",
         },
         0
       );
@@ -118,7 +119,7 @@ export default function Certifications() {
           ref={bgImgRef}
           src="/media/certificates-clean-throne.jpg"
           alt="Sayeed Ibne Saif — Verified Credentials & Certificates"
-          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
+          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none cinematic-backdrop-img saturate-[0.80] filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
@@ -158,7 +159,7 @@ export default function Certifications() {
       {/* ── 2. Top Cinema Marquee HUD ── */}
       <div
         ref={hudRef}
-        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm"
+        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20"
       >
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />

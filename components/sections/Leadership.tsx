@@ -99,7 +99,7 @@ export default function Leadership() {
         0
       );
 
-      // 2. High-Resolution Throne Artwork Expansion (Crisp, zero blur)
+      // 2. High-Resolution Throne Artwork Expansion (Crisp, zero blur, clear transform on complete)
       tl.fromTo(
         bgImgRef.current,
         {
@@ -111,6 +111,7 @@ export default function Leadership() {
           scale: 1.0,
           duration: 0.85,
           ease: "power3.inOut",
+          clearProps: "scale",
         },
         0
       );
@@ -187,7 +188,7 @@ export default function Leadership() {
           ref={bgImgRef}
           src="/media/leadership-clean-throne.jpg"
           alt="Sayeed Ibne Saif — Executive Leadership"
-          className="w-full h-full object-cover object-[center_30%] sm:object-center select-none filter contrast-105 brightness-100 will-change-transform"
+          className="w-full h-full object-cover object-[center_30%] sm:object-center select-none cinematic-backdrop-img filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
@@ -226,7 +227,7 @@ export default function Leadership() {
       {/* ── 2. Top Cinema Marquee HUD (Elevated to top, keeping central portrait clear) ── */}
       <div
         ref={hudRef}
-        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 backdrop-blur-sm opacity-0"
+        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-amber-200/80 uppercase tracking-[0.25em] pb-4 border-b border-amber-500/20 opacity-0"
       >
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
