@@ -4,10 +4,14 @@ import CinematicHero from "@/components/sections/CinematicHero";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicHeader from "@/components/layout/CinematicHeader";
 import SceneDirectorHUD from "@/components/layout/SceneDirectorHUD";
+import CascadingDotsCursor from "@/components/ui/CascadingDotsCursor";
 
 export default function Home() {
   return (
     <>
+      {/* Cascading Dots Cursor Trail — Crimson→Gold */}
+      <CascadingDotsCursor />
+
       {/* Cinematic Header / Menu */}
       <CinematicHeader />
 
