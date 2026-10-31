@@ -1,6 +1,7 @@
 "use client";
 
 import CinematicHero from "@/components/sections/CinematicHero";
+import Leadership from "@/components/sections/Leadership";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicHeader from "@/components/layout/CinematicHeader";
 import SceneDirectorHUD from "@/components/layout/SceneDirectorHUD";
@@ -23,7 +24,10 @@ export default function Home() {
 
       {/* Main Flow: Scrolls over the fixed hero stage */}
       <main className="flow">
-        {/* Scene 02 — Closing Finale */}
+        {/* Scene 02 — Executive Leadership Journey */}
+        <Leadership />
+
+        {/* Scene 03 — Closing Finale */}
         <CinematicFooter />
       </main>
     </>
