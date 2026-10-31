@@ -3,6 +3,7 @@
 import CinematicHero from "@/components/sections/CinematicHero";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
+import AcademicFoundation from "@/components/sections/AcademicFoundation";
 import Leadership from "@/components/sections/Leadership";
 import CinematicFooter from "@/components/sections/CinematicFooter";
 import CinematicHeader from "@/components/layout/CinematicHeader";
@@ -32,10 +33,13 @@ export default function Home() {
         {/* Scene 03 — Production Systems (Orbital Showcase) */}
         <Projects />
 
-        {/* Scene 04 — Executive Leadership Journey */}
+        {/* Scene 04 — Academic Foundation (CGPA Highlight) */}
+        <AcademicFoundation />
+
+        {/* Scene 05 — Executive Leadership Journey */}
         <Leadership />
 
-        {/* Scene 05 — Closing Finale */}
+        {/* Scene 06 — Closing Finale */}
         <CinematicFooter />
       </main>
     </>

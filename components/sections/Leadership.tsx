@@ -111,7 +111,7 @@ export default function Leadership() {
       >
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
-          SCENE 04 // EXECUTIVE LEADERSHIP
+          SCENE 05 // EXECUTIVE LEADERSHIP
         </span>
 
         {/* Minimal letterspaced title */}
