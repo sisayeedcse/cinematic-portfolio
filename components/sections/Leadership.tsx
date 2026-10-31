@@ -63,6 +63,8 @@ export default function Leadership() {
   const [activeId, setActiveId] = useState<string>("chairperson");
 
   const sectionRef = useRef<HTMLElement>(null);
+  const leftCurtainRef = useRef<HTMLDivElement>(null);
+  const rightCurtainRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLImageElement>(null);
   const sweepRef = useRef<HTMLDivElement>(null);
   const hudRef = useRef<HTMLDivElement>(null);
@@ -83,74 +85,88 @@ export default function Leadership() {
         },
       });
 
-      // 1. Stage Floor & Throne Hall perspective tilt-up and focus reveal
+      // 1. Dual Royal Curtain Parting with 2 Golden Lines (Zero Blur, Snappy)
+      tl.fromTo(
+        leftCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: -101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+      tl.fromTo(
+        rightCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: 101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+
+      // 2. High-Resolution Throne Artwork Expansion (Crisp, zero blur)
       tl.fromTo(
         bgImgRef.current,
         {
-          scale: 1.12,
-          filter: "blur(14px) brightness(0.55)",
+          clipPath: "inset(0% 50% 0% 50%)",
+          scale: 1.08,
         },
         {
+          clipPath: "inset(0% 0% 0% 0%)",
           scale: 1.0,
-          filter: "blur(0px) brightness(1.0)",
-          duration: 1.4,
-          ease: "power2.out",
+          duration: 0.85,
+          ease: "power3.inOut",
         },
         0
       );
 
-      // 2. Anamorphic Golden Light Beam sweep across the throne
+      // 3. Anamorphic Golden Light Beam sweep across the throne
       tl.fromTo(
         sweepRef.current,
-        { x: "-100%", opacity: 0.9 },
-        { x: "200%", opacity: 0, duration: 1.5, ease: "power2.inOut" },
+        { x: "-100%", opacity: 0.85 },
+        { x: "200%", opacity: 0, duration: 1.0, ease: "power2.inOut" },
         0.15
       );
 
-      // 3. Marquee HUD unroll
+      // 4. Marquee HUD Entrance
       tl.fromTo(
         hudRef.current,
-        { y: -25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
         0.2
       );
 
-      // 4. Lateral Badges slide in
+      // 5. Lateral Badges slide in
       if (lateralLeftRef.current && lateralRightRef.current) {
         tl.fromTo(
           lateralLeftRef.current,
-          { x: -35, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-          0.35
+          { x: -30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          0.25
         );
         tl.fromTo(
           lateralRightRef.current,
-          { x: 35, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-          0.35
+          { x: 30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          0.25
         );
       }
 
-      // 5. Executive Milestone Cards 3D rise from stage floor reflection
+      // 6. Executive Milestone Cards 3D rise (Fast & Snappy)
       const cards = cardsContainerRef.current?.querySelectorAll(".milestone-card");
       if (cards && cards.length > 0) {
         tl.fromTo(
           cards,
           {
-            y: 45,
+            y: 35,
             opacity: 0,
-            rotateX: 12,
-            transformPerspective: 900,
+            rotateX: 10,
+            transformPerspective: 800,
           },
           {
             y: 0,
             opacity: 1,
             rotateX: 0,
-            duration: 0.9,
-            stagger: 0.12,
+            duration: 0.55,
+            stagger: 0.06,
             ease: "power3.out",
           },
-          0.35
+          0.3
         );
       }
     }, sectionRef);
@@ -172,6 +188,7 @@ export default function Leadership() {
           src="/media/leadership-clean-throne.png"
           alt="Sayeed Ibne Saif — Executive Leadership"
           className="w-full h-full object-cover object-[center_30%] sm:object-center select-none filter contrast-105 brightness-100 will-change-transform"
+          style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
 
@@ -189,6 +206,16 @@ export default function Leadership() {
         <div
           ref={sweepRef}
           className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
+        />
+
+        {/* ── Royal Dual-Curtain Split Reveal with 2 Parting Golden Lines (Zero Blur) ── */}
+        <div
+          ref={leftCurtainRef}
+          className="absolute top-0 bottom-0 left-0 w-1/2 z-10 pointer-events-none bg-gradient-to-r from-[#050102] via-[#0d0205] to-[#120306] border-r border-[#d4af37] shadow-[2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
+        />
+        <div
+          ref={rightCurtainRef}
+          className="absolute top-0 bottom-0 right-0 w-1/2 z-10 pointer-events-none bg-gradient-to-l from-[#050102] via-[#0d0205] to-[#120306] border-l border-[#d4af37] shadow-[-2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}

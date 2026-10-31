@@ -124,7 +124,8 @@ export default function Skills() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const sectionRef = useRef<HTMLElement>(null);
-  const bgContainerRef = useRef<HTMLDivElement>(null);
+  const leftCurtainRef = useRef<HTMLDivElement>(null);
+  const rightCurtainRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLImageElement>(null);
   const sweepRef = useRef<HTMLDivElement>(null);
   const hudRef = useRef<HTMLDivElement>(null);
@@ -147,69 +148,67 @@ export default function Skills() {
         },
       });
 
-      // 1. Cinematic Widescreen Mask Expansion (Technique B: Cinematic Mask Reveal)
+      // 1. Dual Royal Curtain Parting with 2 Golden Lines (Zero Blur, Snappy)
       tl.fromTo(
-        bgContainerRef.current,
+        leftCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: -101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+      tl.fromTo(
+        rightCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: 101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+
+      // 2. High-Resolution Artwork Expansion (Crisp, zero blur)
+      tl.fromTo(
+        bgImgRef.current,
         {
-          clipPath: "inset(10% 0% 10% 0% round 20px)",
-          opacity: 0.3,
+          clipPath: "inset(0% 50% 0% 50%)",
+          scale: 1.08,
         },
         {
-          clipPath: "inset(0% 0% 0% 0% round 0px)",
-          opacity: 1,
-          duration: 1.4,
+          clipPath: "inset(0% 0% 0% 0%)",
+          scale: 1.0,
+          duration: 0.85,
           ease: "power3.inOut",
         },
         0
       );
 
-      // 2. Camera Settle & Contrast (scale 1.14 -> 1.0)
-      tl.fromTo(
-        bgImgRef.current,
-        {
-          scale: 1.14,
-          filter: "blur(12px) brightness(0.5) contrast(1.2)",
-        },
-        {
-          scale: 1.0,
-          filter: "blur(0px) brightness(1.0) contrast(1.05)",
-          duration: 1.5,
-          ease: "expo.out",
-        },
-        0.1
-      );
-
-      // 3. Anamorphic Flare Sweep
+      // 3. Subtle Anamorphic Flare Sweep
       tl.fromTo(
         sweepRef.current,
-        { x: "-100%", opacity: 0.9 },
-        { x: "200%", opacity: 0, duration: 1.6, ease: "power2.inOut" },
+        { x: "-100%", opacity: 0.8 },
+        { x: "200%", opacity: 0, duration: 1.0, ease: "power2.inOut" },
+        0.2
+      );
+
+      // 4. Marquee HUD Entrance
+      tl.fromTo(
+        hudRef.current,
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
         0.3
       );
 
-      // 4. Marquee HUD Unroll
-      tl.fromTo(
-        hudRef.current,
-        { y: -25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-        0.4
-      );
-
-      // 5. Holographic Primitives Stagger (Technique F: Cinematic Stagger Reveal)
+      // 5. Holographic Primitives Stagger (Fast & Snappy)
       const logoButtons = gridContainerRef.current?.querySelectorAll(".skill-logo-btn");
       if (logoButtons && logoButtons.length > 0) {
         tl.fromTo(
           logoButtons,
-          { scale: 0, opacity: 0, y: 25 },
+          { scale: 0.4, opacity: 0, y: 18 },
           {
             scale: 1,
             opacity: 1,
             y: 0,
-            stagger: 0.035,
-            duration: 0.6,
-            ease: "back.out(1.8)",
+            stagger: 0.025,
+            duration: 0.45,
+            ease: "back.out(1.5)",
           },
-          0.5
+          0.35
         );
       }
     }, sectionRef);
@@ -225,15 +224,13 @@ export default function Skills() {
       aria-labelledby="skillsTitle"
     >
       {/* ── 1. Master High-Resolution Artwork (Sayeed on Throne with Glowing 3D SKILLS & Crown) ── */}
-      <div
-        ref={bgContainerRef}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center will-change-transform"
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center will-change-transform">
         <img
           ref={bgImgRef}
           src="/media/skills-throne-clean.jpg"
           alt="Sayeed Ibne Saif — Technical Arsenal & Skills"
           className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
+          style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
 
@@ -250,7 +247,17 @@ export default function Skills() {
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
         <div
           ref={sweepRef}
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
+        />
+
+        {/* ── Royal Dual-Curtain Split Reveal with 2 Parting Golden Lines (Zero Blur) ── */}
+        <div
+          ref={leftCurtainRef}
+          className="absolute top-0 bottom-0 left-0 w-1/2 z-10 pointer-events-none bg-gradient-to-r from-[#050102] via-[#0d0205] to-[#120306] border-r border-[#d4af37] shadow-[2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
+        />
+        <div
+          ref={rightCurtainRef}
+          className="absolute top-0 bottom-0 right-0 w-1/2 z-10 pointer-events-none bg-gradient-to-l from-[#050102] via-[#0d0205] to-[#120306] border-l border-[#d4af37] shadow-[-2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}

@@ -12,6 +12,8 @@ if (typeof window !== "undefined") {
 
 export default function AcademicFoundation() {
   const sectionRef = useRef<HTMLElement>(null);
+  const leftCurtainRef = useRef<HTMLDivElement>(null);
+  const rightCurtainRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLImageElement>(null);
   const haloRef = useRef<HTMLDivElement>(null);
   const sweepRef = useRef<HTMLDivElement>(null);
@@ -32,63 +34,75 @@ export default function AcademicFoundation() {
         },
       });
 
-      // 1. Royal Velvet Background Rise (Technique D: Editorial Slide Reveal)
+      // 1. Dual Royal Curtain Parting with 2 Golden Lines (Zero Blur, Snappy)
+      tl.fromTo(
+        leftCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: -101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+      tl.fromTo(
+        rightCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: 101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+
+      // 2. High-Resolution Artwork Expansion (Crisp, zero blur)
       tl.fromTo(
         bgImgRef.current,
         {
-          scale: 1.12,
-          yPercent: -6,
-          filter: "blur(12px) brightness(0.55) contrast(1.2)",
+          clipPath: "inset(0% 50% 0% 50%)",
+          scale: 1.08,
         },
         {
+          clipPath: "inset(0% 0% 0% 0%)",
           scale: 1.0,
-          yPercent: 0,
-          filter: "blur(0px) brightness(1.0) contrast(1.05)",
-          duration: 1.4,
-          ease: "expo.out",
+          duration: 0.85,
+          ease: "power3.inOut",
         },
         0
       );
 
-      // 2. Halo Aura Breathing Behind Sunglasses & Crown (Technique G: Light & Shadow Reveal)
+      // 3. Halo Aura Breathing Behind Sunglasses & Crown
       tl.fromTo(
         haloRef.current,
-        { opacity: 0, scale: 0.8 },
-        { opacity: 0.5, scale: 1.05, duration: 1.5, ease: "power2.out" },
-        0.2
+        { opacity: 0, scale: 0.85 },
+        { opacity: 0.5, scale: 1.0, duration: 1.0, ease: "power2.out" },
+        0.15
       );
 
-      // 3. Golden Light Sweep across the throne
+      // 4. Golden Light Sweep across the throne
       tl.fromTo(
         sweepRef.current,
         { x: "-100%", opacity: 0.85 },
-        { x: "200%", opacity: 0, duration: 1.6, ease: "power2.inOut" },
+        { x: "200%", opacity: 0, duration: 1.0, ease: "power2.inOut" },
+        0.2
+      );
+
+      // 5. Marquee HUD Entrance
+      tl.fromTo(
+        hudRef.current,
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0.25
+      );
+
+      // 6. CGPA Distinction Card Slide-in (Snappy)
+      tl.fromTo(
+        cardRef.current,
+        { x: 45, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
         0.3
       );
 
-      // 4. Marquee HUD Unroll
-      tl.fromTo(
-        hudRef.current,
-        { y: -25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-        0.35
-      );
-
-      // 5. CGPA Distinction Card Slide-in
-      tl.fromTo(
-        cardRef.current,
-        { x: 60, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1.0, ease: "power3.out" },
-        0.4
-      );
-
-      // 6. Circular Radial Gauge Stroke Fill (0% -> 94.75%)
+      // 7. Circular Radial Gauge Stroke Fill (0% -> 94.75%)
       if (gaugeRef.current) {
         tl.fromTo(
           gaugeRef.current,
           { strokeDasharray: "0, 100" },
-          { strokeDasharray: "94.75, 100", duration: 1.4, ease: "power2.out" },
-          0.6
+          { strokeDasharray: "94.75, 100", duration: 1.0, ease: "power2.out" },
+          0.4
         );
       }
     }, sectionRef);
@@ -110,6 +124,7 @@ export default function AcademicFoundation() {
           src="/media/academic-foundation-throne.jpg"
           alt="Sayeed Ibne Saif — Academic Foundation"
           className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
+          style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
 
@@ -127,7 +142,17 @@ export default function AcademicFoundation() {
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
         <div
           ref={sweepRef}
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
+        />
+
+        {/* ── Royal Dual-Curtain Split Reveal with 2 Parting Golden Lines (Zero Blur) ── */}
+        <div
+          ref={leftCurtainRef}
+          className="absolute top-0 bottom-0 left-0 w-1/2 z-10 pointer-events-none bg-gradient-to-r from-[#050102] via-[#0d0205] to-[#120306] border-r border-[#d4af37] shadow-[2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
+        />
+        <div
+          ref={rightCurtainRef}
+          className="absolute top-0 bottom-0 right-0 w-1/2 z-10 pointer-events-none bg-gradient-to-l from-[#050102] via-[#0d0205] to-[#120306] border-l border-[#d4af37] shadow-[-2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}

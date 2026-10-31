@@ -34,6 +34,8 @@ export default function Projects() {
   const [modalProject, setModalProject] = useState<Project | null>(null);
 
   const sectionRef = useRef<HTMLElement>(null);
+  const leftCurtainRef = useRef<HTMLDivElement>(null);
+  const rightCurtainRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLImageElement>(null);
   const floorGlowRef = useRef<HTMLDivElement>(null);
   const sweepRef = useRef<HTMLDivElement>(null);
@@ -76,60 +78,74 @@ export default function Projects() {
         },
       });
 
-      // 1. Camera Glide on Ferrari Backdrop (Scale 1.12 -> 1.0)
+      // 1. Dual Royal Curtain Parting with 2 Golden Lines (Zero Blur, Snappy)
+      tl.fromTo(
+        leftCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: -101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+      tl.fromTo(
+        rightCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: 101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+
+      // 2. High-Resolution Ferrari Artwork Expansion (Crisp, zero blur)
       tl.fromTo(
         bgImgRef.current,
         {
-          scale: 1.12,
-          filter: "blur(12px) brightness(0.6) contrast(1.15)",
+          clipPath: "inset(0% 50% 0% 50%)",
+          scale: 1.08,
         },
         {
+          clipPath: "inset(0% 0% 0% 0%)",
           scale: 1.0,
-          filter: "blur(0px) brightness(1.0) contrast(1.05)",
-          duration: 1.4,
-          ease: "expo.out",
+          duration: 0.85,
+          ease: "power3.inOut",
         },
         0
       );
 
-      // 2. Automotive Floor Underglow & Spotlight Ignition
+      // 3. Automotive Floor Underglow & Spotlight Ignition
       tl.fromTo(
         floorGlowRef.current,
         { opacity: 0, scaleX: 0.6 },
-        { opacity: 0.7, scaleX: 1.0, duration: 1.2, ease: "power2.out" },
-        0.2
+        { opacity: 0.7, scaleX: 1.0, duration: 0.8, ease: "power2.out" },
+        0.15
       );
 
-      // 3. Headlight Light Sweep across the horizon
+      // 4. Headlight Light Sweep across the horizon
       tl.fromTo(
         sweepRef.current,
         { x: "-100%", opacity: 0.85 },
-        { x: "200%", opacity: 0, duration: 1.5, ease: "power2.inOut" },
+        { x: "200%", opacity: 0, duration: 1.0, ease: "power2.inOut" },
+        0.2
+      );
+
+      // 5. Marquee HUD Entrance
+      tl.fromTo(
+        hudRef.current,
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0.25
+      );
+
+      // 6. Orbit Arena Entrance (Fade & Settle, Snappy)
+      tl.fromTo(
+        orbitWrapRef.current,
+        { opacity: 0, scale: 0.96 },
+        { opacity: 1, scale: 1.0, duration: 0.6, ease: "power3.out" },
         0.3
       );
 
-      // 4. Marquee HUD Unroll
-      tl.fromTo(
-        hudRef.current,
-        { y: -25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-        0.35
-      );
-
-      // 5. Orbit Arena Entrance (Fade & Settle)
-      tl.fromTo(
-        orbitWrapRef.current,
-        { opacity: 0, scale: 0.94 },
-        { opacity: 1, scale: 1.0, duration: 1.0, ease: "power3.out" },
-        0.4
-      );
-
-      // 6. Bottom Telemetry Bar Slide Up
+      // 7. Bottom Telemetry Bar Slide Up
       tl.fromTo(
         bottomBarRef.current,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-        0.6
+        { y: 25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0.35
       );
     }, sectionRef);
 
@@ -172,6 +188,7 @@ export default function Projects() {
           src="/media/projects-ferrari-clean.jpg"
           alt="Sayeed Ibne Saif — Engineering High-Performance Systems"
           className="w-full h-full object-cover object-[55%_center] sm:object-[center_35%] select-none filter contrast-105 brightness-100 will-change-transform"
+          style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
 
@@ -189,7 +206,17 @@ export default function Projects() {
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
         <div
           ref={sweepRef}
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
+        />
+
+        {/* ── Royal Dual-Curtain Split Reveal with 2 Parting Golden Lines (Zero Blur) ── */}
+        <div
+          ref={leftCurtainRef}
+          className="absolute top-0 bottom-0 left-0 w-1/2 z-10 pointer-events-none bg-gradient-to-r from-[#050102] via-[#0d0205] to-[#120306] border-r border-[#d4af37] shadow-[2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
+        />
+        <div
+          ref={rightCurtainRef}
+          className="absolute top-0 bottom-0 right-0 w-1/2 z-10 pointer-events-none bg-gradient-to-l from-[#050102] via-[#0d0205] to-[#120306] border-l border-[#d4af37] shadow-[-2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}

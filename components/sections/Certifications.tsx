@@ -15,6 +15,8 @@ export default function Certifications() {
   const [activeId, setActiveId] = useState<string>(certifications[0].id);
 
   const sectionRef = useRef<HTMLElement>(null);
+  const leftCurtainRef = useRef<HTMLDivElement>(null);
+  const rightCurtainRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLImageElement>(null);
   const mistRef = useRef<HTMLDivElement>(null);
   const sweepRef = useRef<HTMLDivElement>(null);
@@ -34,54 +36,68 @@ export default function Certifications() {
         },
       });
 
-      // 1. Heroic Character Silhouette & Mist Expansion (Technique A + F)
+      // 1. Dual Royal Curtain Parting with 2 Golden Lines (Zero Blur, Snappy)
+      tl.fromTo(
+        leftCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: -101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+      tl.fromTo(
+        rightCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: 101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+
+      // 2. High-Resolution Artwork Expansion (Crisp, zero blur)
       tl.fromTo(
         bgImgRef.current,
         {
-          scale: 1.14,
-          filter: "blur(12px) brightness(0.55) contrast(1.2)",
+          clipPath: "inset(0% 50% 0% 50%)",
+          scale: 1.08,
         },
         {
+          clipPath: "inset(0% 0% 0% 0%)",
           scale: 1.0,
-          filter: "blur(0px) brightness(1.0) contrast(1.05)",
-          duration: 1.4,
-          ease: "expo.out",
+          duration: 0.85,
+          ease: "power3.inOut",
         },
         0
       );
 
-      // 2. Volumetric Crimson Mist Bloom
+      // 3. Volumetric Crimson Mist Bloom
       tl.fromTo(
         mistRef.current,
         { opacity: 0, scale: 0.85 },
-        { opacity: 0.5, scale: 1.05, duration: 1.5, ease: "power2.out" },
-        0.2
+        { opacity: 0.5, scale: 1.0, duration: 0.9, ease: "power2.out" },
+        0.15
       );
 
-      // 3. Golden Light Sweep across the stage
+      // 4. Golden Light Sweep across the stage
       tl.fromTo(
         sweepRef.current,
         { x: "-100%", opacity: 0.85 },
-        { x: "200%", opacity: 0, duration: 1.6, ease: "power2.inOut" },
-        0.3
+        { x: "200%", opacity: 0, duration: 1.0, ease: "power2.inOut" },
+        0.2
       );
 
-      // 4. Marquee HUD Unroll
+      // 5. Marquee HUD Entrance
       tl.fromTo(
         hudRef.current,
-        { y: -25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-        0.35
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0.25
       );
 
-      // 5. Cascading Slate Reveal for Credential Tiles
+      // 6. Cascading Slate Reveal for Credential Tiles (Fast & Snappy)
       const tiles = stackRef.current?.querySelectorAll(".cert-tile");
       if (tiles && tiles.length > 0) {
         tl.fromTo(
           tiles,
-          { x: 45, opacity: 0 },
-          { x: 0, opacity: 1, stagger: 0.05, duration: 0.65, ease: "power3.out" },
-          0.45
+          { x: 35, opacity: 0 },
+          { x: 0, opacity: 1, stagger: 0.03, duration: 0.45, ease: "power3.out" },
+          0.3
         );
       }
     }, sectionRef);
@@ -103,6 +119,7 @@ export default function Certifications() {
           src="/media/certificates-clean-throne.png"
           alt="Sayeed Ibne Saif — Verified Credentials & Certificates"
           className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
+          style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
 
@@ -120,7 +137,17 @@ export default function Certifications() {
         {/* Anamorphic Golden Light Sweep on Viewport Reveal */}
         <div
           ref={sweepRef}
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
+        />
+
+        {/* ── Royal Dual-Curtain Split Reveal with 2 Parting Golden Lines (Zero Blur) ── */}
+        <div
+          ref={leftCurtainRef}
+          className="absolute top-0 bottom-0 left-0 w-1/2 z-10 pointer-events-none bg-gradient-to-r from-[#050102] via-[#0d0205] to-[#120306] border-r border-[#d4af37] shadow-[2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
+        />
+        <div
+          ref={rightCurtainRef}
+          className="absolute top-0 bottom-0 right-0 w-1/2 z-10 pointer-events-none bg-gradient-to-l from-[#050102] via-[#0d0205] to-[#120306] border-l border-[#d4af37] shadow-[-2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
         />
 
         {/* Edge Vignette Shading for Royal Contrast */}

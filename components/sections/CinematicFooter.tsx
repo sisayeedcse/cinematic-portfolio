@@ -25,6 +25,8 @@ export default function CinematicFooter() {
   const [copied, setCopied] = useState(false);
 
   const footerRef = useRef<HTMLElement>(null);
+  const leftCurtainRef = useRef<HTMLDivElement>(null);
+  const rightCurtainRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLImageElement>(null);
   const sweepRef = useRef<HTMLDivElement>(null);
   const hudRef = useRef<HTMLDivElement>(null);
@@ -46,71 +48,85 @@ export default function CinematicFooter() {
         },
       });
 
-      // 1. Director's Aperture Focus Pull: Rack focus from deep bokeh blur to razor sharp
+      // 1. Dual Royal Curtain Parting with 2 Golden Lines (Zero Blur, Snappy)
+      tl.fromTo(
+        leftCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: -101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+      tl.fromTo(
+        rightCurtainRef.current,
+        { xPercent: 0 },
+        { xPercent: 101, duration: 0.85, ease: "power3.inOut" },
+        0
+      );
+
+      // 2. High-Resolution Artwork Expansion (Crisp, zero blur)
       tl.fromTo(
         bgImgRef.current,
         {
-          scale: 1.10,
-          filter: "blur(16px) brightness(0.55)",
+          clipPath: "inset(0% 50% 0% 50%)",
+          scale: 1.08,
         },
         {
+          clipPath: "inset(0% 0% 0% 0%)",
           scale: 1.0,
-          filter: "blur(0px) brightness(1.0)",
-          duration: 1.4,
-          ease: "power2.out",
+          duration: 0.85,
+          ease: "power3.inOut",
         },
         0
       );
 
-      // 2. Cinematic Anamorphic Light Sweep
+      // 3. Cinematic Anamorphic Light Sweep
       tl.fromTo(
         sweepRef.current,
         { x: "-100%", opacity: 0.85 },
-        { x: "200%", opacity: 0, duration: 1.5, ease: "power2.inOut" },
+        { x: "200%", opacity: 0, duration: 1.0, ease: "power2.inOut" },
         0.15
       );
 
-      // 3. Top Cinema Marquee HUD
+      // 4. Top Cinema Marquee HUD
       tl.fromTo(
         hudRef.current,
-        { y: -25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
         0.2
       );
 
-      // 4. Lateral Badges slide in
+      // 5. Lateral Badges slide in
       if (lateralLeftRef.current && lateralRightRef.current) {
         tl.fromTo(
           lateralLeftRef.current,
-          { x: -35, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-          0.3
+          { x: -30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          0.25
         );
         tl.fromTo(
           lateralRightRef.current,
-          { x: 35, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-          0.3
+          { x: 30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          0.25
         );
       }
 
-      // 5. Marquee strip fade
+      // 6. Marquee strip fade
       if (marqueeRef.current) {
         tl.fromTo(
           marqueeRef.current,
           { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" },
-          0.35
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          0.25
         );
       }
 
-      // 6. Luxury Command Dock slide-up
+      // 7. Luxury Command Dock slide-up (Snappy)
       if (dockRef.current) {
         tl.fromTo(
           dockRef.current,
-          { y: 45, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
-          0.4
+          { y: 35, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+          0.3
         );
       }
     }, footerRef);
@@ -138,6 +154,7 @@ export default function CinematicFooter() {
           src="/media/footer-sayeed.png"
           alt="Sayeed Ibne Saif — Finale"
           className="w-full h-full object-cover object-center select-none filter contrast-105 brightness-100 will-change-transform"
+          style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
 
@@ -155,6 +172,16 @@ export default function CinematicFooter() {
         <div
           ref={sweepRef}
           className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/25 to-transparent pointer-events-none mix-blend-screen -skew-x-12 opacity-0"
+        />
+
+        {/* ── Royal Dual-Curtain Split Reveal with 2 Parting Golden Lines (Zero Blur) ── */}
+        <div
+          ref={leftCurtainRef}
+          className="absolute top-0 bottom-0 left-0 w-1/2 z-10 pointer-events-none bg-gradient-to-r from-[#050102] via-[#0d0205] to-[#120306] border-r border-[#d4af37] shadow-[2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
+        />
+        <div
+          ref={rightCurtainRef}
+          className="absolute top-0 bottom-0 right-0 w-1/2 z-10 pointer-events-none bg-gradient-to-l from-[#050102] via-[#0d0205] to-[#120306] border-l border-[#d4af37] shadow-[-2px_0_15px_rgba(212,175,55,0.5)] will-change-transform"
         />
 
         {/* Soft edge blend at top to connect with previous section */}
