@@ -21,11 +21,7 @@ type Scene = {
 
 const scenes: Scene[] = [
   { id: "stage", num: "01", title: "Cinematic Hero", short: "Hero" },
-  { id: "skills", num: "02", title: "Technical Arsenal", short: "Skills" },
-  { id: "certificates", num: "03", title: "Verified Credentials", short: "Certs" },
-  { id: "leadership", num: "04", title: "Leadership & Creed", short: "Lead" },
-  { id: "projects", num: "05", title: "Production Systems", short: "Projects" },
-  { id: "contact", num: "06", title: "Closing Finale", short: "Finale" },
+  { id: "contact", num: "02", title: "Closing Finale", short: "Finale" },
 ];
 
 export default function SceneDirectorHUD() {
