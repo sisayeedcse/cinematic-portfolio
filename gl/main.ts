@@ -118,23 +118,29 @@ export function createCinematicApp(canvas: HTMLCanvasElement) {
     const held = performance.now() - startedAt;
     if (held < MIN_BLACK) await wait(MIN_BLACK - held);
 
-    clearTimeout(safetyTimer);
-    const playing = await app.clips.hero.play();
-    begin();
-    if (!playing) {
-      const onFirstTap = async () => {
-        await app.clips.hero?.play();
-        window.removeEventListener("pointerdown", onFirstTap);
-        window.removeEventListener("scroll", onFirstTap);
-      };
-      window.addEventListener("pointerdown", onFirstTap, { once: true });
-      window.addEventListener("scroll", onFirstTap, { once: true });
+    try {
+      const playing = await app.clips.hero.play();
+      if (!playing) {
+        const onFirstTap = async () => {
+          await app.clips.hero?.play();
+          window.removeEventListener("pointerdown", onFirstTap);
+          window.removeEventListener("scroll", onFirstTap);
+        };
+        window.addEventListener("pointerdown", onFirstTap, { once: true });
+        window.addEventListener("scroll", onFirstTap, { once: true });
+      }
+    } catch {
+      // Handle autoplay policy or headless environments gracefully
     }
+
+    clearTimeout(safetyTimer);
+    begin();
   }
 
   function begin() {
     if (bootEl) bootEl.classList.add("is-done");
     root.classList.remove("is-booting");
+    window.dispatchEvent(new CustomEvent("hero-ready"));
     app.t0 = performance.now();
     app.running = true;
     bindPointer();

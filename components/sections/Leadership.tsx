@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import TextEngine from "spring-text-engine";
+import ElectricLogo from "@/components/ui/ElectricLogo";
 import {
   Crown,
   Users,
@@ -167,7 +168,7 @@ export default function Leadership() {
           <div className="flex items-center gap-2 mb-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.9)]" />
             <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-amber-400 font-mono">
-              Scene 03 // Executive Leadership
+              Scene 04 // Executive Leadership
             </p>
           </div>
           <TextEngine
@@ -200,26 +201,57 @@ export default function Leadership() {
         </div>
       </div>
 
-      {/* ── 2. Cinematic Royal Spotlight Frame (Sayeed Seated on Throne with IEEE Flags) ── */}
+      {/* ── 2. Cinematic Royal Spotlight Frame (Sayeed Seated on Throne with IEEE Flags & ElectricLogo) ── */}
       <div className="relative z-10 max-w-7xl mx-auto w-full mb-10 sm:mb-14">
         <motion.div
           initial={{ scale: 1.08, opacity: 0, filter: "blur(14px) brightness(0.65)" }}
           whileInView={{ scale: 1, opacity: 1, filter: "blur(0px) brightness(1.0)" }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full aspect-[21/9] sm:aspect-[2.4/1] min-h-[260px] sm:min-h-[380px] md:min-h-[440px] rounded-3xl overflow-hidden border border-amber-500/35 shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(200,56,43,0.3)] group"
+          className="relative w-full aspect-[21/9] sm:aspect-[2.4/1] min-h-[280px] sm:min-h-[380px] md:min-h-[460px] rounded-3xl overflow-hidden border border-amber-500/35 shadow-[0_25px_80px_rgba(0,0,0,0.95),0_0_50px_rgba(200,56,43,0.3)] group"
         >
-          {/* Master Leadership Artwork */}
+          {/* Layer 1: Master Visible Leadership Portrait */}
           <img
             src="/media/leadership-hero-bg.jpg"
             alt="Sayeed Ibne Saif — Leadership & IEEE Chairperson"
-            className="w-full h-full object-cover object-[center_35%] filter contrast-105 brightness-100 transition-transform duration-700 group-hover:scale-[1.02]"
+            className="w-full h-full object-cover object-[center_35%] filter contrast-105 brightness-100 transition-transform duration-700 group-hover:scale-[1.01]"
             loading="eager"
           />
 
-          {/* Warm Ambient Pulsing Ember Aura */}
+          {/* Layer 2: Animated Electric Silhouette Outline via React Bits ElectricLogo (WebGL OGL) */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+            className="absolute inset-0 z-10 w-full h-full pointer-events-auto mix-blend-screen"
+          >
+            <ElectricLogo
+              src="/media/leadership-silhouette.png"
+              color="#c8382b"
+              glowColor="#8f1714"
+              scale={0.85}
+              intensity={1.15}
+              glow={1.5}
+              thickness={1.8}
+              strands={4}
+              bend={0.55}
+              crackle={1.1}
+              arcs={0.8}
+              flicker={0.35}
+              fill={0.05}
+              speed={1.5}
+              interactive={true}
+              cursorIntensity={0.8}
+              cursorRadius={110}
+              theme="dark"
+              className="w-full h-full"
+            />
+          </motion.div>
+
+          {/* Layer 3: Warm Ambient Pulsing Ember Aura */}
           <div
-            className="absolute inset-0 opacity-45 mix-blend-screen pointer-events-none"
+            className="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none z-10"
             style={{
               background:
                 "radial-gradient(ellipse 65% 55% at 50% 48%, rgba(220, 38, 38, 0.45) 0%, rgba(212, 175, 55, 0.16) 42%, transparent 75%)",
@@ -227,28 +259,35 @@ export default function Leadership() {
             aria-hidden="true"
           />
 
-          {/* Anamorphic Light Sweep on Viewport Reveal */}
+          {/* Layer 4: Anamorphic Light Sweep on Viewport Reveal */}
           <motion.div
             initial={{ x: "-100%", opacity: 0.75 }}
             whileInView={{ x: "200%", opacity: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none mix-blend-screen -skew-x-12"
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none mix-blend-screen -skew-x-12 z-10"
           />
 
-          {/* Vignette Depth Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-transparent to-[#050102]/60 pointer-events-none" />
+          {/* Layer 5: Vignette Depth Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050102] via-transparent to-[#050102]/60 pointer-events-none z-10" />
 
-          {/* Royal Telemetry Banner on the image frame */}
-          <div className="absolute bottom-4 left-4 right-4 sm:left-8 sm:right-8 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/80 border border-amber-500/40 backdrop-blur-md shadow-lg">
+          {/* Layer 6: Royal Telemetry Banner on the image frame */}
+          <div className="absolute bottom-4 left-4 right-4 sm:left-8 sm:right-8 flex flex-wrap items-center justify-between gap-3 pointer-events-none z-20">
+            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/85 border border-amber-500/40 backdrop-blur-md shadow-lg">
               <Crown size={13} className="text-amber-400" />
               <span className="text-[10px] sm:text-[11px] font-mono text-amber-200 font-bold tracking-[0.2em] uppercase">
                 EXECUTIVE OFFICE · PREMIER UNIVERSITY STUDENT BRANCH
               </span>
             </div>
 
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/80 border border-red-500/40 text-[10px] font-mono text-red-200 font-bold uppercase tracking-wider backdrop-blur-md">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/85 border border-[#c8382b]/50 text-[10px] font-mono text-amber-200 font-bold uppercase tracking-wider backdrop-blur-md shadow-[0_0_15px_rgba(200,56,43,0.3)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#c8382b] animate-ping" />
+              <span className="text-red-400">ELECTRIC CORONA</span>
+              <span className="text-amber-400/50">·</span>
+              <span className="text-amber-300">INTERACTIVE OGL</span>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/80 border border-red-500/40 text-[10px] font-mono text-red-200 font-bold uppercase tracking-wider backdrop-blur-md">
               <Sparkles size={13} className="text-amber-300" />
               <span>TENURE MMXXIV — MMXXVI</span>
             </div>

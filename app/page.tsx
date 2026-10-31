@@ -1,6 +1,7 @@
 "use client";
 
 import CinematicHero from "@/components/sections/CinematicHero";
+import Skills from "@/components/sections/Skills";
 import Certifications from "@/components/sections/Certifications";
 import Leadership from "@/components/sections/Leadership";
 import Projects from "@/components/sections/Projects";
@@ -30,16 +31,19 @@ export default function Home() {
 
       {/* Main Flow: Scrolls over the fixed hero stage */}
       <main className="flow">
-        {/* Scene 2 — Royal Verified Credentials */}
+        {/* Scene 02 — Technical Arsenal & Skills */}
+        <Skills />
+
+        {/* Scene 03 — Royal Verified Credentials */}
         <Certifications />
 
-        {/* Scene 3 — Leadership & Creed */}
+        {/* Scene 04 — Leadership & Creed */}
         <Leadership />
 
-        {/* Scene 4 — High-Performance Systems & Projects */}
+        {/* Scene 05 — High-Performance Systems & Projects */}
         <Projects />
 
-        {/* Scene 5 — Closing Finale */}
+        {/* Scene 06 — Closing Finale */}
         <CinematicFooter />
       </main>
     </>
