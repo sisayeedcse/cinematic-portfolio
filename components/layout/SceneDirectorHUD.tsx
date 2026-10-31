@@ -24,8 +24,9 @@ const scenes: Scene[] = [
   { id: "skills", num: "02", title: "Technical Arsenal", short: "Skills" },
   { id: "projects", num: "03", title: "Production Systems", short: "Projects" },
   { id: "academic", num: "04", title: "Academic Foundation", short: "Academics" },
-  { id: "leadership", num: "05", title: "Leadership Journey", short: "Lead" },
-  { id: "contact", num: "06", title: "Closing Finale", short: "Finale" },
+  { id: "certificates", num: "05", title: "Verified Credentials", short: "Certs" },
+  { id: "leadership", num: "06", title: "Leadership Journey", short: "Lead" },
+  { id: "contact", num: "07", title: "Closing Finale", short: "Finale" },
 ];
 
 export default function SceneDirectorHUD() {
