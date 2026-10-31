@@ -116,7 +116,7 @@ export default function Certifications() {
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center will-change-transform">
         <img
           ref={bgImgRef}
-          src="/media/certificates-clean-throne.png"
+          src="/media/certificates-clean-throne.jpg"
           alt="Sayeed Ibne Saif — Verified Credentials & Certificates"
           className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
