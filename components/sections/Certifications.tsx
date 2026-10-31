@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { certifications } from "@/data/certifications";
 import { ExternalLink, ShieldCheck, Award } from "lucide-react";
 import gsap from "gsap";
@@ -119,7 +119,7 @@ export default function Certifications() {
           ref={bgImgRef}
           src="/media/certificates-clean-throne.jpg"
           alt="Sayeed Ibne Saif — Verified Credentials & Certificates"
-          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none cinematic-backdrop-img saturate-[0.80] filter contrast-105 brightness-100 will-change-transform"
+          className="w-full h-full object-cover object-[50%_20%] sm:object-[50%_25%] lg:object-center select-none cinematic-backdrop-img saturate-[0.80] filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
@@ -177,22 +177,94 @@ export default function Certifications() {
       </div>
 
       {/* ── 3. Main Stage: Left/Center Open (Sayeed & CERTIFICATES) + Sleek Names Stack on Right ── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full mt-auto lg:my-auto py-3 sm:py-6 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-4 sm:gap-6 lg:gap-8">
+      <div className="relative z-10 max-w-[1400px] mx-auto w-full mt-auto lg:my-auto py-2 sm:py-3 lg:py-4 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-2 sm:gap-4 lg:gap-6">
         {/* Left Side spacer: leaves Sayeed and "CERTIFICATES" text 100% open and visible */}
         <div className="hidden lg:block lg:flex-1 pointer-events-none" />
 
-        {/* Right Side: Creative Minimalist Typography Stack of Certificate Names */}
-        <div className="w-full lg:w-auto lg:max-w-lg xl:max-w-xl flex flex-col items-center lg:items-end space-y-2 sm:space-y-2.5">
+        {/* Right Side: Creative Compact Typography Stack of Certificate Names (Sleek for Laptop & Mobile) */}
+        <div className="w-full max-w-sm sm:max-w-md lg:w-[310px] xl:w-[350px] 2xl:w-[400px] lg:ml-auto flex flex-col items-center lg:items-end space-y-1.5 sm:space-y-2">
           {/* Header pill above the list */}
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/80 border border-amber-500/35 backdrop-blur-xl shadow-lg">
-            <Award size={12} className="text-amber-400 animate-pulse" />
-            <span className="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-widest">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/80 border border-amber-500/35 backdrop-blur-xl shadow-lg">
+            <Award size={11} className="text-amber-400 animate-pulse" />
+            <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-300 uppercase tracking-widest">
               CERTIFICATION DOSSIER // VERIFIED CREDENTIALS
             </span>
           </div>
 
-          {/* Interactive Stack of Certificate Names */}
-          <div ref={stackRef} className="w-full space-y-2 sm:space-y-2.5">
+          {/* Mobile View (< lg): Sleek Segmented Pill Selector + Single Focused Certificate Card */}
+          <div className="lg:hidden w-full space-y-2">
+            {/* Quick Segmented Pill Tabs */}
+            <div className="flex items-center gap-1 p-1 rounded-2xl bg-black/80 border border-amber-500/30 backdrop-blur-xl shadow-lg overflow-x-auto no-scrollbar">
+              {certifications.map((cert, idx) => {
+                const isSelected = activeId === cert.id;
+                return (
+                  <button
+                    key={cert.id}
+                    onClick={() => setActiveId(cert.id)}
+                    className={`relative flex-1 min-w-[44px] py-1 px-1 rounded-xl text-[9px] font-mono tracking-wider transition-all duration-300 uppercase truncate text-center ${
+                      isSelected ? "text-white font-bold" : "text-gray-400 hover:text-amber-200"
+                    }`}
+                  >
+                    {isSelected && (
+                      <motion.div
+                        layoutId="mobileActiveCertPill"
+                        className="absolute inset-0 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 rounded-xl shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">0{idx + 1}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Active Single Card on Mobile */}
+            <AnimatePresence mode="wait">
+              {(() => {
+                const activeCert = certifications.find((c) => c.id === activeId) || certifications[0];
+                return (
+                  <motion.div
+                    key={activeCert.id}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.18 }}
+                    className="rounded-2xl p-2.5 sm:p-3 bg-[#140407]/92 border border-amber-400/70 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.95)] flex items-center justify-between gap-3 text-left"
+                  >
+                    <div className="overflow-hidden">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-400 uppercase tracking-wider">
+                          {activeCert.issuerShort}
+                        </span>
+                        <span className="text-gray-500 text-[8px]">•</span>
+                        <span className="text-[8px] sm:text-[9px] font-mono text-gray-400 truncate">
+                          {activeCert.categoryLabel}
+                        </span>
+                      </div>
+                      <h3 className="font-extrabold text-[11px] sm:text-xs font-sans uppercase tracking-tight text-white truncate">
+                        {activeCert.name}
+                      </h3>
+                    </div>
+
+                    {activeCert.verifyUrl && (
+                      <a
+                        href={activeCert.verifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[8px] sm:text-[9px] font-mono font-bold uppercase tracking-wider bg-gradient-to-r from-red-600 to-amber-600 text-white shadow shrink-0 hover:scale-105 transition-all"
+                      >
+                        <span>VERIFY</span>
+                        <ExternalLink size={9} />
+                      </a>
+                    )}
+                  </motion.div>
+                );
+              })()}
+            </AnimatePresence>
+          </div>
+
+          {/* Desktop/Laptop View (lg+): Full Sleek Compact Dossier Stack on Far Right */}
+          <div ref={stackRef} className="hidden lg:flex flex-col w-full space-y-1.5 xl:space-y-2">
             {certifications.map((cert, idx) => {
               const isSelected = activeId === cert.id;
 
@@ -202,17 +274,17 @@ export default function Certifications() {
                   onClick={() => setActiveId(cert.id)}
                   whileHover={{ scale: 1.02, x: -3 }}
                   whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2 }}
-                  className={`cert-tile relative w-full rounded-2xl p-3 sm:p-3.5 transition-all duration-300 cursor-pointer backdrop-blur-2xl flex items-center justify-between gap-3 ${
+                  transition={{ duration: 0.18 }}
+                  className={`cert-tile relative w-full rounded-xl p-2 lg:p-2.5 transition-all duration-300 cursor-pointer backdrop-blur-2xl flex items-center justify-between gap-2.5 ${
                     isSelected
-                      ? "bg-[#180408]/96 border-2 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.5),0_0_15px_rgba(220,38,38,0.4)] ring-1 ring-amber-400/50"
-                      : "bg-[#0d0205]/88 border border-white/10 hover:border-amber-400/70 hover:bg-[#140307]/90 shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
+                      ? "bg-[#180408]/96 border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.5),0_0_12px_rgba(220,38,38,0.4)] ring-1 ring-amber-400/50"
+                      : "bg-[#0d0205]/88 border border-white/10 hover:border-amber-400/70 hover:bg-[#140307]/90 shadow-[0_8px_20px_rgba(0,0,0,0.8)]"
                   }`}
                 >
                   {/* Left: Index + Certificate Name + Issuer */}
-                  <div className="flex items-center gap-3 overflow-hidden">
+                  <div className="flex items-center gap-2 overflow-hidden text-left">
                     <span
-                      className={`text-xs sm:text-sm font-mono font-bold px-2 py-0.5 rounded-lg shrink-0 ${
+                      className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0 ${
                         isSelected
                           ? "bg-amber-400 text-black shadow"
                           : "bg-white/5 text-amber-300/80 border border-white/10"
@@ -223,18 +295,18 @@ export default function Certifications() {
 
                     <div className="overflow-hidden">
                       <h3
-                        className={`text-xs sm:text-sm font-bold font-sans uppercase tracking-wide truncate transition-colors ${
+                        className={`text-[11px] lg:text-xs font-bold font-sans uppercase tracking-wide truncate transition-colors ${
                           isSelected ? "text-white" : "text-gray-200 group-hover:text-white"
                         }`}
                       >
                         {cert.name}
                       </h3>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-400/90 uppercase tracking-wider">
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-[8px] font-mono font-bold text-amber-400/90 uppercase tracking-wider">
                           {cert.issuerShort}
                         </span>
-                        <span className="text-gray-500 text-[10px]">•</span>
-                        <span className="text-[9px] sm:text-[10px] font-mono text-gray-400 truncate">
+                        <span className="text-gray-500 text-[8px]">•</span>
+                        <span className="text-[8px] font-mono text-gray-400 truncate">
                           {cert.categoryLabel}
                         </span>
                       </div>
@@ -248,7 +320,7 @@ export default function Certifications() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[9px] font-mono font-bold uppercase tracking-wider shrink-0 transition-all ${
+                      className={`flex items-center gap-1 px-2 py-0.5 rounded text-[8px] font-mono font-bold uppercase tracking-wider shrink-0 transition-all ${
                         isSelected
                           ? "bg-gradient-to-r from-red-600 to-amber-600 text-white shadow hover:scale-105"
                           : "bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white border border-white/10"
@@ -256,7 +328,7 @@ export default function Certifications() {
                       title={`Verify ${cert.name}`}
                     >
                       <span>VERIFY</span>
-                      <ExternalLink size={10} />
+                      <ExternalLink size={9} />
                     </a>
                   )}
                 </motion.div>

@@ -230,7 +230,7 @@ export default function Skills() {
           ref={bgImgRef}
           src="/media/skills-throne-clean.jpg"
           alt="Sayeed Ibne Saif — Technical Arsenal & Skills"
-          className="w-full h-full object-cover object-center select-none cinematic-backdrop-img filter contrast-105 brightness-100 will-change-transform"
+          className="w-full h-full object-cover object-[62%_20%] sm:object-[56%_25%] lg:object-center select-none cinematic-backdrop-img filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
@@ -287,24 +287,24 @@ export default function Skills() {
       </div>
 
       {/* ── 3. Main Stage: Unobstructed Left/Center (Sayeed & SKILLS) + Holographic Glowing Logos on Right ── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full mt-auto lg:my-auto py-2 sm:py-4 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-3 sm:gap-6 lg:gap-8">
+      <div className="relative z-10 max-w-[1400px] mx-auto w-full mt-auto lg:my-auto py-2 sm:py-3 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-2 sm:gap-4 lg:gap-6">
         {/* Left Side spacer: leaves Sayeed and "SKILLS" text 100% open and visible */}
         <div className="hidden lg:block lg:flex-1 pointer-events-none" />
 
-        {/* Right Side: Creative Holographic Constellation of Glowing Logos */}
-        <div className="w-full lg:w-auto lg:max-w-md xl:max-w-lg flex flex-col items-center lg:items-end space-y-2.5 sm:space-y-3.5">
+        {/* Right Side: Creative Compact Holographic Constellation of Glowing Logos (Sleek for Laptop & Mobile) */}
+        <div className="w-full max-w-sm sm:max-w-md lg:w-[310px] xl:w-[350px] 2xl:w-[390px] lg:ml-auto flex flex-col items-center lg:items-end space-y-1.5 sm:space-y-2.5">
           {/* Header pill above the logos */}
-          <div className="flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 border border-amber-500/35 backdrop-blur-xl shadow-lg">
-            <Flame size={11} className="text-red-500 animate-pulse" />
-            <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-300 uppercase tracking-widest">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-black/80 border border-amber-500/35 backdrop-blur-xl shadow-lg">
+            <Flame size={10} className="text-red-500 animate-pulse" />
+            <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-300 uppercase tracking-widest">
               TECHNOLOGY MATRIX // SELECT OR HOVER
             </span>
           </div>
 
-          {/* Glowing Logos Floating Grid (6 cols × 2 rows on mobile, 4 cols × 3 rows on desktop) */}
+          {/* Glowing Logos Floating Grid (6 cols on mobile, 4 cols on desktop/laptop) */}
           <div
             ref={gridContainerRef}
-            className="grid grid-cols-6 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-3.5 p-2.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#0d0205]/85 border border-amber-500/30 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(200,56,43,0.3)]"
+            className="grid grid-cols-6 lg:grid-cols-4 gap-1.5 sm:gap-2 lg:gap-2 p-2 sm:p-2.5 lg:p-3 rounded-2xl sm:rounded-3xl bg-[#0d0205]/85 border border-amber-500/30 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_30px_rgba(200,56,43,0.3)]"
           >
             {skillLogos.map((skill) => {
               const isSelected = selectedSkill.id === skill.id;
@@ -315,14 +315,14 @@ export default function Skills() {
                   onClick={() => setActiveId(skill.id)}
                   onMouseEnter={() => setHoveredId(skill.id)}
                   onMouseLeave={() => setHoveredId(null)}
-                  className={`skill-logo-btn relative w-10 h-10 sm:w-13 sm:h-13 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center p-2 sm:p-2.5 lg:p-3 transition-all duration-300 group cursor-pointer focus-royal ${
+                  className={`skill-logo-btn relative w-9 h-9 sm:w-11 sm:h-11 lg:w-11 lg:h-11 xl:w-13 xl:h-13 rounded-lg sm:rounded-xl flex items-center justify-center p-1.5 sm:p-2 transition-all duration-300 group cursor-pointer focus-royal ${
                     isSelected
-                      ? "bg-[#1f050b] border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.65),0_0_15px_rgba(220,38,38,0.5)] ring-1 sm:ring-2 ring-amber-400/50 scale-105"
-                      : "bg-[#110204]/90 border border-white/10 hover:border-amber-400/80 hover:bg-[#180408] shadow-[0_8px_20px_rgba(0,0,0,0.7)] hover:scale-110"
+                      ? "bg-[#1f050b] border-2 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.65),0_0_12px_rgba(220,38,38,0.5)] ring-1 ring-amber-400/50 scale-105"
+                      : "bg-[#110204]/90 border border-white/10 hover:border-amber-400/80 hover:bg-[#180408] shadow-[0_6px_15px_rgba(0,0,0,0.7)] hover:scale-110"
                   }`}
                   style={{
                     boxShadow: isSelected
-                      ? `0 0 20px ${skill.glow}, 0 0 35px rgba(200, 56, 43, 0.4)`
+                      ? `0 0 16px ${skill.glow}, 0 0 25px rgba(200, 56, 43, 0.4)`
                       : undefined,
                   }}
                   title={`${skill.name} — ${skill.category}`}
@@ -330,7 +330,7 @@ export default function Skills() {
                 >
                   {/* Subtle pulsing background glow matching the brand color */}
                   <div
-                    className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md pointer-events-none"
+                    className="absolute inset-0 rounded-lg sm:rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"
                     style={{ backgroundColor: skill.glow }}
                   />
 
@@ -346,7 +346,7 @@ export default function Skills() {
 
                   {/* Active Indicator Dot */}
                   {isSelected && (
-                    <span className="absolute -top-1 -right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,1)] animate-ping" />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,1)] animate-ping" />
                   )}
                 </button>
               );
@@ -357,16 +357,16 @@ export default function Skills() {
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedSkill.id}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="w-full rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 bg-[#120306]/92 border border-amber-500/35 backdrop-blur-xl shadow-xl flex items-center justify-between gap-2.5 text-left"
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18 }}
+              className="w-full rounded-xl sm:rounded-2xl p-2 sm:p-2.5 bg-[#120306]/92 border border-amber-500/35 backdrop-blur-xl shadow-xl flex items-center justify-between gap-2 text-left"
             >
-              <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="flex items-center gap-2 overflow-hidden">
                 <div
-                  className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center p-1 sm:p-1.5 shrink-0 border border-white/15 bg-black/60 shadow-md"
-                  style={{ boxShadow: `0 0 12px ${selectedSkill.glow}` }}
+                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center p-1 shrink-0 border border-white/15 bg-black/60 shadow-md"
+                  style={{ boxShadow: `0 0 10px ${selectedSkill.glow}` }}
                 >
                   <img
                     src={selectedSkill.icon}
@@ -376,22 +376,22 @@ export default function Skills() {
                 </div>
 
                 <div className="overflow-hidden">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <span className="font-extrabold text-xs sm:text-base font-sans uppercase text-white tracking-wide">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-extrabold text-[11px] sm:text-xs font-sans uppercase text-white tracking-wide">
                       {selectedSkill.name}
                     </span>
-                    <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-300/90 uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10">
+                    <span className="text-[7px] sm:text-[8px] font-mono font-bold text-amber-300/90 uppercase tracking-wider px-1 py-0.2 rounded bg-white/5 border border-white/10">
                       {selectedSkill.category}
                     </span>
                   </div>
-                  <p className="text-[9px] sm:text-[11px] font-sans text-gray-300 truncate mt-0.5">
+                  <p className="text-[8px] sm:text-[10px] font-sans text-gray-300 truncate mt-0.5">
                     {selectedSkill.desc}
                   </p>
                 </div>
               </div>
 
-              <div className="hidden sm:flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-[9px] font-mono uppercase font-bold">
-                <Check size={11} />
+              <div className="hidden sm:flex items-center gap-1 shrink-0 px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-[8px] font-mono uppercase font-bold">
+                <Check size={9} />
                 <span>ACTIVE</span>
               </div>
             </motion.div>

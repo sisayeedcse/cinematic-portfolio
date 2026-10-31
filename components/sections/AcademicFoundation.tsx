@@ -124,7 +124,7 @@ export default function AcademicFoundation() {
           ref={bgImgRef}
           src="/media/academic-foundation-throne.jpg"
           alt="Sayeed Ibne Saif — Academic Foundation"
-          className="w-full h-full object-cover object-[center_35%] sm:object-[35%_center] select-none cinematic-backdrop-img filter contrast-105 brightness-100 will-change-transform"
+          className="w-full h-full object-cover object-[58%_25%] sm:object-[54%_30%] lg:object-center select-none cinematic-backdrop-img filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
@@ -182,51 +182,51 @@ export default function AcademicFoundation() {
       </div>
 
       {/* ── 3. Main Stage: Unobstructed Left/Center (Sayeed & 3D Typography) + Creative CG Card on Right ── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full mt-auto lg:my-auto py-4 sm:py-6 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6 lg:gap-8">
+      <div className="relative z-10 max-w-[1400px] mx-auto w-full mt-auto lg:my-auto py-2 sm:py-3 lg:py-4 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-3 lg:gap-6">
         {/* Left Side spacer: leaves Sayeed and "ACADEMIC FOUNDATION" text 100% open and visible */}
         <div className="hidden lg:block lg:flex-1 pointer-events-none" />
 
-        {/* Right Side: Creative Academic CGPA Card */}
+        {/* Right Side: Creative Compact Academic CGPA Card (Sleek for Laptop & Mobile) */}
         <div
           ref={cardRef}
-          className="w-full lg:w-auto lg:max-w-md xl:max-w-lg flex flex-col items-center lg:items-end will-change-transform"
+          className="w-full max-w-sm sm:max-w-md lg:w-[320px] xl:w-[360px] 2xl:w-[410px] lg:ml-auto flex flex-col items-center lg:items-end will-change-transform"
         >
           <motion.div
-            whileHover={{ scale: 1.03, y: -4 }}
-            transition={{ duration: 0.3 }}
-            className="relative w-full rounded-3xl p-6 sm:p-8 bg-[#0d0205]/90 border border-amber-500/40 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_40px_rgba(200,56,43,0.35)] flex flex-col gap-5 text-left group"
+            whileHover={{ scale: 1.02, y: -2 }}
+            transition={{ duration: 0.25 }}
+            className="relative w-full rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-4.5 xl:p-6 bg-[#0d0205]/90 border border-amber-500/40 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(200,56,43,0.35)] flex flex-col gap-2.5 sm:gap-4 text-left group"
           >
             {/* Ambient Corner Glow Accent */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-red-600/15 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-28 h-28 bg-amber-400/10 rounded-full blur-xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-28 h-28 bg-red-600/15 rounded-full blur-xl pointer-events-none" />
 
             {/* Header: Label with Amber Glow */}
-            <div className="flex items-center justify-between border-b border-amber-500/25 pb-3">
-              <div className="flex items-center gap-2">
-                <Award size={16} className="text-amber-400 animate-pulse" />
-                <span className="text-xs sm:text-sm font-mono font-bold uppercase tracking-[0.22em] text-amber-300">
+            <div className="flex items-center justify-between border-b border-amber-500/25 pb-2 sm:pb-2.5">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Award size={14} className="text-amber-400 animate-pulse" />
+                <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.2em] text-amber-300">
                   Current CGPA
                 </span>
               </div>
-              <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-[9px] font-mono font-bold uppercase tracking-wider">
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-[8px] sm:text-[9px] font-mono font-bold uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 DISTINCTION
               </span>
             </div>
 
             {/* Core Metric Display: 3.79 / 4.00 */}
-            <div className="flex items-center justify-between gap-4 py-1">
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl sm:text-6xl md:text-7xl font-extrabold font-sans text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-300 tracking-tight drop-shadow-[0_4px_25px_rgba(245,158,11,0.4)]">
+            <div className="flex items-center justify-between gap-3 py-0.5">
+              <div className="flex items-baseline gap-1.5 sm:gap-2">
+                <span className="text-4xl sm:text-5xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-extrabold font-sans text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-300 tracking-tight drop-shadow-[0_4px_20px_rgba(245,158,11,0.4)]">
                   3.79
                 </span>
-                <span className="text-lg sm:text-xl md:text-2xl font-mono text-amber-400/80 font-bold tracking-wider">
+                <span className="text-base sm:text-lg lg:text-base xl:text-xl font-mono text-amber-400/80 font-bold tracking-wider">
                   /4.00
                 </span>
               </div>
 
               {/* Circular Radial Distinction Gauge (94.75%) */}
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 flex items-center justify-center">
+              <div className="relative w-12 h-12 sm:w-16 sm:h-16 lg:w-13 lg:h-13 xl:w-16 xl:h-16 shrink-0 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   {/* Background Track */}
                   <path
@@ -250,7 +250,7 @@ export default function AcademicFoundation() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="text-[10px] sm:text-[11px] font-mono font-extrabold text-amber-200">
+                  <span className="text-[9px] sm:text-[10px] font-mono font-extrabold text-amber-200">
                     94.8%
                   </span>
                 </div>
@@ -258,8 +258,8 @@ export default function AcademicFoundation() {
             </div>
 
             {/* Editorial Description Text (Exact wording requested) */}
-            <div className="pt-3 border-t border-white/10">
-              <p className="text-xs sm:text-sm font-sans text-amber-100/90 leading-relaxed tracking-wide">
+            <div className="pt-2 sm:pt-2.5 border-t border-white/10">
+              <p className="text-[10px] sm:text-xs lg:text-[11px] xl:text-xs font-sans text-amber-100/90 leading-snug sm:leading-relaxed tracking-wide">
                 Maintaining high academic performance while building practical infrastructure skills.
               </p>
             </div>

@@ -188,7 +188,7 @@ export default function Leadership() {
           ref={bgImgRef}
           src="/media/leadership-clean-throne.jpg"
           alt="Sayeed Ibne Saif — Executive Leadership"
-          className="w-full h-full object-cover object-[center_30%] sm:object-center select-none cinematic-backdrop-img filter contrast-105 brightness-100 will-change-transform"
+          className="w-full h-full object-cover object-[50%_20%] sm:object-[50%_25%] lg:object-center select-none cinematic-backdrop-img filter contrast-105 brightness-100 will-change-transform"
           style={{ clipPath: "inset(0% 50% 0% 50%)" }}
           loading="eager"
         />
@@ -259,10 +259,10 @@ export default function Leadership() {
         </div>
       </div>
 
-      {/* ── 4. Bottom Sleek Milestone Dock (Sleek, Minimal, Zero Jargon) ── */}
-      <div className="relative z-10 max-w-6xl mx-auto w-full pt-4">
+      {/* ── 4. Bottom Sleek Milestone Dock (Sleek, Minimal, Zero Jargon, Laptop & Mobile Optimized) ── */}
+      <div className="relative z-10 max-w-6xl mx-auto w-full pt-1 sm:pt-2">
         {/* Mobile View (< md): Sleek 3-Tab Selector + Single Compact Active Card */}
-        <div className="md:hidden space-y-2.5">
+        <div className="md:hidden space-y-2">
           {/* Quick Segmented Controller */}
           <div className="flex items-center gap-1 p-1 rounded-2xl bg-black/80 border border-amber-500/30 backdrop-blur-xl shadow-lg">
             {leadershipRoles.map((item) => {
@@ -271,14 +271,14 @@ export default function Leadership() {
                 <button
                   key={item.id}
                   onClick={() => setActiveId(item.id)}
-                  className={`relative flex-1 py-1.5 px-1.5 rounded-xl text-[10px] font-mono tracking-wider transition-all duration-300 uppercase truncate text-center ${
+                  className={`relative flex-1 py-1 px-1 rounded-xl text-[9px] font-mono tracking-wider transition-all duration-300 uppercase truncate text-center ${
                     isSelected ? "text-white font-bold" : "text-gray-400 hover:text-amber-200"
                   }`}
                 >
                   {isSelected && (
                     <motion.div
                       layoutId="mobileActiveLeadershipPill"
-                      className="absolute inset-0 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 rounded-xl shadow-[0_0_15px_rgba(245,158,11,0.5)]"
+                      className="absolute inset-0 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 rounded-xl shadow-[0_0_12px_rgba(245,158,11,0.5)]"
                       transition={{ type: "spring", stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -288,44 +288,44 @@ export default function Leadership() {
             })}
           </div>
 
-          {/* Active Card */}
+          {/* Active Card on Mobile */}
           <AnimatePresence mode="wait">
             {(() => {
               const activeRole = leadershipRoles.find((r) => r.id === activeId) || leadershipRoles[0];
               return (
                 <motion.div
                   key={activeRole.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  className="rounded-2xl p-4 bg-[#140407]/92 border border-amber-400/70 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.95)]"
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="rounded-2xl p-2.5 sm:p-3 bg-[#140407]/92 border border-amber-400/70 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.95)] text-left"
                 >
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="text-[10px] font-mono font-bold text-amber-400 tracking-widest uppercase">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="text-[9px] font-mono font-bold text-amber-400 tracking-widest uppercase">
                       {activeRole.index} // {activeRole.tag}
                     </span>
                     {activeRole.isCurrent ? (
-                      <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 font-mono text-[9px] font-bold uppercase tracking-wider">
+                      <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 font-mono text-[8px] font-bold uppercase tracking-wider">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         {activeRole.period}
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-amber-200/80 font-mono text-[9px] font-bold uppercase tracking-wider">
+                      <span className="px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-amber-200/80 font-mono text-[8px] font-bold uppercase tracking-wider">
                         {activeRole.period}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="font-extrabold text-base font-sans uppercase tracking-tight text-white leading-tight">
+                  <h3 className="font-extrabold text-xs sm:text-sm font-sans uppercase tracking-tight text-white leading-tight">
                     {activeRole.role}
                   </h3>
 
-                  <p className="text-[11px] font-mono text-amber-300/90 mt-0.5 truncate">
+                  <p className="text-[10px] font-mono text-amber-300/90 mt-0.5 truncate">
                     {activeRole.organization}
                   </p>
 
-                  <p className="text-[11px] font-sans text-gray-300 mt-1.5 line-clamp-2 leading-relaxed">
+                  <p className="text-[10px] font-sans text-gray-300 mt-1 line-clamp-1 leading-snug">
                     {activeRole.summary}
                   </p>
                 </motion.div>
@@ -334,58 +334,58 @@ export default function Leadership() {
           </AnimatePresence>
         </div>
 
-        {/* Desktop View (md+): 3-Column Side-by-Side Milestone Deck with 3D Elevation */}
-        <div ref={cardsContainerRef} className="hidden md:grid grid-cols-3 gap-3.5 sm:gap-4 md:gap-5" style={{ perspective: "1000px" }}>
+        {/* Desktop/Laptop View (md+): Sleek 3-Column Milestone Deck with Lower Height Profile */}
+        <div ref={cardsContainerRef} className="hidden md:grid grid-cols-3 gap-2.5 lg:gap-3 xl:gap-4" style={{ perspective: "1000px" }}>
           {leadershipRoles.map((item) => {
             const isActive = activeId === item.id;
             return (
               <div
                 key={item.id}
                 onClick={() => setActiveId(item.id)}
-                className={`milestone-card opacity-0 relative rounded-2xl p-4 sm:p-5 transition-all duration-300 cursor-pointer select-none border backdrop-blur-xl group ${
+                className={`milestone-card opacity-0 relative rounded-xl sm:rounded-2xl p-3 lg:p-3.5 xl:p-4 transition-all duration-300 cursor-pointer select-none border backdrop-blur-xl group text-left ${
                   isActive
-                    ? "bg-[#160408]/92 border-amber-400 shadow-[0_15px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(245,158,11,0.35)] ring-1 ring-amber-400/60 -translate-y-1"
-                    : "bg-[#0b0204]/80 border-amber-500/25 hover:border-amber-400/70 hover:bg-[#120407]/90 hover:-translate-y-0.5 shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
+                    ? "bg-[#160408]/92 border-amber-400 shadow-[0_15px_35px_rgba(0,0,0,0.9),0_0_20px_rgba(245,158,11,0.35)] ring-1 ring-amber-400/60 -translate-y-1"
+                    : "bg-[#0b0204]/80 border-amber-500/25 hover:border-amber-400/70 hover:bg-[#120407]/90 hover:-translate-y-0.5 shadow-[0_8px_25px_rgba(0,0,0,0.8)]"
                 }`}
               >
                 {/* Active Top Glow Line */}
                 {isActive && (
                   <motion.div
                     layoutId="activeRoleBar"
-                    className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-red-600 via-amber-400 to-red-600 rounded-full shadow-[0_0_12px_rgba(245,158,11,0.9)]"
+                    className="absolute top-0 left-4 right-4 h-[2px] bg-gradient-to-r from-red-600 via-amber-400 to-red-600 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.9)]"
                   />
                 )}
 
                 {/* Top Badge Row */}
-                <div className="flex items-center justify-between gap-2 mb-2.5">
-                  <span className="text-[10px] font-mono font-bold text-amber-400 tracking-widest uppercase">
+                <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                  <span className="text-[9px] font-mono font-bold text-amber-400 tracking-widest uppercase">
                     {item.index} // {item.tag}
                   </span>
 
                   {item.isCurrent ? (
-                    <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 font-mono text-[9px] font-bold uppercase tracking-wider shadow-sm">
+                    <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 font-mono text-[8px] font-bold uppercase tracking-wider shadow-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(52,211,153,1)]" />
                       {item.period}
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-amber-200/80 font-mono text-[9px] font-bold uppercase tracking-wider">
+                    <span className="px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-amber-200/80 font-mono text-[8px] font-bold uppercase tracking-wider">
                       {item.period}
                     </span>
                   )}
                 </div>
 
                 {/* Main Role Title */}
-                <h3 className="font-extrabold text-lg sm:text-xl font-sans uppercase tracking-tight text-white group-hover:text-amber-200 transition-colors leading-tight">
+                <h3 className="font-extrabold text-xs lg:text-sm xl:text-base font-sans uppercase tracking-tight text-white group-hover:text-amber-200 transition-colors leading-tight truncate">
                   {item.role}
                 </h3>
 
                 {/* Organization Subtitle */}
-                <p className="text-[11px] sm:text-xs font-mono text-amber-300/90 mt-1 line-clamp-1">
+                <p className="text-[9px] lg:text-[10px] xl:text-[11px] font-mono text-amber-300/90 mt-0.5 truncate">
                   {item.organization}
                 </p>
 
                 {/* Refined Minimal Summary (No jargon, crystal clear) */}
-                <p className="text-[11px] font-sans text-gray-300/90 mt-2 leading-relaxed line-clamp-2">
+                <p className="text-[9px] lg:text-[10px] xl:text-[11px] font-sans text-gray-300/90 mt-1 leading-snug line-clamp-1 xl:line-clamp-2">
                   {item.summary}
                 </p>
 
